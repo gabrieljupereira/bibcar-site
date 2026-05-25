@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BibCar · Mobilidade Urbana de Fernandópolis</title>
+<meta name="description" content="App de corridas de Fernandópolis com motoristas verificados. Mais segurança para passageiros, mais ganho para motoristas. Baixe o app BibCar.">
+
+<!-- ════════════════════════════════════════════════════════════════
+     ANTES DE PUBLICAR — SUBSTITUA OS CAMPOS MARCADOS COM [SUBSTITUIR]:
+     1. Links dos botões "Baixar o app" (Google Play / App Store)
+     2. Número de WhatsApp oficial
+     3. @ das redes sociais
+     4. Números reais na seção de estatísticas
+     5. ID do Meta Pixel e do Google Analytics (rodapé do <head> / <body>)
+     ════════════════════════════════════════════════════════════════ -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --preto:#0A0A0A; --preto2:#141414; --card:#1A1A1A;
+  --ouro:#C9943A; --ouro-lt:#E8B84B;
+  --roxo:#6B3FA0; --roxo-lt:#8B5CC8;
+  --branco:#F5F5F0; --prata:#8C9BAB;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',sans-serif;background:var(--preto);color:var(--branco);
+  line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+h1,h2,h3,.bebas{font-family:'Bebas Neue',sans-serif;font-weight:400;letter-spacing:.5px;line-height:1}
+a{text-decoration:none;color:inherit}
+.wrap{max-width:1140px;margin:0 auto;padding:0 24px}
+.gold{color:var(--ouro-lt)}
+.purple{color:var(--roxo-lt)}
+
+/* faixa dourada topo */
+.topbar{height:3px;background:linear-gradient(90deg,var(--ouro),var(--ouro-lt),var(--ouro))}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:50;background:rgba(10,10,10,.92);
+  backdrop-filter:blur(10px);border-bottom:1px solid #222}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;color:var(--ouro-lt)}
+.logo span{color:var(--branco)}
+.nav-links{display:flex;gap:30px}
+.nav-links a{font-size:14px;font-weight:500;color:var(--prata);transition:.2s}
+.nav-links a:hover{color:var(--branco)}
+.nav-cta{background:var(--ouro);color:var(--preto);padding:10px 22px;border-radius:8px;
+  font-weight:700;font-size:14px;transition:.2s}
+.nav-cta:hover{background:var(--ouro-lt);transform:translateY(-1px)}
+@media(max-width:760px){.nav-links{display:none}}
+
+/* HERO */
+.hero{position:relative;padding:90px 0 100px;text-align:center;
+  background:radial-gradient(ellipse at 50% -10%,rgba(107,63,160,.35),transparent 60%)}
+.tag{display:inline-block;border:1px solid var(--roxo-lt);color:var(--roxo-lt);
+  font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;
+  padding:6px 16px;border-radius:30px;margin-bottom:26px}
+.hero h1{font-size:clamp(48px,9vw,92px);max-width:900px;margin:0 auto 22px}
+.hero p.sub{font-size:clamp(16px,2.4vw,21px);color:var(--prata);max-width:620px;margin:0 auto 40px}
+.cta-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:16px 32px;border-radius:10px;
+  font-weight:700;font-size:16px;transition:.2s;cursor:pointer;border:2px solid transparent}
+.btn-gold{background:linear-gradient(135deg,var(--ouro),var(--ouro-lt));color:var(--preto)}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(201,148,58,.35)}
+.btn-purple{background:transparent;border-color:var(--roxo-lt);color:var(--branco)}
+.btn-purple:hover{background:var(--roxo);border-color:var(--roxo);transform:translateY(-2px)}
+.hero-note{margin-top:22px;font-size:13px;color:#6a6a6a}
+
+/* SECTION base */
+section{padding:84px 0}
+.sec-head{text-align:center;max-width:680px;margin:0 auto 54px}
+.sec-head .tag{margin-bottom:18px}
+.sec-head h2{font-size:clamp(34px,5vw,52px);margin-bottom:14px}
+.sec-head p{color:var(--prata);font-size:16px}
+
+/* DOIS CAMINHOS */
+.paths{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:760px){.paths{grid-template-columns:1fr}}
+.path{background:var(--card);border:1px solid #262626;border-radius:18px;padding:42px 34px;
+  position:relative;overflow:hidden;transition:.25s}
+.path:hover{transform:translateY(-4px);border-color:#333}
+.path::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px}
+.path.pass::before{background:linear-gradient(var(--ouro),var(--ouro-lt))}
+.path.moto::before{background:linear-gradient(var(--roxo),var(--roxo-lt))}
+.path .ico{font-size:34px;margin-bottom:18px}
+.path h3{font-size:30px;margin-bottom:6px}
+.path .lead{color:var(--prata);font-size:15px;margin-bottom:22px}
+.path ul{list-style:none;margin-bottom:28px}
+.path li{padding:8px 0 8px 28px;position:relative;font-size:15px;color:#cfcfcf}
+.path li::before{content:"✓";position:absolute;left:0;font-weight:700}
+.path.pass li::before{color:var(--ouro-lt)}
+.path.moto li::before{color:var(--roxo-lt)}
+.path .btn{width:100%;justify-content:center}
+
+/* POR QUE */
+.feats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+@media(max-width:880px){.feats{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.feats{grid-template-columns:1fr}}
+.feat{background:var(--preto2);border:1px solid #242424;border-radius:14px;padding:30px 24px;text-align:center}
+.feat .ico{width:54px;height:54px;margin:0 auto 16px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;font-size:24px;
+  background:rgba(107,63,160,.18);border:1px solid rgba(139,92,200,.4)}
+.feat h3{font-size:23px;margin-bottom:8px;letter-spacing:.5px}
+.feat p{font-size:14px;color:var(--prata)}
+
+/* VS CLANDESTINO */
+.vs{background:var(--preto2)}
+.vs-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border-radius:18px;overflow:hidden;
+  border:1px solid #262626}
+@media(max-width:680px){.vs-grid{grid-template-columns:1fr}}
+.vs-col{padding:40px 34px}
+.vs-bib{background:linear-gradient(160deg,rgba(107,63,160,.25),var(--card))}
+.vs-cla{background:#161616}
+.vs-col h3{font-size:28px;margin-bottom:20px}
+.vs-col .label{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  display:inline-block;padding:5px 14px;border-radius:20px;margin-bottom:16px}
+.vs-bib .label{background:var(--ouro);color:var(--preto)}
+.vs-cla .label{background:#3a2020;color:#e08e8e}
+.vs-col li{list-style:none;padding:9px 0 9px 28px;position:relative;font-size:15px}
+.vs-bib li::before{content:"✓";position:absolute;left:0;color:var(--ouro-lt);font-weight:700}
+.vs-cla li{color:var(--prata)}
+.vs-cla li::before{content:"✕";position:absolute;left:0;color:#c0654f;font-weight:700}
+
+/* BIB DELAS */
+.delas{background:linear-gradient(135deg,#1d1230,var(--preto));text-align:center}
+.delas .wrap{max-width:760px}
+.delas .tag{border-color:#d56fa8;color:#e08ec0}
+.delas h2{font-size:clamp(34px,5vw,54px);margin-bottom:16px}
+.delas p{color:var(--prata);font-size:16px;margin-bottom:30px}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;text-align:center}
+@media(max-width:600px){.stats{grid-template-columns:1fr}}
+.stat{background:var(--card);border:1px solid #262626;border-radius:14px;padding:34px 18px}
+.stat .num{font-family:'Bebas Neue',sans-serif;font-size:62px;color:var(--ouro-lt);line-height:1}
+.stat .lbl{font-size:14px;color:var(--prata);margin-top:6px}
+
+/* CTA FINAL */
+.final{text-align:center;background:radial-gradient(ellipse at 50% 120%,rgba(201,148,58,.22),transparent 60%)}
+.final h2{font-size:clamp(40px,7vw,72px);margin-bottom:18px}
+.final p{color:var(--prata);font-size:17px;margin-bottom:34px}
+
+/* FOOTER */
+footer{background:#070707;border-top:1px solid #1e1e1e;padding:56px 0 30px}
+.foot-grid{display:flex;justify-content:space-between;flex-wrap:wrap;gap:34px;margin-bottom:40px}
+.foot-col h4{font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ouro-lt);
+  margin-bottom:14px;font-family:'Inter',sans-serif;font-weight:700}
+.foot-col a,.foot-col p{display:block;color:var(--prata);font-size:14px;margin-bottom:8px;transition:.2s}
+.foot-col a:hover{color:var(--branco)}
+.foot-bottom{text-align:center;border-top:1px solid #1e1e1e;padding-top:24px;
+  font-size:12px;color:#5a5a5a;letter-spacing:.5px}
+
+/* WHATSAPP FLUTUANTE */
+.whats{position:fixed;right:20px;bottom:20px;z-index:60;background:#25D366;color:#fff;
+  width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:28px;box-shadow:0 8px 24px rgba(0,0,0,.4);transition:.2s}
+.whats:hover{transform:scale(1.08)}
+</style>
+</head>
+<body>
+
+<div class="topbar"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="wrap nav-in">
+    <a href="#" class="logo">BIB<span>CAR</span></a>
+    <div class="nav-links">
+      <a href="#caminhos">Passageiro</a>
+      <a href="#caminhos">Motorista</a>
+      <a href="#porque">Segurança</a>
+      <a href="#delas">Bib Delas</a>
+    </div>
+    <!-- [SUBSTITUIR] href pelo link de download do app -->
+    <a href="#caminhos" class="nav-cta">Baixar o app</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <span class="tag">Mobilidade urbana · Fernandópolis</span>
+    <h1>Fernandópolis se move com a <span class="gold">BibCar</span></h1>
+    <p class="sub">App de corridas com motoristas verificados, gente da sua cidade. Mais segurança para quem anda. Mais ganho para quem dirige.</p>
+    <div class="cta-row">
+      <!-- [SUBSTITUIR] href pelo link da loja de apps -->
+      <a href="#caminhos" class="btn btn-gold">Pedir uma corrida</a>
+      <a href="#caminhos" class="btn btn-purple">Quero ser motorista</a>
+    </div>
+    <p class="hero-note">Disponível para Android e iPhone</p>
+  </div>
+</header>
+
+<!-- DOIS CAMINHOS -->
+<section id="caminhos">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="tag">Escolha seu caminho</span>
+      <h2>Dois jeitos de andar com a BibCar</h2>
+      <p>Seja para se locomover ou para gerar renda — a BibCar é da sua cidade.</p>
+    </div>
+    <div class="paths">
+
+      <div class="path pass">
+        <div class="ico">🚗</div>
+        <h3>Sou passageiro</h3>
+        <p class="lead">Peça sua corrida em segundos, com quem você pode confiar.</p>
+        <ul>
+          <li>Motoristas verificados, sem clandestino</li>
+          <li>Acompanhe a corrida em tempo real</li>
+          <li>Tarifa transparente, sem surpresa</li>
+          <li>Suporte local, gente de Fernandópolis</li>
+        </ul>
+        <!-- [SUBSTITUIR] href pelo link de download do app -->
+        <a href="#" class="btn btn-gold">Baixar o app</a>
+      </div>
+
+      <div class="path moto">
+        <div class="ico">🤝</div>
+        <h3>Sou motorista</h3>
+        <p class="lead">Rode na BibCar e ganhe mais perto de casa.</p>
+        <ul>
+          <li>Cadastro simples e rápido</li>
+          <li>Mais ganho por corrida</li>
+          <li>Parceria de verdade, falando de igual pra igual</li>
+          <li>Apoio de uma equipe que conhece a cidade</li>
+        </ul>
+        <!-- [SUBSTITUIR] href pelo link de cadastro / WhatsApp -->
+        <a href="#" class="btn btn-purple">Quero me cadastrar</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- POR QUE -->
+<section id="porque" class="vs">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="tag">Por que BibCar</span>
+      <h2>Segurança não é detalhe. É o ponto de partida.</h2>
+      <p>Tudo na BibCar foi pensado para você chegar bem — e voltar também.</p>
+    </div>
+    <div class="feats">
+      <div class="feat">
+        <div class="ico">🛡️</div>
+        <h3>Motorista verificado</h3>
+        <p>Todo motorista passa por cadastro conferido. Nada de clandestino.</p>
+      </div>
+      <div class="feat">
+        <div class="ico">💜</div>
+        <h3>Bib Delas</h3>
+        <p>Mais cuidado e atenção para as passageiras da BibCar.</p>
+      </div>
+      <div class="feat">
+        <div class="ico">📍</div>
+        <h3>Da sua cidade</h3>
+        <p>Equipe e motoristas que conhecem cada rua de Fernandópolis.</p>
+      </div>
+      <div class="feat">
+        <div class="ico">💰</div>
+        <h3>Preço justo</h3>
+        <p>Tarifa transparente para o passageiro e ganho melhor para o motorista.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VS CLANDESTINO -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="tag">A diferença que importa</span>
+      <h2>BibCar ou transporte clandestino?</h2>
+      <p>Parece a mesma corrida. Não é. A diferença aparece quando algo dá errado.</p>
+    </div>
+    <div class="vs-grid">
+      <div class="vs-col vs-bib">
+        <span class="label">Com a BibCar</span>
+        <h3 class="gold">Você sabe com quem está</h3>
+        <ul>
+          <li>Motorista com cadastro verificado</li>
+          <li>Corrida registrada e acompanhada no app</li>
+          <li>Suporte para resolver qualquer problema</li>
+          <li>Tarifa combinada antes de embarcar</li>
+        </ul>
+      </div>
+      <div class="vs-col vs-cla">
+        <span class="label">No clandestino</span>
+        <h3>Você embarca no escuro</h3>
+        <ul>
+          <li>Sem cadastro, sem verificação</li>
+          <li>Sem registro da corrida</li>
+          <li>Sem suporte se algo acontecer</li>
+          <li>Preço incerto, combinado na hora</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BIB DELAS -->
+<section id="delas" class="delas">
+  <div class="wrap">
+    <span class="tag">Bib Delas</span>
+    <h2>Feito com <span class="purple">cuidado</span> para elas</h2>
+    <p>O Bib Delas é o jeito da BibCar olhar com mais atenção para a segurança das passageiras. Porque toda mulher merece chegar tranquila — de dia ou de noite.</p>
+    <!-- [SUBSTITUIR] href pelo link do app -->
+    <a href="#" class="btn btn-purple">Conhecer o Bib Delas</a>
+  </div>
+</section>
+
+<!-- STATS -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="tag">A BibCar em números</span>
+      <h2>Fernandópolis já anda com a gente</h2>
+    </div>
+    <!-- [SUBSTITUIR] números abaixo pelos dados reais da BibCar -->
+    <div class="stats">
+      <div class="stat"><div class="num">+000</div><div class="lbl">motoristas parceiros</div></div>
+      <div class="stat"><div class="num">+0 mil</div><div class="lbl">corridas realizadas</div></div>
+      <div class="stat"><div class="num">100%</div><div class="lbl">motoristas verificados</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="final">
+  <div class="wrap">
+    <h2>Bora andar de <span class="gold">BibCar</span>?</h2>
+    <p>Baixe o app e peça sua primeira corrida. Sua cidade, do seu jeito.</p>
+    <div class="cta-row">
+      <!-- [SUBSTITUIR] href pelos links das lojas -->
+      <a href="#" class="btn btn-gold">Baixar para Android</a>
+      <a href="#" class="btn btn-purple">Baixar para iPhone</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-col">
+        <a href="#" class="logo">BIB<span>CAR</span></a>
+        <p style="margin-top:10px">Mobilidade urbana de Fernandópolis.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Navegar</h4>
+        <a href="#caminhos">Passageiro</a>
+        <a href="#caminhos">Motorista</a>
+        <a href="#porque">Segurança</a>
+        <a href="#delas">Bib Delas</a>
+      </div>
+      <div class="foot-col">
+        <h4>Contato</h4>
+        <!-- [SUBSTITUIR] e-mail e WhatsApp oficiais -->
+        <a href="mailto:contato@bibcar.com.br">contato@bibcar.com.br</a>
+        <a href="https://wa.me/55SEUNUMERO">WhatsApp</a>
+      </div>
+      <div class="foot-col">
+        <h4>Redes</h4>
+        <!-- [SUBSTITUIR] @ e links reais das redes -->
+        <a href="https://instagram.com/bibcar_fernandopolis">Instagram</a>
+        <a href="#">Facebook</a>
+        <a href="#">TikTok</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      BIBCAR · MOBILIDADE URBANA · FERNANDÓPOLIS · 2026 — Todos os direitos reservados
+    </div>
+  </div>
+</footer>
+
+<!-- WHATSAPP FLUTUANTE — [SUBSTITUIR] 55SEUNUMERO pelo número real -->
+<a href="https://wa.me/55SEUNUMERO" class="whats" aria-label="Falar no WhatsApp">
+  <svg width="30" height="30" viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg">
+    <path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.516 5.26l-.999 3.648 3.972-1.207zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+  </svg>
+</a>
+
+</body>
+</html>
