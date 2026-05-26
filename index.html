@@ -3,303 +3,374 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BibCar · Mobilidade Urbana de Fernandópolis</title>
-<meta name="description" content="App de corridas de Fernandópolis com motoristas verificados. Mais segurança para passageiros, mais ganho para motoristas. Baixe o app BibCar.">
+<title>BibCar · Mobilidade Urbana — Vai de BibCar</title>
+<meta name="description" content="A mobilidade urbana da sua cidade. Motoristas verificados, app rápido, da BibCar Brasil. Passageiro, motorista ou franqueado: comece agora.">
+<meta name="theme-color" content="#0A0A0A">
+<link rel="icon" type="image/png" href="./favicon.png">
 
-<!-- ════════════════════════════════════════════════════════════════
-     ANTES DE PUBLICAR — SUBSTITUA OS CAMPOS MARCADOS COM [SUBSTITUIR]:
-     1. Links dos botões "Baixar o app" (Google Play / App Store)
-     2. Número de WhatsApp oficial
-     3. @ das redes sociais
-     4. Números reais na seção de estatísticas
-     5. ID do Meta Pixel e do Google Analytics (rodapé do <head> / <body>)
-     ════════════════════════════════════════════════════════════════ -->
+<meta property="og:title" content="BibCar · Mobilidade Urbana">
+<meta property="og:description" content="A mobilidade urbana da sua cidade. Vai de BibCar.">
+<meta property="og:image" content="https://bibcarbrasil.com.br/logo.png">
+<meta property="og:url" content="https://bibcarbrasil.com.br">
+<meta property="og:type" content="website">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
 <style>
 :root{
-  --preto:#0A0A0A; --preto2:#141414; --card:#1A1A1A;
-  --ouro:#C9943A; --ouro-lt:#E8B84B;
-  --roxo:#6B3FA0; --roxo-lt:#8B5CC8;
-  --branco:#F5F5F0; --prata:#8C9BAB;
+  --preto:#070707; --preto2:#0F0F12; --card:#141420;
+  --ouro:#FFD23F; --ouro2:#FFB627; --ouro-warm:#FF9500;
+  --roxo:#A930F0; --roxo-elec:#C13EFF; --violeta:#6B3FA0; --violeta2:#8B5CC8;
+  --rosa:#FF2D8E;
+  --prata:#A5B0BD;
+  --branco:#FFFFFF; --branco-warm:#F5F5F0;
+  --gold-grad:linear-gradient(135deg,#FFD23F 0%,#FFB627 50%,#FF9500 100%);
+  --purple-grad:linear-gradient(135deg,#C13EFF 0%,#A930F0 50%,#6B3FA0 100%);
+  --night-grad:radial-gradient(ellipse at 30% 0%,rgba(193,62,255,.28),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(255,210,63,.10),transparent 50%),#070707;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{
-  font-family:'Inter',sans-serif;background:var(--preto);color:var(--branco);
+  font-family:'Inter',sans-serif;background:var(--preto);color:var(--branco-warm);
   line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;
 }
-h1,h2,h3,.bebas{font-family:'Bebas Neue',sans-serif;font-weight:400;letter-spacing:.5px;line-height:1}
+h1,h2,h3,h4,.bebas{font-family:'Bebas Neue',sans-serif;font-weight:400;letter-spacing:1px;line-height:1}
 a{text-decoration:none;color:inherit}
-.wrap{max-width:1140px;margin:0 auto;padding:0 24px}
-.gold{color:var(--ouro-lt)}
-.purple{color:var(--roxo-lt)}
+img{display:block;max-width:100%;height:auto}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+.gold{background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.purple{color:var(--roxo-elec)}
+.rose{color:var(--rosa)}
 
-/* faixa dourada topo */
-.topbar{height:3px;background:linear-gradient(90deg,var(--ouro),var(--ouro-lt),var(--ouro))}
+/* CAMPAIGN BANNER */
+.campaign{position:relative;background:linear-gradient(90deg,#FFB627,#FFD23F,#FF9500,#FFD23F);background-size:300% 100%;animation:slide 8s linear infinite;color:#1a0f00;text-align:center;font-weight:700;font-size:13px;padding:10px 16px;letter-spacing:.5px;z-index:60}
+.campaign a{color:#1a0f00;text-decoration:none}
+.campaign a:hover u{text-decoration:underline}
+.campaign b{font-weight:900}
+@keyframes slide{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+@media(max-width:680px){.campaign{font-size:11.5px;padding:8px 12px}}
 
 /* NAV */
-nav{position:sticky;top:0;z-index:50;background:rgba(10,10,10,.92);
-  backdrop-filter:blur(10px);border-bottom:1px solid #222}
-.nav-in{display:flex;align-items:center;justify-content:space-between;height:68px}
-.logo{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;color:var(--ouro-lt)}
-.logo span{color:var(--branco)}
-.nav-links{display:flex;gap:30px}
-.nav-links a{font-size:14px;font-weight:500;color:var(--prata);transition:.2s}
-.nav-links a:hover{color:var(--branco)}
-.nav-cta{background:var(--ouro);color:var(--preto);padding:10px 22px;border-radius:8px;
-  font-weight:700;font-size:14px;transition:.2s}
-.nav-cta:hover{background:var(--ouro-lt);transform:translateY(-1px)}
-@media(max-width:760px){.nav-links{display:none}}
+nav{position:sticky;top:0;z-index:50;background:rgba(7,7,7,.85);backdrop-filter:blur(14px);border-bottom:1px solid #1a1a22}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:76px;gap:28px}
+.logo-link{display:flex;align-items:center;gap:12px}
+.logo-link img{height:54px;width:auto;filter:drop-shadow(0 0 12px rgba(255,210,63,.35))}
+.nav-links{display:flex;gap:32px}
+.nav-links a{font-size:14px;font-weight:600;color:var(--prata);letter-spacing:.3px;transition:color .2s}
+.nav-links a:hover{color:var(--ouro)}
+.nav-cta{background:var(--gold-grad);color:#1a0f00;padding:12px 24px;border-radius:30px;font-weight:800;font-size:13.5px;letter-spacing:.5px;text-transform:uppercase;transition:transform .2s,box-shadow .2s}
+.nav-cta:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(255,180,55,.45)}
+@media(max-width:880px){.nav-links{display:none}}
 
 /* HERO */
-.hero{position:relative;padding:90px 0 100px;text-align:center;
-  background:radial-gradient(ellipse at 50% -10%,rgba(107,63,160,.35),transparent 60%)}
-.tag{display:inline-block;border:1px solid var(--roxo-lt);color:var(--roxo-lt);
-  font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;
-  padding:6px 16px;border-radius:30px;margin-bottom:26px}
-.hero h1{font-size:clamp(48px,9vw,92px);max-width:900px;margin:0 auto 22px}
-.hero p.sub{font-size:clamp(16px,2.4vw,21px);color:var(--prata);max-width:620px;margin:0 auto 40px}
-.cta-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
-.btn{display:inline-flex;align-items:center;gap:10px;padding:16px 32px;border-radius:10px;
-  font-weight:700;font-size:16px;transition:.2s;cursor:pointer;border:2px solid transparent}
-.btn-gold{background:linear-gradient(135deg,var(--ouro),var(--ouro-lt));color:var(--preto)}
-.btn-gold:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(201,148,58,.35)}
-.btn-purple{background:transparent;border-color:var(--roxo-lt);color:var(--branco)}
-.btn-purple:hover{background:var(--roxo);border-color:var(--roxo);transform:translateY(-2px)}
-.hero-note{margin-top:22px;font-size:13px;color:#6a6a6a}
+.hero{position:relative;padding:80px 0 100px;background:var(--night-grad);overflow:hidden;min-height:88vh;display:flex;align-items:center}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 70% 50%,rgba(169,48,240,.35),transparent 45%);pointer-events:none}
+.hero::after{content:"";position:absolute;top:30%;right:5%;width:600px;height:600px;background:radial-gradient(circle,rgba(193,62,255,.6),transparent 60%);filter:blur(80px);z-index:0;pointer-events:none;animation:pulse 6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:.9;transform:scale(1.15)}}
+.hero-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center;position:relative;z-index:2}
+.hero-text{position:relative}
+.tag{display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--roxo);color:var(--roxo-elec);font-size:11.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:8px 18px;border-radius:30px;margin-bottom:32px;background:rgba(193,62,255,.08)}
+.tag::before{content:"";width:8px;height:8px;background:var(--roxo-elec);border-radius:50%;box-shadow:0 0 12px var(--roxo-elec);animation:blink 1.5s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+.hero h1{font-size:clamp(54px,8.5vw,108px);margin-bottom:24px;letter-spacing:0;line-height:.95}
+.hero h1 .accent{background:var(--purple-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.sub{font-size:clamp(16px,1.7vw,20px);color:var(--prata);max-width:560px;margin-bottom:42px;line-height:1.55}
+.cta-row{display:flex;gap:14px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:18px 32px;border-radius:14px;font-weight:800;font-size:14.5px;letter-spacing:.5px;text-transform:uppercase;transition:all .25s;cursor:pointer;border:2px solid transparent}
+.btn-gold{background:var(--gold-grad);color:#1a0f00;box-shadow:0 8px 24px rgba(255,180,55,.35)}
+.btn-gold:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(255,180,55,.55)}
+.btn-purple{background:var(--purple-grad);color:#fff;box-shadow:0 8px 24px rgba(169,48,240,.4)}
+.btn-purple:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(169,48,240,.6)}
+.btn-ghost{background:transparent;border-color:rgba(255,255,255,.25);color:#fff}
+.btn-ghost:hover{border-color:var(--ouro);color:var(--ouro);background:rgba(255,210,63,.08)}
 
-/* SECTION base */
-section{padding:84px 0}
-.sec-head{text-align:center;max-width:680px;margin:0 auto 54px}
-.sec-head .tag{margin-bottom:18px}
-.sec-head h2{font-size:clamp(34px,5vw,52px);margin-bottom:14px}
-.sec-head p{color:var(--prata);font-size:16px}
+.hero-car{position:relative;display:flex;justify-content:center;align-items:center}
+.hero-car-glow{position:absolute;width:120%;height:120%;background:radial-gradient(circle,rgba(193,62,255,.55),transparent 65%);filter:blur(40px);z-index:0}
+.hero-car img{position:relative;z-index:2;width:100%;max-width:620px;filter:drop-shadow(0 30px 60px rgba(0,0,0,.6)) drop-shadow(0 0 60px rgba(193,62,255,.45));animation:float 5s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
 
-/* DOIS CAMINHOS */
-.paths{display:grid;grid-template-columns:1fr 1fr;gap:24px}
-@media(max-width:760px){.paths{grid-template-columns:1fr}}
-.path{background:var(--card);border:1px solid #262626;border-radius:18px;padding:42px 34px;
-  position:relative;overflow:hidden;transition:.25s}
-.path:hover{transform:translateY(-4px);border-color:#333}
-.path::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px}
-.path.pass::before{background:linear-gradient(var(--ouro),var(--ouro-lt))}
-.path.moto::before{background:linear-gradient(var(--roxo),var(--roxo-lt))}
-.path .ico{font-size:34px;margin-bottom:18px}
-.path h3{font-size:30px;margin-bottom:6px}
-.path .lead{color:var(--prata);font-size:15px;margin-bottom:22px}
-.path ul{list-style:none;margin-bottom:28px}
-.path li{padding:8px 0 8px 28px;position:relative;font-size:15px;color:#cfcfcf}
-.path li::before{content:"✓";position:absolute;left:0;font-weight:700}
-.path.pass li::before{color:var(--ouro-lt)}
-.path.moto li::before{color:var(--roxo-lt)}
+@media(max-width:880px){
+  .hero{padding:60px 0 80px;min-height:auto}
+  .hero-grid{grid-template-columns:1fr;gap:30px;text-align:center}
+  .hero-text{order:2}
+  .hero-car{order:1}
+  .hero-car img{max-width:420px}
+  .cta-row{justify-content:center}
+  .hero::after{width:400px;height:400px;right:-100px;top:10%}
+}
+
+/* GENERIC SECTION */
+section{padding:100px 0;position:relative}
+.sec-head{text-align:center;max-width:760px;margin:0 auto 64px}
+.sec-head .tag{margin-bottom:22px}
+.sec-head h2{font-size:clamp(40px,5.5vw,68px);margin-bottom:18px}
+.sec-head p{color:var(--prata);font-size:17px;line-height:1.6}
+
+/* PATHS — 3 CAMINHOS */
+.paths-section{background:linear-gradient(180deg,#070707 0%,#0c0814 100%)}
+.paths{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+@media(max-width:880px){.paths{grid-template-columns:1fr}}
+.path{background:var(--card);border:1px solid #232336;border-radius:24px;padding:44px 34px;position:relative;overflow:hidden;transition:all .3s}
+.path::before{content:"";position:absolute;top:0;left:0;right:0;height:5px}
+.path.pass::before{background:var(--gold-grad)}
+.path.moto::before{background:var(--purple-grad)}
+.path.fran::before{background:linear-gradient(90deg,var(--ouro),var(--roxo-elec))}
+.path:hover{transform:translateY(-8px);border-color:#3a3a52;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.path.pass:hover{box-shadow:0 20px 60px rgba(255,180,55,.25)}
+.path.moto:hover{box-shadow:0 20px 60px rgba(169,48,240,.3)}
+.path.fran:hover{box-shadow:0 20px 60px rgba(255,180,55,.2),0 20px 60px rgba(169,48,240,.2)}
+.path .ico{width:64px;height:64px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:32px;margin-bottom:24px}
+.path.pass .ico{background:linear-gradient(135deg,rgba(255,210,63,.22),rgba(255,150,0,.1));border:1px solid rgba(255,210,63,.35)}
+.path.moto .ico{background:linear-gradient(135deg,rgba(193,62,255,.22),rgba(107,63,160,.1));border:1px solid rgba(193,62,255,.35)}
+.path.fran .ico{background:linear-gradient(135deg,rgba(255,210,63,.15),rgba(193,62,255,.15));border:1px solid rgba(255,210,63,.3)}
+.path h3{font-size:34px;margin-bottom:10px}
+.path p.lead{color:var(--prata);font-size:15px;margin-bottom:24px;line-height:1.55}
+.path ul{list-style:none;margin-bottom:32px}
+.path li{padding:9px 0 9px 28px;position:relative;font-size:14.5px;color:#cfcfdc}
+.path li::before{content:"›";position:absolute;left:0;font-weight:900;font-size:18px}
+.path.pass li::before{color:var(--ouro)}
+.path.moto li::before{color:var(--roxo-elec)}
+.path.fran li::before{background:linear-gradient(90deg,var(--ouro),var(--roxo-elec));-webkit-background-clip:text;background-clip:text;color:transparent}
 .path .btn{width:100%;justify-content:center}
 
-/* POR QUE */
+/* PORQUE — features */
+.feats-section{background:var(--preto2)}
 .feats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
-@media(max-width:880px){.feats{grid-template-columns:1fr 1fr}}
-@media(max-width:480px){.feats{grid-template-columns:1fr}}
-.feat{background:var(--preto2);border:1px solid #242424;border-radius:14px;padding:30px 24px;text-align:center}
-.feat .ico{width:54px;height:54px;margin:0 auto 16px;border-radius:12px;
-  display:flex;align-items:center;justify-content:center;font-size:24px;
-  background:rgba(107,63,160,.18);border:1px solid rgba(139,92,200,.4)}
-.feat h3{font-size:23px;margin-bottom:8px;letter-spacing:.5px}
-.feat p{font-size:14px;color:var(--prata)}
-
-/* VS CLANDESTINO */
-.vs{background:var(--preto2)}
-.vs-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border-radius:18px;overflow:hidden;
-  border:1px solid #262626}
-@media(max-width:680px){.vs-grid{grid-template-columns:1fr}}
-.vs-col{padding:40px 34px}
-.vs-bib{background:linear-gradient(160deg,rgba(107,63,160,.25),var(--card))}
-.vs-cla{background:#161616}
-.vs-col h3{font-size:28px;margin-bottom:20px}
-.vs-col .label{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
-  display:inline-block;padding:5px 14px;border-radius:20px;margin-bottom:16px}
-.vs-bib .label{background:var(--ouro);color:var(--preto)}
-.vs-cla .label{background:#3a2020;color:#e08e8e}
-.vs-col li{list-style:none;padding:9px 0 9px 28px;position:relative;font-size:15px}
-.vs-bib li::before{content:"✓";position:absolute;left:0;color:var(--ouro-lt);font-weight:700}
-.vs-cla li{color:var(--prata)}
-.vs-cla li::before{content:"✕";position:absolute;left:0;color:#c0654f;font-weight:700}
+@media(max-width:1024px){.feats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.feats{grid-template-columns:1fr}}
+.feat{background:rgba(255,255,255,.025);border:1px solid #1f1f2e;border-radius:18px;padding:32px 24px;text-align:center;transition:all .3s}
+.feat:hover{transform:translateY(-6px);border-color:rgba(193,62,255,.4);background:rgba(193,62,255,.06)}
+.feat .ico{width:60px;height:60px;margin:0 auto 18px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:28px;background:linear-gradient(135deg,rgba(255,210,63,.15),rgba(193,62,255,.15));border:1px solid rgba(255,210,63,.25)}
+.feat h3{font-size:24px;margin-bottom:10px;letter-spacing:.5px}
+.feat p{font-size:14.5px;color:var(--prata);line-height:1.55}
 
 /* BIB DELAS */
-.delas{background:linear-gradient(135deg,#1d1230,var(--preto));text-align:center}
-.delas .wrap{max-width:760px}
-.delas .tag{border-color:#d56fa8;color:#e08ec0}
-.delas h2{font-size:clamp(34px,5vw,54px);margin-bottom:16px}
-.delas p{color:var(--prata);font-size:16px;margin-bottom:30px}
+.delas{background:linear-gradient(135deg,#1d0d28 0%,#0a0612 100%);position:relative;overflow:hidden}
+.delas::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 70% 30%,rgba(255,45,142,.18),transparent 50%);pointer-events:none}
+.delas .wrap{position:relative;z-index:2;max-width:860px;text-align:center}
+.delas .tag{border-color:var(--rosa);color:var(--rosa);background:rgba(255,45,142,.1)}
+.delas .tag::before{background:var(--rosa);box-shadow:0 0 12px var(--rosa)}
+.delas h2{font-size:clamp(40px,6vw,76px);margin-bottom:20px}
+.delas h2 .accent{background:linear-gradient(135deg,#FF2D8E,#C13EFF);-webkit-background-clip:text;background-clip:text;color:transparent}
+.delas p{color:var(--prata);font-size:17px;margin-bottom:36px;line-height:1.65}
+.btn-rose{background:linear-gradient(135deg,#FF2D8E,#C13EFF);color:#fff;box-shadow:0 8px 24px rgba(255,45,142,.35)}
+.btn-rose:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(255,45,142,.55)}
 
-/* STATS */
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;text-align:center}
-@media(max-width:600px){.stats{grid-template-columns:1fr}}
-.stat{background:var(--card);border:1px solid #262626;border-radius:14px;padding:34px 18px}
-.stat .num{font-family:'Bebas Neue',sans-serif;font-size:62px;color:var(--ouro-lt);line-height:1}
-.stat .lbl{font-size:14px;color:var(--prata);margin-top:6px}
+/* VS CLANDESTINO */
+.vs-section{background:#070707}
+.vs-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border-radius:24px;overflow:hidden;border:1px solid #232336}
+@media(max-width:760px){.vs-grid{grid-template-columns:1fr}}
+.vs-col{padding:48px 38px}
+.vs-bib{background:linear-gradient(160deg,rgba(169,48,240,.18),rgba(193,62,255,.05) 50%,var(--card))}
+.vs-cla{background:#0e0e16}
+.vs-col .label{font-size:11.5px;font-weight:800;letter-spacing:2px;text-transform:uppercase;display:inline-block;padding:6px 16px;border-radius:30px;margin-bottom:18px}
+.vs-bib .label{background:var(--gold-grad);color:#1a0f00}
+.vs-cla .label{background:#3a1f1f;color:#e0a0a0}
+.vs-col h3{font-size:34px;margin-bottom:24px}
+.vs-bib h3 .accent{color:var(--ouro)}
+.vs-col li{list-style:none;padding:11px 0 11px 30px;position:relative;font-size:15.5px}
+.vs-bib li::before{content:"✓";position:absolute;left:0;color:var(--ouro);font-weight:900;font-size:18px}
+.vs-cla li{color:#a0a0b0}
+.vs-cla li::before{content:"✕";position:absolute;left:0;color:#c0654f;font-weight:900;font-size:18px}
+
+/* LIDERANÇA */
+.lider{background:linear-gradient(180deg,#070707 0%,#0c0814 100%);text-align:center}
+.lider .wrap{max-width:760px}
+.lider-photo{width:200px;height:200px;border-radius:50%;margin:0 auto 28px;overflow:hidden;border:3px solid var(--ouro);box-shadow:0 0 0 6px rgba(255,210,63,.15),0 20px 40px rgba(193,62,255,.3)}
+.lider-photo img{width:100%;height:100%;object-fit:cover}
+.lider h3{font-size:38px;margin-bottom:6px}
+.lider .role{color:var(--ouro);font-size:13px;letter-spacing:2px;text-transform:uppercase;font-weight:700;margin-bottom:24px}
+.lider .quote{font-size:21px;line-height:1.55;color:var(--branco-warm);font-style:italic;max-width:640px;margin:0 auto;position:relative}
+.lider .quote::before{content:""";position:absolute;top:-30px;left:-10px;font-size:80px;color:var(--roxo-elec);opacity:.5;font-family:Georgia,serif;line-height:1}
+
+/* CIDADES */
+.cities-section{background:var(--preto2)}
+.cities{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:36px}
+.city{padding:14px 28px;border:1.5px solid #2a2a40;border-radius:30px;font-weight:700;font-size:14px;letter-spacing:.5px;background:rgba(255,255,255,.02);transition:all .25s}
+.city.active{border-color:var(--ouro);color:var(--ouro);background:rgba(255,210,63,.08);box-shadow:0 0 20px rgba(255,210,63,.15)}
+.city:hover{transform:translateY(-3px);border-color:var(--roxo-elec)}
+.cities-cta{text-align:center;margin-top:20px;color:var(--prata);font-size:15px}
+.cities-cta a{color:var(--ouro);font-weight:700;border-bottom:1px solid var(--ouro)}
 
 /* CTA FINAL */
-.final{text-align:center;background:radial-gradient(ellipse at 50% 120%,rgba(201,148,58,.22),transparent 60%)}
-.final h2{font-size:clamp(40px,7vw,72px);margin-bottom:18px}
-.final p{color:var(--prata);font-size:17px;margin-bottom:34px}
+.final{text-align:center;background:radial-gradient(ellipse at 50% 100%,rgba(193,62,255,.3),transparent 70%),radial-gradient(ellipse at 50% 0%,rgba(255,210,63,.15),transparent 60%),#070707;padding:120px 0}
+.final h2{font-size:clamp(48px,8vw,96px);margin-bottom:18px;line-height:1}
+.final p{color:var(--prata);font-size:18px;margin-bottom:40px}
+.stores{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.store-btn{display:inline-flex;align-items:center;gap:14px;background:#0f0f18;border:1.5px solid #2a2a40;color:#fff;padding:14px 28px;border-radius:14px;transition:all .25s;min-width:220px}
+.store-btn:hover{border-color:var(--ouro);transform:translateY(-3px);box-shadow:0 12px 28px rgba(255,180,55,.2)}
+.store-btn .ico{font-size:28px}
+.store-btn .txt{text-align:left}
+.store-btn .txt small{display:block;font-size:11px;color:var(--prata);letter-spacing:.5px}
+.store-btn .txt strong{display:block;font-size:16px;font-weight:700}
 
 /* FOOTER */
-footer{background:#070707;border-top:1px solid #1e1e1e;padding:56px 0 30px}
-.foot-grid{display:flex;justify-content:space-between;flex-wrap:wrap;gap:34px;margin-bottom:40px}
-.foot-col h4{font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ouro-lt);
-  margin-bottom:14px;font-family:'Inter',sans-serif;font-weight:700}
-.foot-col a,.foot-col p{display:block;color:var(--prata);font-size:14px;margin-bottom:8px;transition:.2s}
-.foot-col a:hover{color:var(--branco)}
-.foot-bottom{text-align:center;border-top:1px solid #1e1e1e;padding-top:24px;
-  font-size:12px;color:#5a5a5a;letter-spacing:.5px}
+footer{background:#040406;border-top:1px solid #1a1a22;padding:64px 0 32px}
+.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:42px;margin-bottom:48px}
+@media(max-width:760px){.foot-grid{grid-template-columns:1fr 1fr;gap:32px}}
+@media(max-width:480px){.foot-grid{grid-template-columns:1fr}}
+.foot-logo img{height:64px;width:auto;margin-bottom:14px;filter:drop-shadow(0 0 14px rgba(255,210,63,.3))}
+.foot-grid p{color:var(--prata);font-size:14px;line-height:1.55}
+.foot-col h4{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--ouro);margin-bottom:18px;font-family:'Inter',sans-serif;font-weight:800}
+.foot-col a{display:block;color:var(--prata);font-size:14px;margin-bottom:10px;transition:color .2s}
+.foot-col a:hover{color:var(--ouro)}
+.foot-bottom{text-align:center;border-top:1px solid #1a1a22;padding-top:24px;font-size:12px;color:#5a5a6a;letter-spacing:1px}
 
-/* WHATSAPP FLUTUANTE */
-.whats{position:fixed;right:20px;bottom:20px;z-index:60;background:#25D366;color:#fff;
-  width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  font-size:28px;box-shadow:0 8px 24px rgba(0,0,0,.4);transition:.2s}
-.whats:hover{transform:scale(1.08)}
+/* WHATSAPP FLOAT */
+.whats{position:fixed;right:22px;bottom:22px;z-index:60;background:#25D366;color:#fff;width:62px;height:62px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(37,211,102,.45),0 0 0 0 rgba(37,211,102,.5);transition:transform .2s;animation:wpulse 2.4s ease-out infinite}
+.whats:hover{transform:scale(1.1)}
+@keyframes wpulse{0%{box-shadow:0 10px 30px rgba(37,211,102,.45),0 0 0 0 rgba(37,211,102,.5)}100%{box-shadow:0 10px 30px rgba(37,211,102,.45),0 0 0 22px rgba(37,211,102,0)}}
+
+/* SCROLL REVEAL */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+/* particle dots */
+.particles{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.particles span{position:absolute;width:4px;height:4px;border-radius:50%;background:var(--ouro);opacity:.5;animation:floatUp 14s linear infinite}
+.particles span:nth-child(odd){background:var(--roxo-elec)}
+@keyframes floatUp{0%{transform:translateY(110vh) scale(.3);opacity:0}10%{opacity:.7}90%{opacity:.5}100%{transform:translateY(-10vh) scale(1);opacity:0}}
 </style>
 </head>
 <body>
 
-<div class="topbar"></div>
+<!-- CAMPAIGN BANNER -->
+<div class="campaign">
+  <a href="https://www.bibcarbrasil.com.br/chamou-a-bibcar-chamou-a-sorte" target="_blank" rel="noopener">
+    🍀 <b>CHAMOU A BIBCAR, CHAMOU A SORTE</b> — 4 MOTOS ZERO KM · 3 IPHONES · R$ 12 MIL NO PIX · <u>SAIBA MAIS →</u>
+  </a>
+</div>
 
 <!-- NAV -->
 <nav>
   <div class="wrap nav-in">
-    <a href="#" class="logo">BIB<span>CAR</span></a>
+    <a href="#" class="logo-link" aria-label="BibCar">
+      <img src="./logo.png" alt="BibCar Mobilidade Urbana">
+    </a>
     <div class="nav-links">
-      <a href="#caminhos">Passageiro</a>
-      <a href="#caminhos">Motorista</a>
-      <a href="#porque">Segurança</a>
+      <a href="#paths">Passageiro</a>
+      <a href="#paths">Motorista</a>
+      <a href="#paths">Franqueado</a>
       <a href="#delas">Bib Delas</a>
+      <a href="#vs">Segurança</a>
     </div>
-    <!-- [SUBSTITUIR] href pelo link de download do app -->
-    <a href="#caminhos" class="nav-cta">Baixar o app</a>
+    <a href="https://apps.apple.com/br/app/bib-car-brasil/id6444271115" target="_blank" rel="noopener" class="nav-cta">Baixar o app</a>
   </div>
 </nav>
 
 <!-- HERO -->
 <header class="hero">
-  <div class="wrap">
-    <span class="tag">Mobilidade urbana · Fernandópolis</span>
-    <h1>Fernandópolis se move com a <span class="gold">BibCar</span></h1>
-    <p class="sub">App de corridas com motoristas verificados, gente da sua cidade. Mais segurança para quem anda. Mais ganho para quem dirige.</p>
-    <div class="cta-row">
-      <!-- [SUBSTITUIR] href pelo link da loja de apps -->
-      <a href="#caminhos" class="btn btn-gold">Pedir uma corrida</a>
-      <a href="#caminhos" class="btn btn-purple">Quero ser motorista</a>
+  <div class="particles" aria-hidden="true">
+    <span style="left:8%;animation-delay:0s"></span>
+    <span style="left:18%;animation-delay:3s"></span>
+    <span style="left:28%;animation-delay:6s"></span>
+    <span style="left:42%;animation-delay:1s"></span>
+    <span style="left:58%;animation-delay:8s"></span>
+    <span style="left:72%;animation-delay:4s"></span>
+    <span style="left:85%;animation-delay:10s"></span>
+    <span style="left:92%;animation-delay:7s"></span>
+  </div>
+  <div class="wrap hero-grid">
+    <div class="hero-text">
+      <span class="tag">Mobilidade Urbana · Brasil</span>
+      <h1>Vai de <span class="accent">BibCar</span>.</h1>
+      <p class="sub">Motoristas verificados, da sua cidade, app rápido. Mais segurança pra quem anda. Mais ganho pra quem dirige. Mais oportunidade pra quem empreende.</p>
+      <div class="cta-row">
+        <a href="#paths" class="btn btn-gold">Pedir uma corrida</a>
+        <a href="#paths" class="btn btn-purple">Sou motorista</a>
+        <a href="https://www.bibcarbrasil.com.br/seja-um-franqueado" target="_blank" rel="noopener" class="btn btn-ghost">Quero ser franqueado</a>
+      </div>
     </div>
-    <p class="hero-note">Disponível para Android e iPhone</p>
+    <div class="hero-car">
+      <div class="hero-car-glow"></div>
+      <img src="./mercedes.jpg" alt="Mercedes BibCar roxa" loading="eager">
+    </div>
   </div>
 </header>
 
-<!-- DOIS CAMINHOS -->
-<section id="caminhos">
+<!-- 3 CAMINHOS -->
+<section id="paths" class="paths-section">
   <div class="wrap">
-    <div class="sec-head">
-      <span class="tag">Escolha seu caminho</span>
-      <h2>Dois jeitos de andar com a BibCar</h2>
-      <p>Seja para se locomover ou para gerar renda — a BibCar é da sua cidade.</p>
+    <div class="sec-head reveal">
+      <span class="tag">Escolha o seu caminho</span>
+      <h2>Três jeitos de andar <span class="gold">com a BibCar</span></h2>
+      <p>Seja pra se locomover, pra gerar renda ou pra montar seu negócio — a BibCar é da sua cidade.</p>
     </div>
     <div class="paths">
 
-      <div class="path pass">
+      <div class="path pass reveal">
         <div class="ico">🚗</div>
         <h3>Sou passageiro</h3>
-        <p class="lead">Peça sua corrida em segundos, com quem você pode confiar.</p>
+        <p class="lead">Peça sua corrida em segundos, com motorista verificado, da sua cidade.</p>
         <ul>
           <li>Motoristas verificados, sem clandestino</li>
-          <li>Acompanhe a corrida em tempo real</li>
+          <li>Corrida rastreada em tempo real</li>
           <li>Tarifa transparente, sem surpresa</li>
-          <li>Suporte local, gente de Fernandópolis</li>
+          <li>Suporte local, gente da cidade</li>
         </ul>
-        <!-- [SUBSTITUIR] href pelo link de download do app -->
-        <a href="#" class="btn btn-gold">Baixar o app</a>
+        <a href="https://apps.apple.com/br/app/bib-car-brasil/id6444271115" target="_blank" rel="noopener" class="btn btn-gold">Baixar o app</a>
       </div>
 
-      <div class="path moto">
+      <div class="path moto reveal">
         <div class="ico">🤝</div>
         <h3>Sou motorista</h3>
-        <p class="lead">Rode na BibCar e ganhe mais perto de casa.</p>
+        <p class="lead">Rode na BibCar e ganhe mais perto de casa, com parceria de verdade.</p>
         <ul>
           <li>Cadastro simples e rápido</li>
-          <li>Mais ganho por corrida</li>
-          <li>Parceria de verdade, falando de igual pra igual</li>
-          <li>Apoio de uma equipe que conhece a cidade</li>
+          <li>Ganho melhor por corrida</li>
+          <li>Suporte falando de igual pra igual</li>
+          <li>Equipe que conhece o mercado local</li>
         </ul>
-        <!-- [SUBSTITUIR] href pelo link de cadastro / WhatsApp -->
-        <a href="#" class="btn btn-purple">Quero me cadastrar</a>
+        <a href="https://play.google.com/store/apps/details?id=br.com.bibcarbrasil.taxi.drivermachine" target="_blank" rel="noopener" class="btn btn-purple">Baixar Driver Machine</a>
+      </div>
+
+      <div class="path fran reveal">
+        <div class="ico">💎</div>
+        <h3>Sou franqueado</h3>
+        <p class="lead">Leve a BibCar pra sua cidade. Modelo provado, suporte completo, marca forte.</p>
+        <ul>
+          <li>Modelo de negócio validado</li>
+          <li>Suporte de marketing e operação</li>
+          <li>Tecnologia Driver Machine inclusa</li>
+          <li>Cresça com uma marca em expansão</li>
+        </ul>
+        <a href="https://www.bibcarbrasil.com.br/seja-um-franqueado" target="_blank" rel="noopener" class="btn btn-gold" style="background:linear-gradient(135deg,#FFD23F,#C13EFF);color:#fff">Quero ser franqueado</a>
       </div>
 
     </div>
   </div>
 </section>
 
-<!-- POR QUE -->
-<section id="porque" class="vs">
+<!-- POR QUE BIBCAR -->
+<section class="feats-section">
   <div class="wrap">
-    <div class="sec-head">
+    <div class="sec-head reveal">
       <span class="tag">Por que BibCar</span>
-      <h2>Segurança não é detalhe. É o ponto de partida.</h2>
-      <p>Tudo na BibCar foi pensado para você chegar bem — e voltar também.</p>
+      <h2>Segurança não é detalhe. <span class="purple">É o ponto de partida.</span></h2>
+      <p>Tudo na BibCar foi pensado pra você chegar bem — e voltar também.</p>
     </div>
     <div class="feats">
-      <div class="feat">
+      <div class="feat reveal">
         <div class="ico">🛡️</div>
         <h3>Motorista verificado</h3>
         <p>Todo motorista passa por cadastro conferido. Nada de clandestino.</p>
       </div>
-      <div class="feat">
+      <div class="feat reveal">
         <div class="ico">💜</div>
         <h3>Bib Delas</h3>
         <p>Mais cuidado e atenção para as passageiras da BibCar.</p>
       </div>
-      <div class="feat">
+      <div class="feat reveal">
         <div class="ico">📍</div>
         <h3>Da sua cidade</h3>
-        <p>Equipe e motoristas que conhecem cada rua de Fernandópolis.</p>
+        <p>Equipe e motoristas que conhecem as ruas onde você anda.</p>
       </div>
-      <div class="feat">
-        <div class="ico">💰</div>
-        <h3>Preço justo</h3>
-        <p>Tarifa transparente para o passageiro e ganho melhor para o motorista.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- VS CLANDESTINO -->
-<section>
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="tag">A diferença que importa</span>
-      <h2>BibCar ou transporte clandestino?</h2>
-      <p>Parece a mesma corrida. Não é. A diferença aparece quando algo dá errado.</p>
-    </div>
-    <div class="vs-grid">
-      <div class="vs-col vs-bib">
-        <span class="label">Com a BibCar</span>
-        <h3 class="gold">Você sabe com quem está</h3>
-        <ul>
-          <li>Motorista com cadastro verificado</li>
-          <li>Corrida registrada e acompanhada no app</li>
-          <li>Suporte para resolver qualquer problema</li>
-          <li>Tarifa combinada antes de embarcar</li>
-        </ul>
-      </div>
-      <div class="vs-col vs-cla">
-        <span class="label">No clandestino</span>
-        <h3>Você embarca no escuro</h3>
-        <ul>
-          <li>Sem cadastro, sem verificação</li>
-          <li>Sem registro da corrida</li>
-          <li>Sem suporte se algo acontecer</li>
-          <li>Preço incerto, combinado na hora</li>
-        </ul>
+      <div class="feat reveal">
+        <div class="ico">⚡</div>
+        <h3>Tecnologia Driver Machine</h3>
+        <p>Plataforma robusta por trás da operação. Rápida, confiável, escalável.</p>
       </div>
     </div>
   </div>
@@ -309,38 +380,97 @@ footer{background:#070707;border-top:1px solid #1e1e1e;padding:56px 0 30px}
 <section id="delas" class="delas">
   <div class="wrap">
     <span class="tag">Bib Delas</span>
-    <h2>Feito com <span class="purple">cuidado</span> para elas</h2>
+    <h2>Feito com <span class="accent">cuidado</span> para elas.</h2>
     <p>O Bib Delas é o jeito da BibCar olhar com mais atenção para a segurança das passageiras. Porque toda mulher merece chegar tranquila — de dia ou de noite.</p>
-    <!-- [SUBSTITUIR] href pelo link do app -->
-    <a href="#" class="btn btn-purple">Conhecer o Bib Delas</a>
+    <a href="https://apps.apple.com/br/app/bib-car-brasil/id6444271115" target="_blank" rel="noopener" class="btn btn-rose">Conhecer o Bib Delas</a>
   </div>
 </section>
 
-<!-- STATS -->
-<section>
+<!-- VS CLANDESTINO -->
+<section id="vs" class="vs-section">
   <div class="wrap">
-    <div class="sec-head">
-      <span class="tag">A BibCar em números</span>
-      <h2>Fernandópolis já anda com a gente</h2>
+    <div class="sec-head reveal">
+      <span class="tag">A diferença que importa</span>
+      <h2>BibCar ou clandestino? <span class="gold">A diferença aparece quando algo dá errado.</span></h2>
+      <p>Parece a mesma corrida. Não é. Olha aqui.</p>
     </div>
-    <!-- [SUBSTITUIR] números abaixo pelos dados reais da BibCar -->
-    <div class="stats">
-      <div class="stat"><div class="num">+000</div><div class="lbl">motoristas parceiros</div></div>
-      <div class="stat"><div class="num">+0 mil</div><div class="lbl">corridas realizadas</div></div>
-      <div class="stat"><div class="num">100%</div><div class="lbl">motoristas verificados</div></div>
+    <div class="vs-grid reveal">
+      <div class="vs-col vs-bib">
+        <span class="label">Com a BibCar</span>
+        <h3 class="bebas">Você sabe <span class="accent">com quem está</span></h3>
+        <ul>
+          <li>Motorista com cadastro verificado</li>
+          <li>Corrida registrada e rastreada no app</li>
+          <li>Suporte pra resolver qualquer problema</li>
+          <li>Tarifa combinada antes de embarcar</li>
+        </ul>
+      </div>
+      <div class="vs-col vs-cla">
+        <span class="label">No clandestino</span>
+        <h3 class="bebas">Você embarca no escuro</h3>
+        <ul>
+          <li>Sem cadastro, sem verificação</li>
+          <li>Sem registro da corrida</li>
+          <li>Sem suporte se acontecer algo</li>
+          <li>Preço incerto, combinado na hora</li>
+        </ul>
+      </div>
     </div>
+  </div>
+</section>
+
+<!-- LIDERANÇA -->
+<section class="lider">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="tag" style="border-color:var(--ouro);color:var(--ouro);background:rgba(255,210,63,.08)">Liderança</span>
+      <div class="lider-photo">
+        <img src="./thales.jpg" alt="Thales Alexandre — C.O. BibCar Brasil">
+      </div>
+      <h3>Thales Alexandre</h3>
+      <div class="role">C.O. BibCar Brasil</div>
+      <p class="quote">A BibCar nasceu pra ser diferente. Mais perto da cidade, mais perto do motorista, mais perto de quem precisa chegar bem. Mobilidade de verdade, feita por gente de verdade.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CIDADES -->
+<section class="cities-section">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="tag">Onde a BibCar opera</span>
+      <h2>A gente <span class="gold">tá expandindo</span></h2>
+      <p>Cidades que já andam de BibCar. Sua cidade ainda não tá aqui? Vire franqueado.</p>
+    </div>
+    <div class="cities reveal">
+      <div class="city active">Fernandópolis · SP</div>
+      <div class="city active">Votuporanga · SP</div>
+      <div class="city">Muriaé · MG</div>
+      <div class="city">Manhuaçu · MG</div>
+      <div class="city">Viçosa · MG</div>
+      <div class="city">Sete Lagoas · MG</div>
+      <div class="city">+ em expansão</div>
+    </div>
+    <p class="cities-cta">Sua cidade não tá no mapa? <a href="https://www.bibcarbrasil.com.br/seja-um-franqueado" target="_blank" rel="noopener">Vire franqueado e leve a BibCar até ela →</a></p>
   </div>
 </section>
 
 <!-- CTA FINAL -->
 <section class="final">
   <div class="wrap">
-    <h2>Bora andar de <span class="gold">BibCar</span>?</h2>
-    <p>Baixe o app e peça sua primeira corrida. Sua cidade, do seu jeito.</p>
-    <div class="cta-row">
-      <!-- [SUBSTITUIR] href pelos links das lojas -->
-      <a href="#" class="btn btn-gold">Baixar para Android</a>
-      <a href="#" class="btn btn-purple">Baixar para iPhone</a>
+    <div class="reveal">
+      <h2>Vai de <span class="gold">BibCar</span>.</h2>
+      <p>Baixe o app e peça sua primeira corrida agora.</p>
+      <div class="stores">
+        <a href="https://apps.apple.com/br/app/bib-car-brasil/id6444271115" target="_blank" rel="noopener" class="store-btn">
+          <span class="ico">🍎</span>
+          <span class="txt"><small>Baixe na</small><strong>App Store</strong></span>
+        </a>
+        <a href="https://play.google.com/store/search?q=bibcar+brasil&c=apps" target="_blank" rel="noopener" class="store-btn">
+          <span class="ico">▶</span>
+          <span class="txt"><small>Baixe no</small><strong>Google Play</strong></span>
+        </a>
+      </div>
     </div>
   </div>
 </section>
@@ -349,43 +479,53 @@ footer{background:#070707;border-top:1px solid #1e1e1e;padding:56px 0 30px}
 <footer>
   <div class="wrap">
     <div class="foot-grid">
-      <div class="foot-col">
-        <a href="#" class="logo">BIB<span>CAR</span></a>
-        <p style="margin-top:10px">Mobilidade urbana de Fernandópolis.</p>
+      <div class="foot-logo">
+        <img src="./logo.png" alt="BibCar">
+        <p>Mobilidade urbana com identidade.<br>Da sua cidade, com você.</p>
       </div>
       <div class="foot-col">
         <h4>Navegar</h4>
-        <a href="#caminhos">Passageiro</a>
-        <a href="#caminhos">Motorista</a>
-        <a href="#porque">Segurança</a>
+        <a href="#paths">Passageiro</a>
+        <a href="#paths">Motorista</a>
+        <a href="https://www.bibcarbrasil.com.br/seja-um-franqueado" target="_blank" rel="noopener">Franqueado</a>
         <a href="#delas">Bib Delas</a>
+        <a href="#vs">Segurança</a>
+      </div>
+      <div class="foot-col">
+        <h4>Apps</h4>
+        <a href="https://apps.apple.com/br/app/bib-car-brasil/id6444271115" target="_blank" rel="noopener">App Store (iOS)</a>
+        <a href="https://play.google.com/store/search?q=bibcar+brasil&c=apps" target="_blank" rel="noopener">Google Play (Android)</a>
+        <a href="https://play.google.com/store/apps/details?id=br.com.bibcarbrasil.taxi.drivermachine" target="_blank" rel="noopener">Driver Machine (Motorista)</a>
       </div>
       <div class="foot-col">
         <h4>Contato</h4>
-        <!-- [SUBSTITUIR] e-mail e WhatsApp oficiais -->
-        <a href="mailto:contato@bibcar.com.br">contato@bibcar.com.br</a>
-        <a href="https://wa.me/55SEUNUMERO">WhatsApp</a>
-      </div>
-      <div class="foot-col">
-        <h4>Redes</h4>
-        <!-- [SUBSTITUIR] @ e links reais das redes -->
-        <a href="https://instagram.com/bibcar_fernandopolis">Instagram</a>
-        <a href="#">Facebook</a>
-        <a href="#">TikTok</a>
+        <a href="https://wa.me/551151924005" target="_blank" rel="noopener">WhatsApp Suporte</a>
+        <a href="mailto:contato@bibcarbrasil.com.br">contato@bibcarbrasil.com.br</a>
+        <a href="https://instagram.com/bibcar_fernandopolis" target="_blank" rel="noopener">Instagram</a>
       </div>
     </div>
     <div class="foot-bottom">
-      BIBCAR · MOBILIDADE URBANA · FERNANDÓPOLIS · 2026 — Todos os direitos reservados
+      BIBCAR · MOBILIDADE URBANA · BRASIL · 2026 — Todos os direitos reservados
     </div>
   </div>
 </footer>
 
-<!-- WHATSAPP FLUTUANTE — [SUBSTITUIR] 55SEUNUMERO pelo número real -->
-<a href="https://wa.me/55SEUNUMERO" class="whats" aria-label="Falar no WhatsApp">
-  <svg width="30" height="30" viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg">
+<!-- WHATSAPP FLOAT -->
+<a href="https://wa.me/551151924005" target="_blank" rel="noopener" class="whats" aria-label="Falar no WhatsApp">
+  <svg width="32" height="32" viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg">
     <path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.516 5.26l-.999 3.648 3.972-1.207zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
   </svg>
 </a>
+
+<!-- SCROLL REVEAL -->
+<script>
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}
+    });
+  },{threshold:.12, rootMargin:'0px 0px -60px 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
 
 </body>
 </html>
