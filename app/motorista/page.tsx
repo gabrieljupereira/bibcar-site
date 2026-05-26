@@ -2,7 +2,6 @@
 
 import dynamic from 'next/dynamic';
 import ScrollReveal from '@/components/ScrollReveal';
-import { motion } from 'framer-motion';
 
 const FloatingOrbs = dynamic(() => import('@/components/FloatingOrbs'), { ssr: false });
 
@@ -160,13 +159,9 @@ export default function Motorista() {
                   style={{ background: 'linear-gradient(180deg,#FFD23F,#FF9500,rgba(255,210,63,0))' }}
                 />
                 {registerSteps.map((step, i) => (
-                  <motion.div
+                  <div
                     key={i}
                     className="flex gap-6 mb-10 relative"
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: i * 0.12 }}
-                    viewport={{ once: true }}
                   >
                     <div
                       className="w-12 h-12 rounded-full flex items-center justify-center font-black text-base flex-shrink-0 relative z-10"
@@ -183,7 +178,7 @@ export default function Motorista() {
                         </a>
                       )}
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </ScrollReveal>
@@ -201,14 +196,10 @@ export default function Motorista() {
 
               <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(255,210,63,0.2)' }}>
                 {documents.map((doc, i) => (
-                  <motion.div
+                  <div
                     key={doc}
                     className="flex items-center gap-4 px-6 py-4"
                     style={{ borderBottom: i < documents.length - 1 ? '1px solid rgba(255,255,255,0.06)' : 'none', background: i % 2 === 0 ? 'rgba(255,210,63,0.03)' : 'transparent' }}
-                    initial={{ opacity: 0, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.4, delay: i * 0.08 }}
-                    viewport={{ once: true }}
                   >
                     <div
                       className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-black"
@@ -217,7 +208,7 @@ export default function Motorista() {
                       ✓
                     </div>
                     <span className="text-sm" style={{ color: '#cfcfdc' }}>{doc}</span>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </ScrollReveal>

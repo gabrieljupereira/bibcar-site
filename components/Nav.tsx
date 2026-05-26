@@ -4,7 +4,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 const links = [
   { href: '/passageiro', label: 'Passageiro' },
@@ -83,39 +82,37 @@ export default function Nav() {
         </button>
       </div>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            className="md:hidden overflow-hidden"
-            style={{ background: 'rgba(15,15,18,0.98)', borderTop: '1px solid rgba(255,255,255,0.08)' }}
-          >
-            <div className="container py-6 flex flex-col gap-5">
-              {links.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setOpen(false)}
-                  className="text-lg font-semibold text-silver hover:text-gold transition-colors"
-                >
-                  {link.label}
-                </Link>
-              ))}
-              <a
-                href="https://apps.apple.com/br/app/bib-car-brasil/id6444271115"
-                target="_blank"
-                rel="noopener"
-                className="btn-gold text-center justify-center mt-2"
+      {open && (
+        <div
+          className="md:hidden overflow-hidden"
+          style={{
+            background: 'rgba(15,15,18,0.98)',
+            borderTop: '1px solid rgba(255,255,255,0.08)',
+            animation: 'navSlideDown 0.25s ease forwards',
+          }}
+        >
+          <div className="container py-6 flex flex-col gap-5">
+            {links.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setOpen(false)}
+                className="text-lg font-semibold text-silver hover:text-gold transition-colors"
               >
-                Baixar o app
-              </a>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                {link.label}
+              </Link>
+            ))}
+            <a
+              href="https://apps.apple.com/br/app/bib-car-brasil/id6444271115"
+              target="_blank"
+              rel="noopener"
+              className="btn-gold text-center justify-center mt-2"
+            >
+              Baixar o app
+            </a>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }

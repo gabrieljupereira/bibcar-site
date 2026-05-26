@@ -2,7 +2,6 @@
 
 import dynamic from 'next/dynamic';
 import ScrollReveal from '@/components/ScrollReveal';
-import { motion } from 'framer-motion';
 import { useState } from 'react';
 
 const FloatingOrbs = dynamic(() => import('@/components/FloatingOrbs'), { ssr: false });
@@ -190,14 +189,10 @@ export default function Franqueado() {
             <ScrollReveal delay={0.15}>
               <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(255,210,63,0.2)' }}>
                 {included.map((item, i) => (
-                  <motion.div
+                  <div
                     key={item}
                     className="flex items-center gap-4 px-6 py-4"
                     style={{ borderBottom: i < included.length - 1 ? '1px solid rgba(255,255,255,0.06)' : 'none', background: i % 2 === 0 ? 'rgba(255,210,63,0.03)' : 'transparent' }}
-                    initial={{ opacity: 0, x: 24 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.4, delay: i * 0.07 }}
-                    viewport={{ once: true }}
                   >
                     <div
                       className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-black"
@@ -206,7 +201,7 @@ export default function Franqueado() {
                       ✓
                     </div>
                     <span className="text-sm" style={{ color: '#cfcfdc' }}>{item}</span>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </ScrollReveal>
@@ -282,13 +277,9 @@ export default function Franqueado() {
               style={{ background: 'linear-gradient(180deg,#FFD23F,#C13EFF,rgba(193,62,255,0))' }}
             />
             {onboardingSteps.map((step, i) => (
-              <motion.div
+              <div
                 key={i}
                 className="flex gap-6 mb-10 relative"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: i * 0.12 }}
-                viewport={{ once: true }}
               >
                 <div
                   className="w-12 h-12 rounded-full flex items-center justify-center font-black text-base flex-shrink-0 relative z-10"
@@ -305,7 +296,7 @@ export default function Franqueado() {
                   <h3 className="bebas text-2xl mb-1">{step.title}</h3>
                   <p className="text-silver text-sm leading-relaxed">{step.desc}</p>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>

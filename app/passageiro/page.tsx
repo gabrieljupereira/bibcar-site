@@ -3,7 +3,6 @@
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import ScrollReveal from '@/components/ScrollReveal';
 
 const FloatingOrbs = dynamic(() => import('@/components/FloatingOrbs'), { ssr: false });
@@ -65,19 +64,16 @@ function FAQItem({ item, index }: { item: { q: string; a: string }; index: numbe
           +
         </span>
       </button>
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="overflow-hidden"
-          >
-            <p className="text-silver pb-5 leading-relaxed" style={{ fontSize: 15 }}>{item.a}</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div
+        className="overflow-hidden"
+        style={{
+          maxHeight: open ? '300px' : '0',
+          opacity: open ? 1 : 0,
+          transition: 'max-height 0.3s ease, opacity 0.3s ease',
+        }}
+      >
+        <p className="text-silver pb-5 leading-relaxed" style={{ fontSize: 15 }}>{item.a}</p>
+      </div>
     </div>
   );
 }
