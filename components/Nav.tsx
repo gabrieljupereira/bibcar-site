@@ -1,0 +1,121 @@
+'use client';
+
+import Link from 'next/link';
+import Image from 'next/image';
+import { usePathname } from 'next/navigation';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const links = [
+  { href: '/passageiro', label: 'Passageiro' },
+  { href: '/motorista', label: 'Motorista' },
+  { href: '/franqueado', label: 'Franqueado' },
+  { href: '/#delas', label: 'Bib Delas' },
+];
+
+const accentColor: Record<string, string> = {
+  '/passageiro': '#C13EFF',
+  '/motorista': '#FFD23F',
+  '/franqueado': '#FFD23F',
+};
+
+export default function Nav() {
+  const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+
+  const accent = accentColor[pathname] || '#FFD23F';
+
+  return (
+    <nav className="sticky top-0 z-50" style={{ backdropFilter: 'blur(16px)', background: 'rgba(7,7,7,0.82)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+      <div className="container flex items-center justify-between h-20">
+        <Link href="/" className="flex items-center gap-3" onClick={() => setOpen(false)}>
+          <Image
+            src="/logo.png"
+            alt="BibCar"
+            width={130}
+            height={48}
+            className="h-12 w-auto"
+            style={{ filter: 'drop-shadow(0 0 12px rgba(255,210,63,.4))' }}
+            priority
+          />
+        </Link>
+
+        {/* Desktop links */}
+        <div className="hidden md:flex items-center gap-8">
+          {links.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-sm font-semibold tracking-wide transition-colors duration-200"
+                style={{ color: isActive ? accent : '#A5B0BD' }}
+                onMouseEnter={(e) => { (e.target as HTMLElement).style.color = accent; }}
+                onMouseLeave={(e) => { (e.target as HTMLElement).style.color = isActive ? accent : '#A5B0BD'; }}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
+        </div>
+
+        <a
+          href="https://apps.apple.com/br/app/bib-car-brasil/id6444271115"
+          target="_blank"
+          rel="noopener"
+          className="hidden md:inline-flex items-center font-black text-sm px-6 py-3 rounded-full uppercase tracking-wide transition-all hover:-translate-y-0.5"
+          style={{ background: 'linear-gradient(135deg,#FFD23F,#FFB627,#FF9500)', color: '#1a0f00', boxShadow: '0 8px 24px rgba(255,180,55,.35)' }}
+        >
+          Baixar o app
+        </a>
+
+        {/* Hamburger */}
+        <button
+          onClick={() => setOpen(!open)}
+          className="md:hidden p-2"
+          aria-label="Menu"
+        >
+          <div className="w-6 flex flex-col gap-1.5">
+            <span className="block h-0.5 bg-white rounded transition-all duration-300" style={{ transform: open ? 'rotate(45deg) translateY(8px)' : 'none' }} />
+            <span className="block h-0.5 bg-white rounded transition-all duration-300" style={{ opacity: open ? 0 : 1 }} />
+            <span className="block h-0.5 bg-white rounded transition-all duration-300" style={{ transform: open ? 'rotate(-45deg) translateY(-8px)' : 'none' }} />
+          </div>
+        </button>
+      </div>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="md:hidden overflow-hidden"
+            style={{ background: 'rgba(15,15,18,0.98)', borderTop: '1px solid rgba(255,255,255,0.08)' }}
+          >
+            <div className="container py-6 flex flex-col gap-5">
+              {links.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setOpen(false)}
+                  className="text-lg font-semibold text-silver hover:text-gold transition-colors"
+                >
+                  {link.label}
+                </Link>
+              ))}
+              <a
+                href="https://apps.apple.com/br/app/bib-car-brasil/id6444271115"
+                target="_blank"
+                rel="noopener"
+                className="btn-gold text-center justify-center mt-2"
+              >
+                Baixar o app
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </nav>
+  );
+}

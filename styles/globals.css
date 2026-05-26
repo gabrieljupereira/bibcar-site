@@ -1,0 +1,222 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+  --gold: #FFD23F;
+  --gold2: #FFB627;
+  --gold-warm: #FF9500;
+  --purple: #A930F0;
+  --purple-elec: #C13EFF;
+  --pink: #FF2D8E;
+  --dark: #070707;
+  --dark2: #0F0F12;
+  --card: #141420;
+  --silver: #A5B0BD;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #070707;
+  color: #F5F5F0;
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.bebas {
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+.gold-text {
+  background: linear-gradient(135deg, #FFD23F 0%, #FFB627 50%, #FF9500 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.purple-text {
+  background: linear-gradient(135deg, #C13EFF 0%, #A930F0 50%, #6B3FA0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.pink-text {
+  background: linear-gradient(135deg, #FF2D8E 0%, #C13EFF 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #FFD23F 0%, #C13EFF 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.card-border {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #141420;
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+
+.card-border:hover {
+  border-color: rgba(255, 210, 63, 0.35);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.btn-gold {
+  background: linear-gradient(135deg, #FFD23F 0%, #FFB627 50%, #FF9500 100%);
+  color: #1a0f00;
+  font-weight: 800;
+  border-radius: 14px;
+  padding: 16px 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-size: 14px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 8px 24px rgba(255, 180, 55, 0.35);
+}
+
+.btn-gold:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 36px rgba(255, 180, 55, 0.55);
+}
+
+.btn-purple {
+  background: linear-gradient(135deg, #C13EFF 0%, #A930F0 50%, #6B3FA0 100%);
+  color: #fff;
+  font-weight: 800;
+  border-radius: 14px;
+  padding: 16px 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-size: 14px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 8px 24px rgba(169, 48, 240, 0.4);
+}
+
+.btn-purple:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 36px rgba(169, 48, 240, 0.6);
+}
+
+.btn-ghost {
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-weight: 800;
+  border-radius: 14px;
+  padding: 14px 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.btn-ghost:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(255, 210, 63, 0.08);
+}
+
+.btn-rose {
+  background: linear-gradient(135deg, #FF2D8E 0%, #C13EFF 100%);
+  color: #fff;
+  font-weight: 800;
+  border-radius: 14px;
+  padding: 16px 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-size: 14px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 8px 24px rgba(255, 45, 142, 0.35);
+}
+
+.btn-rose:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 36px rgba(255, 45, 142, 0.55);
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1.5px solid var(--purple-elec);
+  color: var(--purple-elec);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 7px 18px;
+  border-radius: 30px;
+  background: rgba(193, 62, 255, 0.08);
+}
+
+.tag-gold {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(255, 210, 63, 0.08);
+}
+
+.tag-pink {
+  border-color: var(--pink);
+  color: var(--pink);
+  background: rgba(255, 45, 142, 0.08);
+}
+
+.section {
+  padding: 100px 0;
+  position: relative;
+}
+
+.container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+@keyframes campaign-slide {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 300% 50%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes wp-pulse {
+  0% { box-shadow: 0 10px 30px rgba(37,211,102,.45), 0 0 0 0 rgba(37,211,102,.5); }
+  100% { box-shadow: 0 10px 30px rgba(37,211,102,.45), 0 0 0 22px rgba(37,211,102,0); }
+}
