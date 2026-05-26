@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import ScrollReveal from '@/components/ScrollReveal';
-import { motion } from 'framer-motion';
+import { motion } from 'framer-motion/client';
 
 const FloatingOrbs = dynamic(() => import('@/components/FloatingOrbs'), { ssr: false });
 
