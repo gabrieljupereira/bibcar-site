@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion/client';
+import { motion, AnimatePresence } from 'framer-motion';
 import ScrollReveal from '@/components/ScrollReveal';
 
 const FloatingOrbs = dynamic(() => import('@/components/FloatingOrbs'), { ssr: false });
