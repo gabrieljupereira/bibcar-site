@@ -13,9 +13,9 @@ interface Props {
 
 function isWeakDevice(): boolean {
   if (typeof window === 'undefined') return false;
-  const smallScreen = window.innerWidth < 768;
+  // Only fallback for devices with 1-2 CPU cores (very old/low-end hardware)
   const lowCores = typeof navigator !== 'undefined' && navigator.hardwareConcurrency !== undefined && navigator.hardwareConcurrency <= 2;
-  return smallScreen || lowCores;
+  return lowCores;
 }
 
 export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13EFF', className = '', style, fallbackImage = '/mercedes.jpg' }: Props) {
