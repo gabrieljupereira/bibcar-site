@@ -136,26 +136,13 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
 
           const paintColor = new THREE.Color(bodyColor);
 
-          // DEBUG — remove after identifying material names
-          const matLog: string[] = [];
-          model.traverse((child) => {
-            const mesh = child as import('three').Mesh;
-            if (!mesh.isMesh) return;
-            const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-            mats.forEach((mat) => {
-              const m = mat as import('three').MeshStandardMaterial;
-              matLog.push(`mesh="${mesh.name}" mat="${m.name}" metal=${m.metalness?.toFixed(2)} rough=${m.roughness?.toFixed(2)} transp=${m.transparent} opacity=${m.opacity?.toFixed(2)}`);
-            });
-          });
-          console.log('[CarViewer] materials:\n' + matLog.join('\n'));
-
           model.traverse((child) => {
             const mesh = child as import('three').Mesh;
             if (!mesh.isMesh) return;
             mesh.castShadow = true;
             mesh.receiveShadow = true;
 
-            // Build full scene-hierarchy name for this mesh (catches "Wheel_FR > Car > Scene")
+            // Collect full hierarchy + material name for keyword matching
             const buildPath = (obj: import('three').Object3D): string => {
               const parts: string[] = [];
               let cur: import('three').Object3D | null = obj;
@@ -168,41 +155,37 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
               const m = mat as import('three').MeshStandardMaterial;
               if (!m.color) return;
 
-              // Full name = hierarchy path + material name
               const fullName = hierPath + ' ' + (m.name || '').toLowerCase();
 
-              // Skip glass by name or true transparency
-              const isGlass =
-                fullName.includes('glass') || fullName.includes('window') ||
-                fullName.includes('windshield') || fullName.includes('visor') ||
-                fullName.includes('lens') || fullName.includes('headlamp') ||
-                fullName.includes('taillamp');
-              if (isGlass) return;
+              // --- SKIP: glass / windows ---
               if (m.transparent && m.opacity < 0.88) return;
               if ('transmission' in m && (m as unknown as { transmission: number }).transmission > 0.1) return;
+              if (fullName.includes('glass') || fullName.includes('window') ||
+                  fullName.includes('windshield') || fullName.includes('visor') ||
+                  fullName.includes('lens')) return;
 
-              // Skip rims/wheels by hierarchy name
-              const isRim =
-                fullName.includes('rim') || fullName.includes('wheel') ||
-                fullName.includes('alloy') || fullName.includes('spoke') ||
-                fullName.includes('hub') || fullName.includes('roda') ||
-                fullName.includes('aro');
-              if (isRim) return;
+              // --- SKIP: tires / rubber (very matte, roughness ≥ 0.7) ---
+              if (m.roughness >= 0.70) return;
+              if (fullName.includes('tire') || fullName.includes('tyre') ||
+                  fullName.includes('rubber') || fullName.includes('pneu')) return;
 
-              // Skip tires by name or roughness (rubber = very matte)
-              const isTire =
-                fullName.includes('tire') || fullName.includes('tyre') ||
-                fullName.includes('rubber') || fullName.includes('pneu');
-              if (isTire) return;
-              if (m.roughness > 0.72) return;
-
-              // Skip polished chrome: very high metalness
-              if (m.metalness > 0.78) return;
+              // --- SKIP: silver/chrome/metallic parts ---
+              // Rule 1: original material is highly metallic (rims, exhaust, chrome trim)
+              if (m.metalness >= 0.60) return;
+              // Rule 2: original color is light/silver AND has notable metalness
+              //         (catches badges, star logo, polished trim with metalness 0.4–0.6)
+              const { r, g, b } = m.color;
+              const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+              if (lum > 0.28 && m.metalness >= 0.35) return;
+              // Rule 3: name-based chrome/badge detection
               if (fullName.includes('chrome') || fullName.includes('badge') ||
                   fullName.includes('emblem') || fullName.includes('logo') ||
-                  fullName.includes('rotor') || fullName.includes('caliper')) return;
+                  fullName.includes('star') || fullName.includes('symbol') ||
+                  fullName.includes('rotor') || fullName.includes('caliper') ||
+                  fullName.includes('rim') || fullName.includes('spoke') ||
+                  fullName.includes('wheel') || fullName.includes('hub')) return;
 
-              // Paint body panels solid glossy purple
+              // --- PAINT: body panels, bumpers, mirrors, pillars ---
               m.color.set(paintColor);
               m.metalness = 0.5;
               m.roughness = 0.12;
