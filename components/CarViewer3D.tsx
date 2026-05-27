@@ -136,6 +136,29 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
 
           const paintColor = new THREE.Color(bodyColor);
 
+          // Collect unique material info for debugging
+          const seen = new Set<string>();
+          const debugLines: string[] = [];
+          model.traverse((child) => {
+            const mesh = child as import('three').Mesh;
+            if (!mesh.isMesh) return;
+            const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+            mats.forEach((mat) => {
+              const m = mat as import('three').MeshStandardMaterial;
+              const key = `${mesh.name}||${m.name}`;
+              if (seen.has(key)) return;
+              seen.add(key);
+              debugLines.push(`mesh:"${mesh.name}" mat:"${m.name}" M=${m.metalness?.toFixed(2)} R=${m.roughness?.toFixed(2)} L=${((0.299*(m.color?.r||0)+0.587*(m.color?.g||0)+0.114*(m.color?.b||0))).toFixed(2)}`);
+            });
+          });
+          // Show debug overlay on screen
+          const dbg = document.createElement('div');
+          dbg.id = 'car-debug';
+          dbg.style.cssText = 'position:absolute;top:0;left:0;right:0;background:rgba(0,0,0,0.85);color:#0f0;font:10px monospace;padding:4px;z-index:999;max-height:200px;overflow-y:auto;pointer-events:none;white-space:pre';
+          dbg.textContent = debugLines.join('\n');
+          container.style.position = 'relative';
+          container.appendChild(dbg);
+
           model.traverse((child) => {
             const mesh = child as import('three').Mesh;
             if (!mesh.isMesh) return;
