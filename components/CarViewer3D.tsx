@@ -135,12 +135,65 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
           model.position.sub(center.multiplyScalar(scale));
           model.position.y = 0;
 
-          // Show model as-is — no material modifications
+          const paintColor = new THREE.Color(bodyColor);
+
           model.traverse((child) => {
             const mesh = child as import('three').Mesh;
             if (!mesh.isMesh) return;
             mesh.castShadow = true;
             mesh.receiveShadow = true;
+
+            // Clone materials so each mesh has independent properties
+            if (Array.isArray(mesh.material)) {
+              mesh.material = mesh.material.map(m => m.clone());
+            } else {
+              mesh.material = mesh.material.clone();
+            }
+
+            const applyPaint = (mat: import('three').Material) => {
+              const m = mat as import('three').MeshStandardMaterial;
+              if (!m.color) return;
+
+              const origM = m.metalness;
+              const origR = m.roughness;
+              const { r, g, b } = m.color;
+              const origLum = 0.299 * r + 0.587 * g + 0.114 * b;
+              const n = (mesh.name + ' ' + m.name).toLowerCase();
+
+              // Glass
+              if (m.transparent && m.opacity < 0.88) return;
+              if ('transmission' in m && (m as unknown as { transmission: number }).transmission > 0.1) return;
+              if (n.includes('glass') || n.includes('window') || n.includes('windshield')) return;
+
+              // Tires: high roughness + near-zero metalness + dark
+              if (origR >= 0.65 && origM < 0.15 && origLum < 0.15) {
+                m.color.set(0x080808); m.metalness = 0; m.roughness = 0.92; m.envMapIntensity = 0;
+                m.needsUpdate = true; return;
+              }
+
+              // Chrome/silver: very high metalness or chrome keywords
+              const isChrome = origM >= 0.88 ||
+                n.includes('chrome') || n.includes('rim') || n.includes('wheel') ||
+                n.includes('grille') || n.includes('logo') || n.includes('badge') ||
+                n.includes('emblem') || n.includes('exhaust');
+              if (isChrome) {
+                m.color.set(0xd0d0d0); m.metalness = 0.85; m.roughness = 0.18; m.envMapIntensity = 0.2;
+                m.needsUpdate = true; return;
+              }
+
+              // Body paint
+              m.color.set(paintColor);
+              m.metalness = 0.45; m.roughness = 0.08; m.envMapIntensity = 0.6;
+              m.transparent = false; m.opacity = 1;
+              if ('transmission' in m) (m as unknown as { transmission: number }).transmission = 0;
+              m.needsUpdate = true;
+            };
+
+            if (Array.isArray(mesh.material)) {
+              mesh.material.forEach(applyPaint);
+            } else {
+              applyPaint(mesh.material);
+            }
           });
 
           scene.add(model);
