@@ -173,6 +173,23 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
               if (m.transparent && m.opacity < 0.88) return;
               if ('transmission' in m && (m as unknown as { transmission: number }).transmission > 0.1) return;
 
+              // --- CHROME KEYWORDS: star, logo, badge, exhaust → polished silver ---
+              const isChrome =
+                meshName.includes('star') || meshName.includes('logo') ||
+                meshName.includes('badge') || meshName.includes('emblem') ||
+                meshName.includes('chrome') || meshName.includes('exhaust') ||
+                meshName.includes('trim') || meshName.includes('grille') ||
+                meshName.includes('ornament') || meshName.includes('hood_star') ||
+                m.metalness >= 0.85;
+              if (isChrome) {
+                m.color.set(0xe0e0e0);
+                m.metalness = 0.95;
+                m.roughness = 0.06;
+                m.envMapIntensity = 2.5;
+                m.needsUpdate = true;
+                return;
+              }
+
               // --- BODY MESHES: force purple even if original M=1.00 ---
               const isBody = meshName.startsWith('cla250') || meshName.startsWith('bumper') || meshName.startsWith('object');
               if (isBody) {
@@ -187,17 +204,9 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
                 return;
               }
 
-              // --- HIGH-METALNESS (star, badges, exhaust): polished chrome mirror ---
-              if (m.metalness >= 0.85) {
-                m.color.set(0xe8e8e8);
-                m.metalness = 0.95;
-                m.roughness = 0.06;
-                m.envMapIntensity = 2.5;
-                m.needsUpdate = true;
-                return;
-              }
-
               // --- EVERYTHING ELSE: paint purple ---
+              // Log unknowns so we can identify the star mesh if needed
+              console.log('[CarViewer unknown mesh]', mesh.name, 'mat:', m.name, 'M:', m.metalness?.toFixed(2), 'R:', m.roughness?.toFixed(2));
               m.color.set(paintColor);
               m.metalness = 0.5;
               m.roughness = 0.12;
