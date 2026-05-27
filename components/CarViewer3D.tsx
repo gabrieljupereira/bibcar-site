@@ -212,21 +212,27 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
             logoTex.colorSpace = THREE.SRGBColorSpace;
             const img = logoTex.image as HTMLImageElement;
             const logoH = carH * 0.22;
-            const logoW = logoH * (img.naturalWidth / img.naturalHeight);
+            const logoW = logoH * ((img.naturalWidth || 1000) / (img.naturalHeight || 800));
             const mat = new THREE.MeshBasicMaterial({
-              map: logoTex, transparent: true, alphaTest: 0.05,
-              depthWrite: false, polygonOffset: true, polygonOffsetFactor: -4,
+              map: logoTex,
+              transparent: true,
+              alphaTest: 0.01,
+              side: THREE.DoubleSide,
+              depthWrite: false,
+              polygonOffset: true,
+              polygonOffsetFactor: -4,
             });
             const logoY = carBB.min.y + carH * 0.5;
             const geo = new THREE.PlaneGeometry(logoW, logoH);
+            // Add to model so logos rotate with car
             const mL = new THREE.Mesh(geo, mat);
-            mL.position.set(carBB.min.x - 0.01, logoY, carCenterZ);
+            mL.position.set(carBB.min.x - 0.06, logoY, carCenterZ);
             mL.rotation.y = Math.PI / 2;
-            scene.add(mL);
+            model.add(mL);
             const mR = new THREE.Mesh(geo, mat);
-            mR.position.set(carBB.max.x + 0.01, logoY, carCenterZ);
+            mR.position.set(carBB.max.x + 0.06, logoY, carCenterZ);
             mR.rotation.y = -Math.PI / 2;
-            scene.add(mR);
+            model.add(mR);
           });
 
           controls.target.set(0, size.y * scale * 0.38, 0);
