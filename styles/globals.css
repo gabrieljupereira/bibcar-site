@@ -227,6 +227,12 @@ body {
 }
 
 @media (max-width: 767px) {
+  .tag {
+    letter-spacing: 0.8px;
+    padding: 6px 14px;
+    font-size: 10px;
+  }
+
   .section {
     padding: 60px 0;
   }
