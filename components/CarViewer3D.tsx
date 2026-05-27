@@ -211,7 +211,8 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
           new THREE.TextureLoader().load('/logo.png', (logoTex) => {
             logoTex.colorSpace = THREE.SRGBColorSpace;
             const img = logoTex.image as HTMLImageElement;
-            const logoH = carH * 0.22;
+            const carWidth = carBB.max.x - carBB.min.x;
+            const logoH = carH * 0.30;
             const logoW = logoH * ((img.naturalWidth || 1000) / (img.naturalHeight || 800));
             const mat = new THREE.MeshBasicMaterial({
               map: logoTex,
@@ -226,11 +227,11 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
             const geo = new THREE.PlaneGeometry(logoW, logoH);
             // Add to model so logos rotate with car
             const mL = new THREE.Mesh(geo, mat);
-            mL.position.set(carBB.min.x - 0.06, logoY, carCenterZ);
+            mL.position.set(carBB.min.x + carWidth * 0.09, logoY, carCenterZ);
             mL.rotation.y = -Math.PI / 2;
             scene.add(mL);
             const mR = new THREE.Mesh(geo, mat);
-            mR.position.set(carBB.max.x + 0.06, logoY, carCenterZ);
+            mR.position.set(carBB.max.x - carWidth * 0.09, logoY, carCenterZ);
             mR.rotation.y = Math.PI / 2;
             scene.add(mR);
           });
