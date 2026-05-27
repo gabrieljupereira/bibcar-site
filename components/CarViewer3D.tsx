@@ -1,18 +1,33 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 
 interface Props {
   modelPath?: string;
   bodyColor?: string;
   className?: string;
   style?: React.CSSProperties;
+  fallbackImage?: string;
 }
 
-export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13EFF', className = '', style }: Props) {
+function isWeakDevice(): boolean {
+  if (typeof window === 'undefined') return false;
+  const smallScreen = window.innerWidth < 768;
+  const lowCores = typeof navigator !== 'undefined' && navigator.hardwareConcurrency !== undefined && navigator.hardwareConcurrency <= 2;
+  return smallScreen || lowCores;
+}
+
+export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13EFF', className = '', style, fallbackImage = '/mercedes.jpg' }: Props) {
   const mountRef = useRef<HTMLDivElement>(null);
+  const [useFallback, setUseFallback] = useState(false);
 
   useEffect(() => {
+    if (isWeakDevice()) {
+      setUseFallback(true);
+      return;
+    }
+
     const container = mountRef.current;
     if (!container) return;
 
@@ -59,7 +74,7 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
           const { RGBELoader } = await import('three/examples/jsm/loaders/RGBELoader.js');
           const hdr = await new Promise<import('three').DataTexture>((res, rej) => {
             new RGBELoader().load(
-              'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/studio_small_09_1k.hdr',
+              '/hdri/studio_small_09_1k.hdr',
               res, undefined, rej
             );
           });
@@ -341,6 +356,21 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
       c._cleanup?.();
     };
   }, [modelPath, bodyColor]);
+
+  if (useFallback) {
+    return (
+      <div className={className} style={{ position: 'relative', overflow: 'hidden', ...style }}>
+        <Image
+          src={fallbackImage}
+          alt="BibCar"
+          fill
+          style={{ objectFit: 'cover', objectPosition: 'center' }}
+          priority
+        />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(13,11,30,0.6) 0%, transparent 60%)' }} />
+      </div>
+    );
+  }
 
   return (
     <div
