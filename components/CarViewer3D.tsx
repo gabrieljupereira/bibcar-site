@@ -146,42 +146,30 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
               const m = mat as import('three').MeshStandardMaterial;
               if (!m.color) return;
 
-              const name = (m.name || mesh.name || '').toLowerCase();
+              // Skip glass: transparent materials (windows, headlight covers)
+              if (m.transparent && m.opacity < 0.88) return;
+              if ('transmission' in m && (m as unknown as { transmission: number }).transmission > 0.1) return;
 
-              // Skip glass by name or transparency
+              // Skip tires/rubber: high roughness = matte surface (no glossy rubber)
+              if (m.roughness > 0.65) return;
+
+              // Skip polished chrome rims: high metalness + low roughness = mirror metal
+              if (m.metalness > 0.72 && m.roughness < 0.35) return;
+
+              // Name-based fallback for glass/chrome that may have low roughness
+              const name = (m.name || mesh.name || '').toLowerCase();
               if (
                 name.includes('glass') || name.includes('window') ||
-                name.includes('windshield') || name.includes('visor') ||
-                name.includes('headlamp') || name.includes('taillamp') ||
-                name.includes('lens')
-              ) return;
-              if (m.transparent && m.opacity < 0.88) return;
-
-              // Skip rims/wheels — keep silver
-              if (
-                name.includes('rim') || name.includes('wheel') ||
-                name.includes('alloy') || name.includes('spoke') || name.includes('hub')
+                name.includes('windshield') || name.includes('lens') ||
+                name.includes('chrome') || name.includes('badge') ||
+                name.includes('emblem') || name.includes('rotor') ||
+                name.includes('caliper')
               ) return;
 
-              // Skip tires — keep black
-              if (
-                name.includes('tire') || name.includes('tyre') || name.includes('rubber')
-              ) return;
-
-              // Skip chrome badges/emblems/rotors — keep silver
-              if (
-                name.includes('chrome') || name.includes('logo') ||
-                name.includes('badge') || name.includes('emblem') ||
-                name.includes('rotor') || name.includes('caliper') || name.includes('disc')
-              ) return;
-
-              // Only mirror-chrome by property (no lum threshold — model may be black car)
-              if (m.metalness > 0.92) return;
-
-              // Paint body solid glossy purple
+              // Paint everything else — body, bumpers, mirrors, pillars
               m.color.set(paintColor);
-              m.metalness = 0.25;   // low metalness → color shows clearly
-              m.roughness = 0.08;   // very glossy like car lacquer
+              m.metalness = 0.4;
+              m.roughness = 0.1;
               m.envMapIntensity = 1.8;
               m.transparent = false;
               m.opacity = 1;
