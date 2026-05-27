@@ -134,94 +134,12 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
           model.position.sub(center.multiplyScalar(scale));
           model.position.y = 0;
 
-          const paintColor = new THREE.Color(bodyColor);
-
+          // Show model as-is — no material modifications
           model.traverse((child) => {
             const mesh = child as import('three').Mesh;
             if (!mesh.isMesh) return;
             mesh.castShadow = true;
             mesh.receiveShadow = true;
-
-            // CRITICAL: clone materials so meshes don't share the same object.
-            // Without this, modifying metalness on mesh A changes it for mesh B too,
-            // breaking the metalness >= 0.85 chrome detection on subsequent meshes.
-            if (Array.isArray(mesh.material)) {
-              mesh.material = mesh.material.map(m => m.clone());
-            } else {
-              mesh.material = mesh.material.clone();
-            }
-
-            const meshName = mesh.name.toLowerCase();
-
-            const applyPaint = (mat: import('three').Material) => {
-              const m = mat as import('three').MeshStandardMaterial;
-              if (!m.color) return;
-
-              // Read ORIGINAL values from the cloned material (safe — no shared state)
-              const origM = m.metalness;
-              const origR = m.roughness;
-              const origT = m.transparent;
-              const origO = m.opacity;
-              const { r, g, b } = m.color;
-              const origLum = 0.299 * r + 0.587 * g + 0.114 * b;
-
-              // Debug: log each material so we can see what this model has
-              console.log(`[mat] mesh="${mesh.name}" mat="${m.name}" M=${origM.toFixed(2)} R=${origR.toFixed(2)} L=${origLum.toFixed(2)} T=${origT} O=${origO?.toFixed(2)}`);
-
-              // --- GLASS: transparent by property ---
-              if (origT && origO < 0.88) return;
-              if ('transmission' in m && (m as unknown as { transmission: number }).transmission > 0.1) return;
-              const n = (mesh.name + ' ' + m.name).toLowerCase();
-              if (n.includes('glass') || n.includes('window') || n.includes('windshield')) return;
-
-              // --- TIRES: high roughness + near-zero metalness + dark ---
-              if (origR >= 0.65 && origM < 0.15 && origLum < 0.15) {
-                m.color.set(0x080808);
-                m.metalness = 0;
-                m.roughness = 0.92;
-                m.envMapIntensity = 0;
-                m.needsUpdate = true;
-                return;
-              }
-
-              // --- CHROME/SILVER: very high metalness only (true chrome: rims, grille, badges) ---
-              if (origM >= 0.88) {
-                m.color.set(0xd0d0d0);
-                m.metalness = 0.85;
-                m.roughness = 0.18;
-                m.envMapIntensity = 0.2;
-                m.needsUpdate = true;
-                return;
-              }
-
-              // --- Also chrome by name keywords ---
-              if (n.includes('chrome') || n.includes('rim') || n.includes('wheel') ||
-                  n.includes('grille') || n.includes('trim') || n.includes('logo') ||
-                  n.includes('badge') || n.includes('emblem') || n.includes('exhaust')) {
-                m.color.set(0xd0d0d0);
-                m.metalness = 0.85;
-                m.roughness = 0.18;
-                m.envMapIntensity = 0.2;
-                m.needsUpdate = true;
-                return;
-              }
-
-              // --- BODY PAINT: everything else → deep glossy purple ---
-              m.color.set(paintColor);
-              m.metalness = 0.45;
-              m.roughness = 0.08;
-              m.envMapIntensity = 0.6;
-              m.transparent = false;
-              m.opacity = 1;
-              if ('transmission' in m) (m as unknown as { transmission: number }).transmission = 0;
-              m.needsUpdate = true;
-            };
-
-            if (Array.isArray(mesh.material)) {
-              mesh.material.forEach(applyPaint);
-            } else {
-              applyPaint(mesh.material);
-            }
           });
 
           scene.add(model);
