@@ -211,9 +211,26 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
           new THREE.TextureLoader().load('/logo.png', (logoTex) => {
             logoTex.colorSpace = THREE.SRGBColorSpace;
             const img = logoTex.image as HTMLImageElement;
-            const carWidth = carBB.max.x - carBB.min.x;
             const logoH = carH * 0.30;
             const logoW = logoH * ((img.naturalWidth || 1000) / (img.naturalHeight || 800));
+            const logoY = carBB.min.y + carH * 0.5;
+
+            // Raycast from outside each side to find exact door surface X position
+            const raycaster = new THREE.Raycaster();
+            raycaster.set(
+              new THREE.Vector3(carBB.min.x - 1, logoY, carCenterZ),
+              new THREE.Vector3(1, 0, 0)
+            );
+            const hitsL = raycaster.intersectObject(model, true);
+            const doorXL = hitsL.length > 0 ? hitsL[0].point.x - 0.01 : carBB.min.x - 0.02;
+
+            raycaster.set(
+              new THREE.Vector3(carBB.max.x + 1, logoY, carCenterZ),
+              new THREE.Vector3(-1, 0, 0)
+            );
+            const hitsR = raycaster.intersectObject(model, true);
+            const doorXR = hitsR.length > 0 ? hitsR[0].point.x + 0.01 : carBB.max.x + 0.02;
+
             const mat = new THREE.MeshBasicMaterial({
               map: logoTex,
               transparent: true,
@@ -223,15 +240,13 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
               polygonOffset: true,
               polygonOffsetFactor: -4,
             });
-            const logoY = carBB.min.y + carH * 0.5;
             const geo = new THREE.PlaneGeometry(logoW, logoH);
-            // Add to model so logos rotate with car
             const mL = new THREE.Mesh(geo, mat);
-            mL.position.set(carBB.min.x + carWidth * 0.09, logoY, carCenterZ);
+            mL.position.set(doorXL, logoY, carCenterZ);
             mL.rotation.y = -Math.PI / 2;
             scene.add(mL);
             const mR = new THREE.Mesh(geo, mat);
-            mR.position.set(carBB.max.x - carWidth * 0.09, logoY, carCenterZ);
+            mR.position.set(doorXR, logoY, carCenterZ);
             mR.rotation.y = Math.PI / 2;
             scene.add(mR);
           });
