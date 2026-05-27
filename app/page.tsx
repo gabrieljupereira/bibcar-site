@@ -47,7 +47,7 @@ export default function Home() {
         <div
           className="absolute inset-0"
           style={{
-            background: 'radial-gradient(ellipse at 30% 50%, rgba(7,7,7,0.82) 0%, rgba(7,7,7,0.55) 60%, transparent 100%)',
+            background: 'radial-gradient(ellipse at 30% 50%, rgba(247,245,255,0.88) 0%, rgba(247,245,255,0.55) 60%, transparent 100%)',
             zIndex: 1,
           }}
         />
@@ -89,7 +89,7 @@ export default function Home() {
       </section>
 
       {/* 3 PATHS */}
-      <section className="section" style={{ background: 'linear-gradient(180deg,#070707 0%,#0c0814 100%)' }}>
+      <section className="section" style={{ background: 'linear-gradient(180deg,#F7F5FF 0%,#EDE9FF 100%)' }}>
         <div className="container">
           <ScrollReveal className="text-center mb-16 max-w-2xl mx-auto">
             <div className="tag tag-gold mb-5 inline-flex">Escolha o seu caminho</div>
@@ -141,7 +141,7 @@ export default function Home() {
               <ScrollReveal key={path.title} delay={i * 0.12}>
                 <div
                   className="rounded-3xl p-10 relative overflow-hidden transition-all duration-300 h-full flex flex-col"
-                  style={{ background: '#141420', border: '1px solid #232336' }}
+                  style={{ background: '#FFFFFF', border: '1px solid rgba(0,0,0,0.09)' }}
                   onMouseEnter={(e) => {
                     (e.currentTarget as HTMLElement).style.transform = 'translateY(-8px)';
                     (e.currentTarget as HTMLElement).style.boxShadow = path.hoverShadow;
@@ -159,8 +159,8 @@ export default function Home() {
                   <p className="text-silver text-sm mb-6 leading-relaxed">{path.lead}</p>
                   <ul className="mb-8 flex-1">
                     {path.items.map((item) => (
-                      <li key={item} className="py-2.5 text-sm" style={{ color: '#cfcfdc', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                        <span className="mr-2" style={{ color: '#FFD23F' }}>›</span>
+                      <li key={item} className="py-2.5 text-sm" style={{ color: '#374151', borderBottom: '1px solid rgba(0,0,0,0.07)' }}>
+                        <span className="mr-2" style={{ color: '#FF9500' }}>›</span>
                         {item}
                       </li>
                     ))}
@@ -176,7 +176,7 @@ export default function Home() {
       </section>
 
       {/* POR QUE BIBCAR */}
-      <section className="section" style={{ background: '#0F0F12' }}>
+      <section className="section" style={{ background: '#EDE9FF' }}>
         <div className="container">
           <ScrollReveal className="text-center mb-14 max-w-2xl mx-auto">
             <div className="tag mb-5 inline-flex">Por que BibCar</div>
@@ -194,21 +194,21 @@ export default function Home() {
               <ScrollReveal key={feat.title} delay={i * 0.1}>
                 <div
                   className="rounded-2xl p-8 text-center transition-all duration-300 cursor-default"
-                  style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid #1f1f2e' }}
+                  style={{ background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)' }}
                   onMouseEnter={(e) => {
                     (e.currentTarget as HTMLElement).style.borderColor = 'rgba(193,62,255,0.4)';
-                    (e.currentTarget as HTMLElement).style.background = 'rgba(193,62,255,0.06)';
+                    (e.currentTarget as HTMLElement).style.background = 'rgba(168,48,232,0.07)';
                     (e.currentTarget as HTMLElement).style.transform = 'translateY(-6px)';
                   }}
                   onMouseLeave={(e) => {
                     (e.currentTarget as HTMLElement).style.borderColor = '#1f1f2e';
-                    (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.025)';
+                    (e.currentTarget as HTMLElement).style.background = 'rgba(0,0,0,0.04)';
                     (e.currentTarget as HTMLElement).style.transform = 'none';
                   }}
                 >
                   <div
                     className="text-3xl mb-4 w-14 h-14 mx-auto rounded-2xl flex items-center justify-center"
-                    style={{ background: 'linear-gradient(135deg,rgba(255,210,63,.15),rgba(193,62,255,.15))', border: '1px solid rgba(255,210,63,.25)' }}
+                    style={{ background: 'linear-gradient(135deg,rgba(255,184,0,.12),rgba(168,48,232,.12))', border: '1px solid rgba(168,48,232,.2)' }}
                   >
                     {feat.icon}
                   </div>
@@ -222,8 +222,8 @@ export default function Home() {
       </section>
 
       {/* BIB DELAS */}
-      <section id="delas" className="section relative overflow-hidden" style={{ background: 'linear-gradient(135deg,#1d0d28 0%,#0a0612 100%)' }}>
-        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 70% 30%,rgba(255,45,142,.18),transparent 50%)' }} />
+      <section id="delas" className="section relative overflow-hidden" style={{ background: 'linear-gradient(135deg,#F0EAFF 0%,#EDE9FF 100%)' }}>
+        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 70% 30%,rgba(232,38,122,.12),transparent 50%)' }} />
         <div className="container relative text-center max-w-3xl mx-auto" style={{ zIndex: 2 }}>
           <ScrollReveal>
             <div className="tag tag-pink mb-6 inline-flex">
@@ -244,7 +244,7 @@ export default function Home() {
       </section>
 
       {/* VS CLANDESTINO */}
-      <section className="section" style={{ background: '#070707' }}>
+      <section className="section" style={{ background: '#F7F5FF' }}>
         <div className="container">
           <ScrollReveal className="text-center mb-14 max-w-2xl mx-auto">
             <div className="tag tag-gold mb-5 inline-flex">A diferença que importa</div>
@@ -256,11 +256,11 @@ export default function Home() {
 
           <ScrollReveal>
             <div className="grid grid-cols-1 md:grid-cols-2 rounded-3xl overflow-hidden" style={{ border: '1px solid #232336' }}>
-              <div className="p-12" style={{ background: 'linear-gradient(160deg,rgba(169,48,240,.18),rgba(193,62,255,.05) 50%,#141420)' }}>
+              <div className="p-12" style={{ background: 'linear-gradient(160deg,rgba(155,39,216,.1),rgba(168,48,232,.04) 50%,#FFFFFF)' }}>
                 <span className="inline-block text-xs font-black tracking-widest uppercase px-4 py-1.5 rounded-full mb-5" style={{ background: 'linear-gradient(135deg,#FFD23F,#FF9500)', color: '#1a0f00' }}>
                   Com a BibCar
                 </span>
-                <h3 className="bebas text-4xl mb-6">Você sabe <span style={{ color: '#FFD23F' }}>com quem está</span></h3>
+                <h3 className="bebas text-4xl mb-6">Você sabe <span style={{ color: '#FF9500' }}>com quem está</span></h3>
                 <ul className="space-y-4">
                   {['Motorista com cadastro verificado', 'Corrida registrada e rastreada no app', 'Suporte pra resolver qualquer problema', 'Tarifa combinada antes de embarcar'].map((item) => (
                     <li key={item} className="flex items-start gap-3 text-[15px]">
@@ -270,15 +270,15 @@ export default function Home() {
                   ))}
                 </ul>
               </div>
-              <div className="p-12" style={{ background: '#0e0e16' }}>
-                <span className="inline-block text-xs font-black tracking-widest uppercase px-4 py-1.5 rounded-full mb-5" style={{ background: '#3a1f1f', color: '#e0a0a0' }}>
+              <div className="p-12" style={{ background: '#F5F3FF' }}>
+                <span className="inline-block text-xs font-black tracking-widest uppercase px-4 py-1.5 rounded-full mb-5" style={{ background: '#FFE8E8', color: '#C0392B' }}>
                   No clandestino
                 </span>
                 <h3 className="bebas text-4xl mb-6">Você embarca no escuro</h3>
                 <ul className="space-y-4">
                   {['Sem cadastro, sem verificação', 'Sem registro da corrida', 'Sem suporte se acontecer algo', 'Preço incerto, combinado na hora'].map((item) => (
                     <li key={item} className="flex items-start gap-3 text-[15px] text-silver/70">
-                      <span style={{ color: '#c0654f', fontWeight: 900, fontSize: 18, flexShrink: 0 }}>✕</span>
+                      <span style={{ color: '#C0392B', fontWeight: 900, fontSize: 18, flexShrink: 0 }}>✕</span>
                       {item}
                     </li>
                   ))}
@@ -290,7 +290,7 @@ export default function Home() {
       </section>
 
       {/* LIDERANÇA */}
-      <section className="section text-center" style={{ background: 'linear-gradient(180deg,#070707 0%,#0c0814 100%)' }}>
+      <section className="section text-center" style={{ background: 'linear-gradient(180deg,#F7F5FF 0%,#EDE9FF 100%)' }}>
         <div className="container max-w-2xl mx-auto">
           <ScrollReveal>
             <div className="tag tag-gold mb-8 inline-flex">Liderança</div>
@@ -302,8 +302,8 @@ export default function Home() {
             </div>
             <h3 className="bebas text-4xl mb-1">Thales Alexandre</h3>
             <p className="text-gold text-xs font-black uppercase tracking-widest mb-7">C.O. BibCar Brasil</p>
-            <blockquote className="text-lg leading-relaxed italic max-w-xl mx-auto" style={{ color: '#F5F5F0', position: 'relative' }}>
-              <span className="absolute -top-8 -left-2 text-7xl opacity-40" style={{ color: '#C13EFF', fontFamily: 'Georgia, serif', lineHeight: 1 }}>"</span>
+            <blockquote className="text-lg leading-relaxed italic max-w-xl mx-auto" style={{ color: '#100D24', position: 'relative' }}>
+              <span className="absolute -top-8 -left-2 text-7xl opacity-40" style={{ color: '#A830E8', fontFamily: 'Georgia, serif', lineHeight: 1 }}>"</span>
               A BibCar nasceu pra ser diferente. Mais perto da cidade, mais perto do motorista, mais perto de quem precisa chegar bem. Mobilidade de verdade, feita por gente de verdade.
             </blockquote>
           </ScrollReveal>
@@ -311,7 +311,7 @@ export default function Home() {
       </section>
 
       {/* CIDADES */}
-      <section className="section" style={{ background: '#0F0F12' }}>
+      <section className="section" style={{ background: '#EDE9FF' }}>
         <div className="container">
           <ScrollReveal className="text-center mb-12 max-w-xl mx-auto">
             <div className="tag mb-5 inline-flex">Onde a BibCar opera</div>
@@ -331,21 +331,21 @@ export default function Home() {
                   className="px-6 py-3 rounded-full font-bold text-sm tracking-wide transition-all"
                   style={{
                     border: city.active ? '1.5px solid #FFD23F' : '1.5px solid #2a2a40',
-                    color: city.active ? '#FFD23F' : '#A5B0BD',
-                    background: city.active ? 'rgba(255,210,63,0.08)' : 'rgba(255,255,255,0.02)',
+                    color: city.active ? '#FF9500' : '#94A3B8',
+                    background: city.active ? 'rgba(255,184,0,0.1)' : 'rgba(0,0,0,0.04)',
                     boxShadow: city.active ? '0 0 20px rgba(255,210,63,0.15)' : 'none',
                   }}
                 >
                   {city.name}
                 </div>
               ))}
-              <div className="px-6 py-3 rounded-full font-bold text-sm text-silver/60" style={{ border: '1.5px dashed #2a2a40' }}>
+              <div className="px-6 py-3 rounded-full font-bold text-sm text-silver/60" style={{ border: '1.5px dashed rgba(0,0,0,0.2)' }}>
                 + em expansão
               </div>
             </div>
             <p className="text-center text-silver text-sm mt-4">
               Sua cidade não tá no mapa?{' '}
-              <Link href="/franqueado" className="font-bold underline" style={{ color: '#FFD23F' }}>
+              <Link href="/franqueado" className="font-bold underline" style={{ color: '#FF9500' }}>
                 Vire franqueado e leve a BibCar até ela →
               </Link>
             </p>
@@ -356,7 +356,7 @@ export default function Home() {
       {/* CTA FINAL */}
       <section
         className="section text-center"
-        style={{ background: 'radial-gradient(ellipse at 50% 100%,rgba(193,62,255,.3),transparent 70%),radial-gradient(ellipse at 50% 0%,rgba(255,210,63,.15),transparent 60%),#070707' }}
+        style={{ background: 'radial-gradient(ellipse at 50% 100%,rgba(193,62,255,.3),transparent 70%),radial-gradient(ellipse at 50% 0%,rgba(255,184,0,.15),transparent 60%),#F7F5FF' }}
       >
         <div className="container max-w-2xl mx-auto">
           <ScrollReveal>
@@ -375,7 +375,7 @@ export default function Home() {
                   target="_blank"
                   rel="noopener"
                   className="flex items-center gap-4 rounded-2xl transition-all hover:-translate-y-1"
-                  style={{ background: '#0f0f18', border: '1.5px solid #2a2a40', padding: '14px 28px', minWidth: 210 }}
+                  style={{ background: '#FFFFFF', border: '1.5px solid rgba(0,0,0,0.1)', padding: '14px 28px', minWidth: 210 }}
                   onMouseEnter={(e) => {
                     (e.currentTarget as HTMLElement).style.borderColor = '#FFD23F';
                     (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 28px rgba(255,180,55,.2)';
