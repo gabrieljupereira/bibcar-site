@@ -227,11 +227,11 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
             // Add to model so logos rotate with car
             const mL = new THREE.Mesh(geo, mat);
             mL.position.set(carBB.min.x - 0.06, logoY, carCenterZ);
-            mL.rotation.y = Math.PI / 2;
+            mL.rotation.y = -Math.PI / 2;
             scene.add(mL);
             const mR = new THREE.Mesh(geo, mat);
             mR.position.set(carBB.max.x + 0.06, logoY, carCenterZ);
-            mR.rotation.y = -Math.PI / 2;
+            mR.rotation.y = Math.PI / 2;
             scene.add(mR);
           });
 
