@@ -54,8 +54,8 @@ export default function Footer() {
               <a href="mailto:contato@bibcarbrasil.com.br" className="text-silver text-sm hover:text-gold transition-colors">
                 contato@bibcarbrasil.com.br
               </a>
-              <a href="https://instagram.com/bibcar_fernandopolis" target="_blank" rel="noopener" className="text-silver text-sm hover:text-gold transition-colors">
-                @bibcar_fernandopolis
+              <a href="https://instagram.com/bibcarbrasil" target="_blank" rel="noopener" className="text-silver text-sm hover:text-gold transition-colors">
+                @bibcarbrasil
               </a>
             </div>
           </div>
