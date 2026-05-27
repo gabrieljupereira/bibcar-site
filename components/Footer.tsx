@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 export default function Footer() {
   return (
-    <footer style={{ background: '#040406', borderTop: '1px solid rgba(255,255,255,0.08)' }} className="pt-16 pb-8">
+    <footer style={{ background: '#EDE9FF', borderTop: '1px solid rgba(0,0,0,0.08)' }} className="pt-16 pb-8">
       <div className="container">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
           <div>
@@ -13,7 +13,7 @@ export default function Footer() {
               width={130}
               height={48}
               className="h-12 w-auto mb-4"
-              style={{ filter: 'drop-shadow(0 0 14px rgba(255,210,63,.3))' }}
+              
             />
             <p className="text-silver text-sm leading-relaxed">
               Mobilidade urbana com identidade.<br />Da sua cidade, com você.
@@ -21,7 +21,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-gold text-xs font-black uppercase tracking-widest mb-4">Navegar</h4>
+            <h4 className="text-xs font-black uppercase tracking-widest mb-4" style={{ color: "#9B27D8" }}>Navegar</h4>
             <div className="flex flex-col gap-2.5">
               <Link href="/passageiro" className="text-silver text-sm hover:text-gold transition-colors">Passageiro</Link>
               <Link href="/motorista" className="text-silver text-sm hover:text-gold transition-colors">Motorista</Link>
@@ -31,7 +31,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-gold text-xs font-black uppercase tracking-widest mb-4">Apps</h4>
+            <h4 className="text-xs font-black uppercase tracking-widest mb-4" style={{ color: "#9B27D8" }}>Apps</h4>
             <div className="flex flex-col gap-2.5">
               <a href="https://apps.apple.com/br/app/bib-car-brasil/id6444271115" target="_blank" rel="noopener" className="text-silver text-sm hover:text-gold transition-colors">
                 App Passageiro · iOS
@@ -46,7 +46,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-gold text-xs font-black uppercase tracking-widest mb-4">Contato</h4>
+            <h4 className="text-xs font-black uppercase tracking-widest mb-4" style={{ color: "#9B27D8" }}>Contato</h4>
             <div className="flex flex-col gap-2.5">
               <a href="https://wa.me/551151924005" target="_blank" rel="noopener" className="text-silver text-sm hover:text-gold transition-colors">
                 WhatsApp Suporte
@@ -61,7 +61,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/10 pt-6 text-center text-[11px] text-silver/40 tracking-widest uppercase">
+        <div className="border-t border-black/10 pt-6 text-center text-[11px] text-silver/60 tracking-widest uppercase">
           BIBCAR · MOBILIDADE URBANA · BRASIL · 2026 — Todos os direitos reservados
         </div>
       </div>
