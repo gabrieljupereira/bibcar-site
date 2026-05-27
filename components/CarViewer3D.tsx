@@ -142,7 +142,15 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
             mesh.castShadow = true;
             mesh.receiveShadow = true;
 
-            // Use MESH NAME for detection — most reliable for this specific GLB
+            // CRITICAL: clone materials so meshes don't share the same object.
+            // Without this, modifying metalness on mesh A changes it for mesh B too,
+            // breaking the metalness >= 0.85 chrome detection on subsequent meshes.
+            if (Array.isArray(mesh.material)) {
+              mesh.material = mesh.material.map(m => m.clone());
+            } else {
+              mesh.material = mesh.material.clone();
+            }
+
             const meshName = mesh.name.toLowerCase();
 
             const applyPaint = (mat: import('three').Material) => {
