@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import ScrollReveal from '@/components/ScrollReveal';
 import FloatingOrbs from '@/components/FloatingOrbs';
+import ClientCarViewer from '@/components/ClientCarViewer';
 
 const features = [
   { icon: '🛡️', title: 'Motorista verificado', desc: 'Todos passam por análise de CNH, CRLV e antecedentes criminais. Nada de clandestino.' },
@@ -70,29 +71,25 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="hidden md:flex justify-center items-center relative">
+          <div className="hidden md:flex justify-center items-center relative" style={{ height: 480 }}>
             <div
-              className="absolute"
+              className="absolute inset-0"
               style={{
-                width: '120%',
-                height: '120%',
-                background: 'radial-gradient(circle, rgba(193,62,255,0.45), transparent 65%)',
-                filter: 'blur(40px)',
+                background: 'radial-gradient(circle at 50% 60%, rgba(193,62,255,0.3), transparent 70%)',
+                filter: 'blur(30px)',
+                pointerEvents: 'none',
               }}
             />
-            <Image
-              src="/mercedes.jpg"
-              alt="Mercedes BibCar"
-              width={620}
-              height={420}
-              className="relative"
-              style={{
-                filter: 'drop-shadow(0 30px 60px rgba(0,0,0,0.7)) drop-shadow(0 0 60px rgba(193,62,255,0.5))',
-                animation: 'float 5s ease-in-out infinite',
-                maxWidth: '100%',
-              }}
-              priority
+            <ClientCarViewer
+              modelPath="/car.glb"
+              style={{ width: '100%', height: '100%' }}
             />
+            <p
+              className="absolute bottom-2 left-0 right-0 text-center"
+              style={{ fontSize: 10, color: 'rgba(165,176,189,0.4)', letterSpacing: 2, textTransform: 'uppercase', pointerEvents: 'none' }}
+            >
+              Arraste para girar · Scroll para zoom
+            </p>
           </div>
         </div>
       </section>
