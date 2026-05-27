@@ -51,7 +51,7 @@ export default function Home() {
             zIndex: 1,
           }}
         />
-        <div className="container relative grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-12 items-center py-20 md:py-28" style={{ zIndex: 2 }}>
+        <div className="container relative grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center py-10 md:py-28" style={{ zIndex: 2 }}>
           <div>
             <div className="tag mb-8 inline-flex">
               <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#C13EFF', boxShadow: '0 0 10px #C13EFF', animation: 'blink 1.5s infinite' }} />
@@ -64,7 +64,7 @@ export default function Home() {
             <p className="text-silver mb-10 max-w-lg" style={{ fontSize: 'clamp(16px, 1.6vw, 19px)', lineHeight: 1.6 }}>
               Motoristas verificados, da sua cidade, app rápido. Mais segurança pra quem anda. Mais ganho pra quem dirige. Mais oportunidade pra quem empreende.
             </p>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-col md:flex-row md:flex-wrap gap-4">
               <Link href="/passageiro" className="btn-gold">Pedir uma corrida</Link>
               <Link href="/motorista" className="btn-purple">Sou motorista</Link>
               <Link href="/franqueado" className="btn-ghost">Quero ser franqueado</Link>
