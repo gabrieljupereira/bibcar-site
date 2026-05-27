@@ -146,16 +146,12 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
 
           const paintColor = new THREE.Color(bodyColor);
 
-          // Non-body part keywords — skip painting these meshes entirely
-          const SKIP_KEYWORDS = [
-            'engine', 'motor', 'exhaust', 'muffler', 'header', 'intake',
-            'wheel', 'rim', 'tire', 'tyre', 'rubber', 'brake', 'caliper', 'disc', 'rotor',
-            'glass', 'window', 'windsh', 'windscreen',
-            'light', 'lamp', 'led',
-            'badge', 'logo', 'emblem', 'lottering', 'lettering',
-            'seat', 'interior', 'dash', 'gauge', 'display', 'screen', 'cluster',
-            'grill', 'vent',
-            'v8_', 'gasca', 'vivacc',
+          // Whitelist: ONLY paint meshes whose names match body panel keywords
+          // Everything else (tires, rims, glass, lights, logos, interior) stays original
+          const BODY_KEYWORDS = [
+            'door', 'hood', 'body', 'fender', 'bumper', 'bumpor',
+            'spoiler', 'roof', 'trunk', 'bonnet', 'quarter', 'rocker',
+            'sill', 'wing', 'panel', 'tailgate', 'bootlid', 'mirror',
           ];
 
           model.traverse((child) => {
@@ -164,9 +160,9 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
             mesh.castShadow = true;
             mesh.receiveShadow = true;
 
-            // Skip non-body parts by name — preserves tires, rims, glass, lights, logos
+            // Only process confirmed body panels
             const n = mesh.name.toLowerCase();
-            if (SKIP_KEYWORDS.some(k => n.includes(k))) return;
+            if (!BODY_KEYWORDS.some(k => n.includes(k))) return;
 
             // Clone materials before modifying
             if (Array.isArray(mesh.material)) {
@@ -178,17 +174,18 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
             const applyPaint = (mat: import('three').Material) => {
               const m = mat as import('three').MeshStandardMaterial;
               if (!m.color) return;
-              // Skip transparent glass panels
+              // Skip transparent glass
               if (m.transparent && m.opacity < 0.9) return;
               if ('transmission' in m && (m as unknown as { transmission: number }).transmission > 0.05) return;
-              // Skip materials that actually glow (non-black emissive)
+              // Skip actually glowing materials
               const emissiveColor = (m as unknown as { emissive?: { r: number; g: number; b: number } }).emissive;
               const origE = (m as unknown as { emissiveIntensity?: number }).emissiveIntensity ?? 0;
               const emissiveLum = emissiveColor
                 ? (0.299 * emissiveColor.r + 0.587 * emissiveColor.g + 0.114 * emissiveColor.b) * origE
                 : 0;
               if (emissiveLum > 0.02) return;
-              // Paint: only change base color — preserve all texture maps + PBR values
+              // Remove color texture so pure #7F00FF shows without warm-tone interference
+              m.map = null;
               m.color.set(paintColor);
               m.needsUpdate = true;
             };
