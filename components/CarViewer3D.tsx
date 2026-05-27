@@ -149,21 +149,55 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
               const m = mat as import('three').MeshStandardMaterial;
               if (!m.color) return;
 
-              // --- SKIP: rims (mesh name starts with "rims_") ---
-              if (meshName.startsWith('rims')) return;
+              // --- RIMS: actively set to polished silver chrome ---
+              if (meshName.startsWith('rims')) {
+                m.color.set(0xd4d4d4);
+                m.metalness = 0.9;
+                m.roughness = 0.18;
+                m.envMapIntensity = 2.0;
+                m.needsUpdate = true;
+                return;
+              }
 
-              // --- SKIP: tires/rubber (mesh name contains "rubber") ---
-              if (meshName.includes('rubber')) return;
+              // --- TIRES: actively set to black matte rubber ---
+              if (meshName.includes('rubber')) {
+                m.color.set(0x0a0a0a);
+                m.metalness = 0.0;
+                m.roughness = 0.92;
+                m.needsUpdate = true;
+                return;
+              }
 
-              // --- SKIP: glass (mesh name contains "glass") ---
-              if (meshName.includes('glass') || meshName.includes('light')) return;
+              // --- SKIP: glass, lights ---
+              if (meshName.includes('glass') || meshName.includes('light') || meshName.includes('biper')) return;
               if (m.transparent && m.opacity < 0.88) return;
               if ('transmission' in m && (m as unknown as { transmission: number }).transmission > 0.1) return;
 
-              // --- SKIP: high-metalness chrome (M≥0.85) — logo, exhaust, badges ---
-              if (m.metalness >= 0.85) return;
+              // --- BODY MESHES: force purple even if original M=1.00 ---
+              const isBody = meshName.startsWith('cla250') || meshName.startsWith('bumper') || meshName.startsWith('object');
+              if (isBody) {
+                m.color.set(paintColor);
+                m.metalness = 0.5;
+                m.roughness = 0.12;
+                m.envMapIntensity = 1.6;
+                m.transparent = false;
+                m.opacity = 1;
+                if ('transmission' in m) (m as unknown as { transmission: number }).transmission = 0;
+                m.needsUpdate = true;
+                return;
+              }
 
-              // --- PAINT: body, bumpers, mirrors, pillars, trim ---
+              // --- HIGH-METALNESS (star, badges, exhaust): polished chrome mirror ---
+              if (m.metalness >= 0.85) {
+                m.color.set(0xe8e8e8);
+                m.metalness = 0.95;
+                m.roughness = 0.06;
+                m.envMapIntensity = 2.5;
+                m.needsUpdate = true;
+                return;
+              }
+
+              // --- EVERYTHING ELSE: paint purple ---
               m.color.set(paintColor);
               m.metalness = 0.5;
               m.roughness = 0.12;
