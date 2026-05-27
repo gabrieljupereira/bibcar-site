@@ -82,7 +82,7 @@ export default function Home() {
             />
             <ClientCarViewer
               modelPath="/car.glb"
-              bodyColor="#C13EFF"
+              bodyColor="#7B2FBF"
               style={{ width: '100%', height: '100%' }}
             />
             <p

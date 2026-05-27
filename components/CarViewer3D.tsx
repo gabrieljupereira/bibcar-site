@@ -43,7 +43,7 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.8;
+      renderer.toneMappingExposure = 1.1;
       container.appendChild(renderer.domElement);
 
       // Environment map for realistic reflections on metallic surfaces
@@ -54,11 +54,11 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
       pmremGenerator.dispose();
 
       // Lights
-      const ambient = new THREE.AmbientLight(0xffffff, 1.2);
+      const ambient = new THREE.AmbientLight(0xffffff, 0.8);
       scene.add(ambient);
 
       // Main key light — warm top front
-      const keyLight = new THREE.DirectionalLight(0xfff4e0, 5);
+      const keyLight = new THREE.DirectionalLight(0xfff4e0, 2.5);
       keyLight.position.set(4, 8, 5);
       keyLight.castShadow = true;
       keyLight.shadow.mapSize.set(2048, 2048);
@@ -72,12 +72,12 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
       scene.add(keyLight);
 
       // Fill light — cool side
-      const fillLight = new THREE.DirectionalLight(0xc8d8ff, 2.5);
+      const fillLight = new THREE.DirectionalLight(0xc8d8ff, 1.5);
       fillLight.position.set(-5, 3, 2);
       scene.add(fillLight);
 
       // Rim light — back edge highlight
-      const rimLight = new THREE.DirectionalLight(0xffffff, 3);
+      const rimLight = new THREE.DirectionalLight(0xffffff, 1.8);
       rimLight.position.set(0, 4, -6);
       scene.add(rimLight);
 
@@ -142,35 +142,58 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
             mesh.castShadow = true;
             mesh.receiveShadow = true;
 
+            // Build full scene-hierarchy name for this mesh (catches "Wheel_FR > Car > Scene")
+            const buildPath = (obj: import('three').Object3D): string => {
+              const parts: string[] = [];
+              let cur: import('three').Object3D | null = obj;
+              while (cur) { if (cur.name) parts.push(cur.name.toLowerCase()); cur = cur.parent; }
+              return parts.join(' ');
+            };
+            const hierPath = buildPath(mesh);
+
             const applyPaint = (mat: import('three').Material) => {
               const m = mat as import('three').MeshStandardMaterial;
               if (!m.color) return;
 
-              // Skip glass: transparent materials (windows, headlight covers)
+              // Full name = hierarchy path + material name
+              const fullName = hierPath + ' ' + (m.name || '').toLowerCase();
+
+              // Skip glass by name or true transparency
+              const isGlass =
+                fullName.includes('glass') || fullName.includes('window') ||
+                fullName.includes('windshield') || fullName.includes('visor') ||
+                fullName.includes('lens') || fullName.includes('headlamp') ||
+                fullName.includes('taillamp');
+              if (isGlass) return;
               if (m.transparent && m.opacity < 0.88) return;
               if ('transmission' in m && (m as unknown as { transmission: number }).transmission > 0.1) return;
 
-              // Skip tires/rubber: high roughness = matte surface (no glossy rubber)
-              if (m.roughness > 0.65) return;
+              // Skip rims/wheels by hierarchy name
+              const isRim =
+                fullName.includes('rim') || fullName.includes('wheel') ||
+                fullName.includes('alloy') || fullName.includes('spoke') ||
+                fullName.includes('hub') || fullName.includes('roda') ||
+                fullName.includes('aro');
+              if (isRim) return;
 
-              // Skip polished chrome rims: high metalness + low roughness = mirror metal
-              if (m.metalness > 0.72 && m.roughness < 0.35) return;
+              // Skip tires by name or roughness (rubber = very matte)
+              const isTire =
+                fullName.includes('tire') || fullName.includes('tyre') ||
+                fullName.includes('rubber') || fullName.includes('pneu');
+              if (isTire) return;
+              if (m.roughness > 0.72) return;
 
-              // Name-based fallback for glass/chrome that may have low roughness
-              const name = (m.name || mesh.name || '').toLowerCase();
-              if (
-                name.includes('glass') || name.includes('window') ||
-                name.includes('windshield') || name.includes('lens') ||
-                name.includes('chrome') || name.includes('badge') ||
-                name.includes('emblem') || name.includes('rotor') ||
-                name.includes('caliper')
-              ) return;
+              // Skip polished chrome: very high metalness
+              if (m.metalness > 0.78) return;
+              if (fullName.includes('chrome') || fullName.includes('badge') ||
+                  fullName.includes('emblem') || fullName.includes('logo') ||
+                  fullName.includes('rotor') || fullName.includes('caliper')) return;
 
-              // Paint everything else — body, bumpers, mirrors, pillars
+              // Paint body panels solid glossy purple
               m.color.set(paintColor);
-              m.metalness = 0.4;
-              m.roughness = 0.1;
-              m.envMapIntensity = 1.8;
+              m.metalness = 0.5;
+              m.roughness = 0.12;
+              m.envMapIntensity = 1.6;
               m.transparent = false;
               m.opacity = 1;
               if ('transmission' in m) (m as unknown as { transmission: number }).transmission = 0;
