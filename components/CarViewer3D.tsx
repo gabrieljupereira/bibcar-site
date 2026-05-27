@@ -206,38 +206,25 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
 
           // Place BibCar logo on both sides of car
           const carBB = new THREE.Box3().setFromObject(model);
-          const carW = carBB.max.x - carBB.min.x;
           const carH = carBB.max.y - carBB.min.y;
+          const carCenterZ = (carBB.min.z + carBB.max.z) / 2;
           new THREE.TextureLoader().load('/logo.png', (logoTex) => {
             logoTex.colorSpace = THREE.SRGBColorSpace;
             const img = logoTex.image as HTMLImageElement;
-            const cv = document.createElement('canvas');
-            cv.width = img.width; cv.height = img.height;
-            const ctx = cv.getContext('2d')!;
-            ctx.drawImage(img, 0, 0);
-            const px = ctx.getImageData(0, 0, cv.width, cv.height);
-            for (let i = 0; i < px.data.length; i += 4) {
-              if (px.data[i] > 210 && px.data[i + 1] > 210 && px.data[i + 2] > 210)
-                px.data[i + 3] = 0;
-            }
-            ctx.putImageData(px, 0, 0);
-            const cleanTex = new THREE.CanvasTexture(cv);
             const logoH = carH * 0.22;
-            const logoW = logoH * (img.width / img.height);
+            const logoW = logoH * (img.naturalWidth / img.naturalHeight);
             const mat = new THREE.MeshBasicMaterial({
-              map: cleanTex, transparent: true, depthWrite: false,
-              polygonOffset: true, polygonOffsetFactor: -4,
+              map: logoTex, transparent: true, alphaTest: 0.05,
+              depthWrite: false, polygonOffset: true, polygonOffsetFactor: -4,
             });
-            const logoY = carBB.min.y + carH * 0.52;
-            const logoZ = (carBB.min.z + carBB.max.z) / 2 + carW * 0.04;
-            // Left side (faces -X)
-            const mL = new THREE.Mesh(new THREE.PlaneGeometry(logoW, logoH), mat);
-            mL.position.set(carBB.min.x - 0.01, logoY, logoZ);
+            const logoY = carBB.min.y + carH * 0.5;
+            const geo = new THREE.PlaneGeometry(logoW, logoH);
+            const mL = new THREE.Mesh(geo, mat);
+            mL.position.set(carBB.min.x - 0.01, logoY, carCenterZ);
             mL.rotation.y = Math.PI / 2;
             scene.add(mL);
-            // Right side (faces +X)
-            const mR = new THREE.Mesh(new THREE.PlaneGeometry(logoW, logoH), mat.clone());
-            mR.position.set(carBB.max.x + 0.01, logoY, logoZ);
+            const mR = new THREE.Mesh(geo, mat);
+            mR.position.set(carBB.max.x + 0.01, logoY, carCenterZ);
             mR.rotation.y = -Math.PI / 2;
             scene.add(mR);
           });
