@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR">
-      <body className="bg-dark text-white overflow-x-hidden">
+      <body className="overflow-x-hidden">
         <ClientParticles />
         <Nav />
         <main style={{ position: 'relative', zIndex: 2 }}>{children}</main>
