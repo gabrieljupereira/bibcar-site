@@ -53,12 +53,12 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
       scene.environment = envTexture;
       pmremGenerator.dispose();
 
-      // Lights
-      const ambient = new THREE.AmbientLight(0xffffff, 0.8);
+      // Lights — dramatic studio setup for deep shadows + chrome highlights
+      const ambient = new THREE.AmbientLight(0xffffff, 0.3);
       scene.add(ambient);
 
-      // Main key light — warm top front
-      const keyLight = new THREE.DirectionalLight(0xfff4e0, 2.5);
+      // Main key light — strong warm from top-front
+      const keyLight = new THREE.DirectionalLight(0xfff8f0, 4.0);
       keyLight.position.set(4, 8, 5);
       keyLight.castShadow = true;
       keyLight.shadow.mapSize.set(2048, 2048);
@@ -71,23 +71,23 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
       keyLight.shadow.bias = -0.001;
       scene.add(keyLight);
 
-      // Fill light — cool side
-      const fillLight = new THREE.DirectionalLight(0xc8d8ff, 1.5);
+      // Fill light — cool blue side
+      const fillLight = new THREE.DirectionalLight(0xd0e8ff, 1.8);
       fillLight.position.set(-5, 3, 2);
       scene.add(fillLight);
 
-      // Rim light — back edge highlight
-      const rimLight = new THREE.DirectionalLight(0xffffff, 1.8);
-      rimLight.position.set(0, 4, -6);
+      // Rim light — strong back-edge to outline car in white
+      const rimLight = new THREE.DirectionalLight(0xffffff, 2.5);
+      rimLight.position.set(0, 5, -6);
       scene.add(rimLight);
 
-      // Subtle under-car fill — very soft, no color cast
-      const underFill = new THREE.PointLight(0xffffff, 0.6, 5);
+      // Subtle under-car fill
+      const underFill = new THREE.PointLight(0xffffff, 0.4, 5);
       underFill.position.set(0, -0.3, 0);
       scene.add(underFill);
 
-      // Soft front fill — neutral white, avoid color cast
-      const frontLight = new THREE.PointLight(0xffffff, 1.2, 8);
+      // Soft front fill
+      const frontLight = new THREE.PointLight(0xffffff, 0.8, 8);
       frontLight.position.set(0, 1.5, 4);
       scene.add(frontLight);
 
@@ -149,21 +149,22 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
               const m = mat as import('three').MeshStandardMaterial;
               if (!m.color) return;
 
-              // --- RIMS: actively set to polished silver chrome ---
+              // --- RIMS: brushed silver alloy — low envMap so purple bg doesn't bleed in ---
               if (meshName.startsWith('rims')) {
-                m.color.set(0xd4d4d4);
-                m.metalness = 0.9;
-                m.roughness = 0.18;
-                m.envMapIntensity = 2.0;
+                m.color.set(0xc0c0c0);
+                m.metalness = 0.75;
+                m.roughness = 0.28;
+                m.envMapIntensity = 0.2; // near-zero: shows own silver color, not purple reflections
                 m.needsUpdate = true;
                 return;
               }
 
-              // --- TIRES: actively set to black matte rubber ---
+              // --- TIRES: black matte rubber ---
               if (meshName.includes('rubber')) {
-                m.color.set(0x0a0a0a);
+                m.color.set(0x080808);
                 m.metalness = 0.0;
-                m.roughness = 0.92;
+                m.roughness = 0.95;
+                m.envMapIntensity = 0;
                 m.needsUpdate = true;
                 return;
               }
@@ -173,44 +174,28 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
               if (m.transparent && m.opacity < 0.88) return;
               if ('transmission' in m && (m as unknown as { transmission: number }).transmission > 0.1) return;
 
-              // --- CHROME KEYWORDS: star, logo, badge, exhaust → polished silver ---
+              // --- CHROME: star, logo, badge, high-metalness trim → polished silver ---
+              // Key: envMapIntensity LOW so they show actual silver color, not purple env reflections
               const isChrome =
                 meshName.includes('star') || meshName.includes('logo') ||
                 meshName.includes('badge') || meshName.includes('emblem') ||
                 meshName.includes('chrome') || meshName.includes('exhaust') ||
                 meshName.includes('trim') || meshName.includes('grille') ||
-                meshName.includes('ornament') || meshName.includes('hood_star') ||
-                m.metalness >= 0.85;
+                meshName.includes('ornament') || m.metalness >= 0.85;
               if (isChrome) {
-                m.color.set(0xe0e0e0);
-                m.metalness = 0.95;
-                m.roughness = 0.06;
-                m.envMapIntensity = 2.5;
+                m.color.set(0xd8d8d8);
+                m.metalness = 0.82;
+                m.roughness = 0.14;
+                m.envMapIntensity = 0.15; // very low: appears silver not purple
                 m.needsUpdate = true;
                 return;
               }
 
-              // --- BODY MESHES: force purple even if original M=1.00 ---
-              const isBody = meshName.startsWith('cla250') || meshName.startsWith('bumper') || meshName.startsWith('object');
-              if (isBody) {
-                m.color.set(paintColor);
-                m.metalness = 0.5;
-                m.roughness = 0.12;
-                m.envMapIntensity = 1.6;
-                m.transparent = false;
-                m.opacity = 1;
-                if ('transmission' in m) (m as unknown as { transmission: number }).transmission = 0;
-                m.needsUpdate = true;
-                return;
-              }
-
-              // --- EVERYTHING ELSE: paint purple ---
-              // Log unknowns so we can identify the star mesh if needed
-              console.log('[CarViewer unknown mesh]', mesh.name, 'mat:', m.name, 'M:', m.metalness?.toFixed(2), 'R:', m.roughness?.toFixed(2));
+              // --- BODY + EVERYTHING ELSE: deep glossy purple paint ---
               m.color.set(paintColor);
-              m.metalness = 0.5;
-              m.roughness = 0.12;
-              m.envMapIntensity = 1.6;
+              m.metalness = 0.45;
+              m.roughness = 0.08;
+              m.envMapIntensity = 0.6; // moderate — adds paint depth without purple bleed
               m.transparent = false;
               m.opacity = 1;
               if ('transmission' in m) (m as unknown as { transmission: number }).transmission = 0;
