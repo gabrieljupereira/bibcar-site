@@ -136,6 +136,19 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
 
           const paintColor = new THREE.Color(bodyColor);
 
+          // DEBUG — remove after identifying material names
+          const matLog: string[] = [];
+          model.traverse((child) => {
+            const mesh = child as import('three').Mesh;
+            if (!mesh.isMesh) return;
+            const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+            mats.forEach((mat) => {
+              const m = mat as import('three').MeshStandardMaterial;
+              matLog.push(`mesh="${mesh.name}" mat="${m.name}" metal=${m.metalness?.toFixed(2)} rough=${m.roughness?.toFixed(2)} transp=${m.transparent} opacity=${m.opacity?.toFixed(2)}`);
+            });
+          });
+          console.log('[CarViewer] materials:\n' + matLog.join('\n'));
+
           model.traverse((child) => {
             const mesh = child as import('three').Mesh;
             if (!mesh.isMesh) return;
