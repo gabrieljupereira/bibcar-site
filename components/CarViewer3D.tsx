@@ -153,31 +153,26 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
               const m = mat as import('three').MeshStandardMaterial;
               if (!m.color) return;
 
-              // Preserve original values (read from cloned copy)
-              const origM   = m.metalness;
-              const origR   = m.roughness;
-              const origE   = (m as unknown as { emissiveIntensity?: number }).emissiveIntensity ?? 0;
+              const origM = m.metalness;
+              const origR = m.roughness;
+              const origE = (m as unknown as { emissiveIntensity?: number }).emissiveIntensity ?? 0;
               const { r, g, b } = m.color;
               const origLum = 0.299 * r + 0.587 * g + 0.114 * b;
 
-              // --- KEEP ORIGINAL: glass / transparent ---
+              // KEEP: glass / transparent
               if (m.transparent && m.opacity < 0.9) return;
               if ('transmission' in m && (m as unknown as { transmission: number }).transmission > 0.05) return;
 
-              // --- KEEP ORIGINAL: emissive lights (headlights LED, red tail lights) ---
-              if (origE > 0.1) return;
+              // KEEP: lights with emissive (faróis LED, lanternas vermelhas)
+              if (origE > 0.05) return;
 
-              // --- KEEP ORIGINAL: tires (very matte + dark) ---
-              if (origR > 0.6 && origM < 0.2 && origLum < 0.12) return;
+              // KEEP: tires — matte + dark + rubber-like
+              if (origR > 0.55 && origM < 0.15 && origLum < 0.15) return;
 
-              // --- KEEP ORIGINAL: chrome / metallic (rims, grille, trim, exhaust) ---
-              if (origM > 0.75) return;
+              // KEEP: polished metallic rims/chrome — shiny metal
+              if (origM > 0.65 && origR < 0.4) return;
 
-              // --- KEEP ORIGINAL: very dark non-paint surfaces (underbody, engine bay) ---
-              // Only skip if BOTH dark AND very matte (not body paint)
-              if (origLum < 0.03 && origR > 0.55) return;
-
-              // --- PAINT PURPLE: body panels only ---
+              // PAINT: body panels (and anything else that isn't glass/lights/tires/rims)
               m.color.set(paintColor);
               m.metalness = 0.5;
               m.roughness = 0.1;
