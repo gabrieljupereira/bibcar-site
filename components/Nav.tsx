@@ -31,9 +31,9 @@ export default function Nav() {
           <Image
             src="/logo.png"
             alt="BibCar"
-            width={130}
-            height={48}
-            className="h-12 w-auto"
+            width={180}
+            height={66}
+            className="h-16 w-auto"
             priority
           />
         </Link>
