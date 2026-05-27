@@ -205,10 +205,12 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
           // Paint brake calipers yellow (#FADA28)
           const caliperColor = new THREE.Color('#FADA28');
           const CALIPER_KEYWORDS = ['caliper', 'calliper', 'pinca'];
+          const LIGHT_KEYWORDS = ['light', 'lamp', 'lens', 'tail', 'signal', 'stop', 'indicator', 'chmsl', 'runninglight'];
           model.traverse((child) => {
             const cMesh = child as import('three').Mesh;
             if (!cMesh.isMesh) return;
             const cn = cMesh.name.toLowerCase();
+            if (LIGHT_KEYWORDS.some(k => cn.includes(k))) return;
             const byName = CALIPER_KEYWORDS.some(k => cn.includes(k));
             const firstMat = (Array.isArray(cMesh.material) ? cMesh.material[0] : cMesh.material) as import('three').MeshStandardMaterial;
             const byColor = firstMat?.color && firstMat.color.r > 0.55 && firstMat.color.g < 0.25 && firstMat.color.b < 0.25;
