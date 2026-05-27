@@ -184,8 +184,8 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
                 return;
               }
 
-              // --- CHROME/SILVER: high metalness in original model ---
-              if (origM >= 0.7) {
+              // --- CHROME/SILVER: very high metalness only (true chrome: rims, grille, badges) ---
+              if (origM >= 0.88) {
                 m.color.set(0xd0d0d0);
                 m.metalness = 0.85;
                 m.roughness = 0.18;
