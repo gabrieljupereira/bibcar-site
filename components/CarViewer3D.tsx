@@ -157,53 +157,60 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
               const m = mat as import('three').MeshStandardMaterial;
               if (!m.color) return;
 
-              // --- RIMS: brushed silver alloy — low envMap so purple bg doesn't bleed in ---
-              if (meshName.startsWith('rims')) {
-                m.color.set(0xc0c0c0);
-                m.metalness = 0.75;
-                m.roughness = 0.28;
-                m.envMapIntensity = 0.2; // near-zero: shows own silver color, not purple reflections
-                m.needsUpdate = true;
-                return;
-              }
+              // Read ORIGINAL values from the cloned material (safe — no shared state)
+              const origM = m.metalness;
+              const origR = m.roughness;
+              const origT = m.transparent;
+              const origO = m.opacity;
+              const { r, g, b } = m.color;
+              const origLum = 0.299 * r + 0.587 * g + 0.114 * b;
 
-              // --- TIRES: black matte rubber ---
-              if (meshName.includes('rubber')) {
+              // Debug: log each material so we can see what this model has
+              console.log(`[mat] mesh="${mesh.name}" mat="${m.name}" M=${origM.toFixed(2)} R=${origR.toFixed(2)} L=${origLum.toFixed(2)} T=${origT} O=${origO?.toFixed(2)}`);
+
+              // --- GLASS: transparent by property ---
+              if (origT && origO < 0.88) return;
+              if ('transmission' in m && (m as unknown as { transmission: number }).transmission > 0.1) return;
+              const n = (mesh.name + ' ' + m.name).toLowerCase();
+              if (n.includes('glass') || n.includes('window') || n.includes('windshield')) return;
+
+              // --- TIRES: high roughness + near-zero metalness + dark ---
+              if (origR >= 0.65 && origM < 0.15 && origLum < 0.15) {
                 m.color.set(0x080808);
-                m.metalness = 0.0;
-                m.roughness = 0.95;
+                m.metalness = 0;
+                m.roughness = 0.92;
                 m.envMapIntensity = 0;
                 m.needsUpdate = true;
                 return;
               }
 
-              // --- SKIP: glass, lights ---
-              if (meshName.includes('glass') || meshName.includes('light') || meshName.includes('biper')) return;
-              if (m.transparent && m.opacity < 0.88) return;
-              if ('transmission' in m && (m as unknown as { transmission: number }).transmission > 0.1) return;
-
-              // --- CHROME: star, logo, badge, high-metalness trim → polished silver ---
-              // Key: envMapIntensity LOW so they show actual silver color, not purple env reflections
-              const isChrome =
-                meshName.includes('star') || meshName.includes('logo') ||
-                meshName.includes('badge') || meshName.includes('emblem') ||
-                meshName.includes('chrome') || meshName.includes('exhaust') ||
-                meshName.includes('trim') || meshName.includes('grille') ||
-                meshName.includes('ornament') || m.metalness >= 0.85;
-              if (isChrome) {
-                m.color.set(0xd8d8d8);
-                m.metalness = 0.82;
-                m.roughness = 0.14;
-                m.envMapIntensity = 0.15; // very low: appears silver not purple
+              // --- CHROME/SILVER: high metalness in original model ---
+              if (origM >= 0.7) {
+                m.color.set(0xd0d0d0);
+                m.metalness = 0.85;
+                m.roughness = 0.18;
+                m.envMapIntensity = 0.2;
                 m.needsUpdate = true;
                 return;
               }
 
-              // --- BODY + EVERYTHING ELSE: deep glossy purple paint ---
+              // --- Also chrome by name keywords ---
+              if (n.includes('chrome') || n.includes('rim') || n.includes('wheel') ||
+                  n.includes('grille') || n.includes('trim') || n.includes('logo') ||
+                  n.includes('badge') || n.includes('emblem') || n.includes('exhaust')) {
+                m.color.set(0xd0d0d0);
+                m.metalness = 0.85;
+                m.roughness = 0.18;
+                m.envMapIntensity = 0.2;
+                m.needsUpdate = true;
+                return;
+              }
+
+              // --- BODY PAINT: everything else → deep glossy purple ---
               m.color.set(paintColor);
               m.metalness = 0.45;
               m.roughness = 0.08;
-              m.envMapIntensity = 0.6; // moderate — adds paint depth without purple bleed
+              m.envMapIntensity = 0.6;
               m.transparent = false;
               m.opacity = 1;
               if ('transmission' in m) (m as unknown as { transmission: number }).transmission = 0;
