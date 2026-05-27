@@ -25,7 +25,7 @@ export default function Nav() {
   const accent = accentColor[pathname] || '#A830E8';
 
   return (
-    <nav className="sticky top-0 z-50" style={{ backdropFilter: 'blur(16px)', background: 'rgba(247,245,255,0.92)', borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
+    <nav className="sticky top-0 z-50" style={{ backdropFilter: 'blur(16px)', background: 'rgba(18,8,40,0.92)', borderBottom: '1px solid rgba(161,48,232,0.25)' }}>
       <div className="container flex items-center justify-between h-20">
         <Link href="/" className="flex items-center gap-3" onClick={() => setOpen(false)}>
           <Image
@@ -47,9 +47,9 @@ export default function Nav() {
                 key={link.href}
                 href={link.href}
                 className="text-sm font-semibold tracking-wide transition-colors duration-200"
-                style={{ color: isActive ? accent : '#64748B' }}
+                style={{ color: isActive ? accent : 'rgba(255,255,255,0.75)' }}
                 onMouseEnter={(e) => { (e.target as HTMLElement).style.color = accent; }}
-                onMouseLeave={(e) => { (e.target as HTMLElement).style.color = isActive ? accent : '#64748B'; }}
+                onMouseLeave={(e) => { (e.target as HTMLElement).style.color = isActive ? accent : 'rgba(255,255,255,0.75)'; }}
               >
                 {link.label}
               </Link>
@@ -74,9 +74,9 @@ export default function Nav() {
           aria-label="Menu"
         >
           <div className="w-6 flex flex-col gap-1.5">
-            <span className="block h-0.5 rounded transition-all duration-300" style={{ background: '#100D24', transform: open ? 'rotate(45deg) translateY(8px)' : 'none' }} />
-            <span className="block h-0.5 rounded transition-all duration-300" style={{ background: '#100D24', opacity: open ? 0 : 1 }} />
-            <span className="block h-0.5 rounded transition-all duration-300" style={{ background: '#100D24', transform: open ? 'rotate(-45deg) translateY(-8px)' : 'none' }} />
+            <span className="block h-0.5 rounded transition-all duration-300" style={{ background: 'rgba(255,255,255,0.85)', transform: open ? 'rotate(45deg) translateY(8px)' : 'none' }} />
+            <span className="block h-0.5 rounded transition-all duration-300" style={{ background: 'rgba(255,255,255,0.85)', opacity: open ? 0 : 1 }} />
+            <span className="block h-0.5 rounded transition-all duration-300" style={{ background: 'rgba(255,255,255,0.85)', transform: open ? 'rotate(-45deg) translateY(-8px)' : 'none' }} />
           </div>
         </button>
       </div>
@@ -85,8 +85,8 @@ export default function Nav() {
         <div
           className="md:hidden overflow-hidden"
           style={{
-            background: 'rgba(247,245,255,0.98)',
-            borderTop: '1px solid rgba(0,0,0,0.08)',
+            background: 'rgba(18,8,40,0.97)',
+            borderTop: '1px solid rgba(161,48,232,0.25)',
             animation: 'navSlideDown 0.25s ease forwards',
           }}
         >
@@ -97,7 +97,7 @@ export default function Nav() {
                 href={link.href}
                 onClick={() => setOpen(false)}
                 className="text-lg font-semibold transition-colors"
-                style={{ color: '#64748B' }}
+                style={{ color: 'rgba(255,255,255,0.75)' }}
               >
                 {link.label}
               </Link>
