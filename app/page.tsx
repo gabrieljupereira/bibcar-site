@@ -16,10 +16,10 @@ const features = [
 const cities = [
   { name: 'Fernandópolis · SP', active: true },
   { name: 'Votuporanga · SP', active: true },
-  { name: 'Muriaé · MG', active: false },
-  { name: 'Manhuaçu · MG', active: false },
-  { name: 'Viçosa · MG', active: false },
-  { name: 'Sete Lagoas · MG', active: false },
+  { name: 'Muriaé · MG', active: true },
+  { name: 'Manhuaçu · MG', active: true },
+  { name: 'Viçosa · MG', active: true },
+  { name: 'Sete Lagoas · MG', active: true },
 ];
 
 export default function Home() {
