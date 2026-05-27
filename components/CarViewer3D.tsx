@@ -228,6 +228,29 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
             }
           });
 
+          // Turn on DRL / LED signature strips — make them glow white
+          const DRL_KEYWORDS = ['drl', 'led', 'daytime', 'running', 'strip', 'signature', 'accent', 'eyebrow'];
+          model.traverse((child) => {
+            const lMesh = child as import('three').Mesh;
+            if (!lMesh.isMesh) return;
+            const ln = lMesh.name.toLowerCase();
+            const byDrlName = DRL_KEYWORDS.some(k => ln.includes(k));
+            const mats = Array.isArray(lMesh.material) ? lMesh.material : [lMesh.material];
+            const firstM = mats[0] as import('three').MeshStandardMaterial;
+            // Also catch bright-white meshes inside headlight housings (r,g,b all > 0.8)
+            const byWhiteColor = firstM?.color &&
+              firstM.color.r > 0.8 && firstM.color.g > 0.8 && firstM.color.b > 0.8 &&
+              ln.includes('light');
+            if (!byDrlName && !byWhiteColor) return;
+            mats.forEach(mat => {
+              const m = mat as import('three').MeshStandardMaterial;
+              if (!m.color) return;
+              m.emissive = new THREE.Color('#ffffff');
+              m.emissiveIntensity = 2.5;
+              m.needsUpdate = true;
+            });
+          });
+
           scene.add(model);
 
           // Place BibCar logo on both sides of car
