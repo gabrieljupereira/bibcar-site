@@ -43,7 +43,7 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.1;
+      renderer.toneMappingExposure = 0.85;
       container.appendChild(renderer.domElement);
 
       // Environment map — RoomEnvironment immediately, upgrade to HDRI if available
@@ -73,12 +73,12 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
         }
       })();
 
-      // Studio lights — soft and even, let env map do most work
-      const ambient = new THREE.AmbientLight(0xffffff, 1.2);
+      // Controlled studio lighting — lower intensity to preserve color saturation
+      const ambient = new THREE.AmbientLight(0xffffff, 0.4);
       scene.add(ambient);
 
-      // Soft key from top-front
-      const keyLight = new THREE.DirectionalLight(0xfff8f0, 2.5);
+      // Key light — soft from top-front
+      const keyLight = new THREE.DirectionalLight(0xfff8f0, 1.2);
       keyLight.position.set(3, 7, 5);
       keyLight.castShadow = true;
       keyLight.shadow.mapSize.set(4096, 4096);
@@ -91,13 +91,13 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
       keyLight.shadow.bias = -0.001;
       scene.add(keyLight);
 
-      // Soft fill from side
-      const fillLight = new THREE.DirectionalLight(0xe8f0ff, 1.2);
+      // Fill light — gentle from side
+      const fillLight = new THREE.DirectionalLight(0xe0e8ff, 0.6);
       fillLight.position.set(-5, 3, 2);
       scene.add(fillLight);
 
-      // Rim light — separates car from background
-      const rimLight = new THREE.DirectionalLight(0xffffff, 1.8);
+      // Rim light — edge separation
+      const rimLight = new THREE.DirectionalLight(0xffffff, 0.9);
       rimLight.position.set(0, 5, -6);
       scene.add(rimLight);
 
@@ -184,9 +184,11 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
                 ? (0.299 * emissiveColor.r + 0.587 * emissiveColor.g + 0.114 * emissiveColor.b) * origE
                 : 0;
               if (emissiveLum > 0.02) return;
-              // Remove color texture so pure #7F00FF shows without warm-tone interference
+              // Glossy car paint: dielectric clearcoat (metalness=0) shows vivid color
               m.map = null;
               m.color.set(paintColor);
+              m.metalness = 0.0;
+              m.roughness = 0.15;
               m.needsUpdate = true;
             };
 
