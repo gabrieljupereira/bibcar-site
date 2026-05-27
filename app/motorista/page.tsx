@@ -57,9 +57,9 @@ export default function Motorista() {
   return (
     <>
       {/* HERO */}
-      <section className="relative overflow-hidden" style={{ minHeight: '90vh', display: 'flex', alignItems: 'center' }}>
+      <section className="relative overflow-hidden" style={{ minHeight: '90vh', display: 'flex', alignItems: 'center', background: '#0d0b1e' }}>
         <FloatingOrbs variant="motorista" className="absolute inset-0" style={{ zIndex: 0 }} />
-        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 25% 50%,rgba(7,7,7,0.88) 0%,rgba(7,7,7,0.6) 60%,transparent 100%)', zIndex: 1 }} />
+        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 25% 50%,rgba(7,7,7,0.7) 0%,rgba(7,7,7,0.3) 60%,transparent 100%)', zIndex: 1 }} />
         <div className="container relative py-28" style={{ zIndex: 2 }}>
           <div className="max-w-2xl">
             <div className="tag tag-gold mb-8 inline-flex">
