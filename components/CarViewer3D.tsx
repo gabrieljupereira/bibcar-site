@@ -28,9 +28,8 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
       const w = container.clientWidth || 600;
       const h = container.clientHeight || 480;
 
-      // Scene — dark background stops CSS purple from bleeding through transparent renderer
+      // Scene — transparent so container CSS background shows through
       const scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x080810);
 
       // Camera — low angle, cinematic
       const camera = new THREE.PerspectiveCamera(42, w / h, 0.1, 100);

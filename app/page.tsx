@@ -72,14 +72,6 @@ export default function Home() {
           </div>
 
           <div className="hidden md:flex justify-center items-center relative" style={{ height: 480 }}>
-            <div
-              className="absolute inset-0"
-              style={{
-                background: 'radial-gradient(circle at 50% 60%, rgba(193,62,255,0.3), transparent 70%)',
-                filter: 'blur(30px)',
-                pointerEvents: 'none',
-              }}
-            />
             <ClientCarViewer
               modelPath="/car.glb"
               bodyColor="#5C0F8B"
