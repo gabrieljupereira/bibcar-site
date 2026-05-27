@@ -46,10 +46,28 @@ export default function Nav() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm font-semibold tracking-wide transition-colors duration-200"
-                style={{ color: isActive ? accent : 'rgba(255,255,255,0.75)' }}
-                onMouseEnter={(e) => { (e.target as HTMLElement).style.color = accent; }}
-                onMouseLeave={(e) => { (e.target as HTMLElement).style.color = isActive ? accent : 'rgba(255,255,255,0.75)'; }}
+                className="transition-all duration-200"
+                style={{
+                  color: isActive ? accent : '#ffffff',
+                  fontWeight: 700,
+                  fontSize: 14,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  textShadow: isActive ? `0 0 12px ${accent}88` : '0 1px 4px rgba(0,0,0,0.3)',
+                  opacity: isActive ? 1 : 0.92,
+                }}
+                onMouseEnter={(e) => {
+                  const el = e.target as HTMLElement;
+                  el.style.color = accent;
+                  el.style.textShadow = `0 0 14px ${accent}aa`;
+                  el.style.opacity = '1';
+                }}
+                onMouseLeave={(e) => {
+                  const el = e.target as HTMLElement;
+                  el.style.color = isActive ? accent : '#ffffff';
+                  el.style.textShadow = isActive ? `0 0 12px ${accent}88` : '0 1px 4px rgba(0,0,0,0.3)';
+                  el.style.opacity = isActive ? '1' : '0.92';
+                }}
               >
                 {link.label}
               </Link>
