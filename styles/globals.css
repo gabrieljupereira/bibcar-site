@@ -198,7 +198,8 @@ body {
 .container {
   max-width: 1240px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding-left: 24px;
+  padding-right: 24px;
 }
 
 @keyframes campaign-slide {
