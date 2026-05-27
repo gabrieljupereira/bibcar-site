@@ -146,12 +146,15 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
 
           const paintColor = new THREE.Color(bodyColor);
 
-          // Whitelist: ONLY paint meshes whose names match body panel keywords
-          // Everything else (tires, rims, glass, lights, logos, interior) stays original
           const BODY_KEYWORDS = [
             'door', 'hood', 'body', 'fender', 'bumper', 'bumpor',
             'spoiler', 'roof', 'trunk', 'bonnet', 'quarter', 'rocker',
             'sill', 'wing', 'panel', 'tailgate', 'bootlid', 'mirror',
+          ];
+
+          // Exclusions take priority — never paint lights/glass even if name matches a body keyword (e.g. trunklight)
+          const EXCLUDE_KEYWORDS = [
+            'light', 'lamp', 'lens', 'glass', 'signal', 'runninglight', 'chmsl',
           ];
 
           model.traverse((child) => {
@@ -160,8 +163,8 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
             mesh.castShadow = true;
             mesh.receiveShadow = true;
 
-            // Only process confirmed body panels
             const n = mesh.name.toLowerCase();
+            if (EXCLUDE_KEYWORDS.some(k => n.includes(k))) return;
             if (!BODY_KEYWORDS.some(k => n.includes(k))) return;
 
             // Clone materials before modifying
