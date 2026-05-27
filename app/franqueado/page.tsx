@@ -90,9 +90,9 @@ export default function Franqueado() {
   return (
     <>
       {/* HERO */}
-      <section className="relative overflow-hidden" style={{ minHeight: '90vh', display: 'flex', alignItems: 'center', background: '#0d0b1e' }}>
+      <section className="relative overflow-hidden" style={{ minHeight: '90vh', display: 'flex', alignItems: 'center', background: '#F7F5FF' }}>
         <FloatingOrbs variant="franqueado" className="absolute inset-0" style={{ zIndex: 0 }} />
-        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 25% 50%,rgba(7,7,7,0.7) 0%,rgba(7,7,7,0.3) 60%,transparent 100%)', zIndex: 1 }} />
+        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 25% 50%,rgba(241,235,255,0.85) 0%,transparent 70%)', zIndex: 1 }} />
         <div className="container relative py-28" style={{ zIndex: 2 }}>
           <div className="max-w-2xl">
             <div className="tag tag-gold mb-8 inline-flex">
@@ -108,10 +108,7 @@ export default function Franqueado() {
               Leve a BibCar pra sua cidade. Modelo de negócio validado, suporte completo, tecnologia de ponta — e uma marca que já chegou pra ficar.
             </p>
             <div className="flex flex-wrap gap-4">
-              <a
-                href="#contato"
-                className="btn-gold"
-              >
+              <a href="#contato" className="btn-gold">
                 Quero ser franqueado →
               </a>
               <a href="https://wa.me/551151924005" target="_blank" rel="noopener" className="btn-ghost">
@@ -123,7 +120,7 @@ export default function Franqueado() {
       </section>
 
       {/* 3 PILARES */}
-      <section className="section" style={{ background: 'linear-gradient(180deg,#070707 0%,#0c0814 100%)' }}>
+      <section className="section" style={{ background: '#ffffff' }}>
         <div className="container">
           <ScrollReveal className="text-center mb-14 max-w-xl mx-auto">
             <div className="tag tag-gold mb-5 inline-flex">O modelo BibCar</div>
@@ -140,23 +137,23 @@ export default function Franqueado() {
             {pillars.map((p, i) => (
               <ScrollReveal key={p.title} delay={i * 0.13}>
                 <div
-                  className="rounded-3xl p-10 relative overflow-hidden h-full flex flex-col"
-                  style={{ background: '#141420', border: '1px solid #232336' }}
+                  className="rounded-3xl p-10 relative overflow-hidden h-full flex flex-col transition-all duration-300"
+                  style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.09)', boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}
                   onMouseEnter={(e) => {
                     (e.currentTarget as HTMLElement).style.borderColor = p.color + '55';
                     (e.currentTarget as HTMLElement).style.transform = 'translateY(-8px)';
-                    (e.currentTarget as HTMLElement).style.boxShadow = `0 20px 50px ${p.color}22`;
+                    (e.currentTarget as HTMLElement).style.boxShadow = `0 20px 50px ${p.color}20`;
                   }}
                   onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = '#232336';
+                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(0,0,0,0.09)';
                     (e.currentTarget as HTMLElement).style.transform = 'none';
-                    (e.currentTarget as HTMLElement).style.boxShadow = 'none';
+                    (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 12px rgba(0,0,0,0.04)';
                   }}
                 >
                   <div className="absolute top-0 left-0 right-0 h-1.5 rounded-t-3xl" style={{ background: p.color }} />
                   <div
                     className="text-4xl mb-6 mt-2 w-16 h-16 rounded-2xl flex items-center justify-center"
-                    style={{ background: p.color + '20', border: `1px solid ${p.color}40` }}
+                    style={{ background: p.color + '18', border: `1px solid ${p.color}30` }}
                   >
                     {p.icon}
                   </div>
@@ -170,7 +167,7 @@ export default function Franqueado() {
       </section>
 
       {/* O QUE VOCÊ RECEBE */}
-      <section className="section" style={{ background: '#0F0F12' }}>
+      <section className="section" style={{ background: '#F7F5FF' }}>
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <ScrollReveal>
@@ -185,20 +182,23 @@ export default function Franqueado() {
             </ScrollReveal>
 
             <ScrollReveal delay={0.15}>
-              <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(255,210,63,0.2)' }}>
+              <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(255,210,63,0.25)', boxShadow: '0 2px 16px rgba(0,0,0,0.05)' }}>
                 {included.map((item, i) => (
                   <div
                     key={item}
                     className="flex items-center gap-4 px-6 py-4"
-                    style={{ borderBottom: i < included.length - 1 ? '1px solid rgba(255,255,255,0.06)' : 'none', background: i % 2 === 0 ? 'rgba(255,210,63,0.03)' : 'transparent' }}
+                    style={{
+                      borderBottom: i < included.length - 1 ? '1px solid rgba(0,0,0,0.05)' : 'none',
+                      background: i % 2 === 0 ? 'rgba(255,210,63,0.04)' : '#ffffff',
+                    }}
                   >
                     <div
                       className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-black"
-                      style={{ background: 'rgba(255,210,63,0.15)', color: '#FFD23F' }}
+                      style={{ background: 'rgba(255,210,63,0.15)', color: '#FF9500' }}
                     >
                       ✓
                     </div>
-                    <span className="text-sm" style={{ color: '#cfcfdc' }}>{item}</span>
+                    <span className="text-sm text-silver">{item}</span>
                   </div>
                 ))}
               </div>
@@ -208,7 +208,7 @@ export default function Franqueado() {
       </section>
 
       {/* CIDADES */}
-      <section className="section" style={{ background: '#070707' }}>
+      <section className="section" style={{ background: '#ffffff' }}>
         <div className="container">
           <ScrollReveal className="text-center mb-12 max-w-xl mx-auto">
             <div className="tag tag-gold mb-5 inline-flex">Cidades disponíveis</div>
@@ -228,28 +228,29 @@ export default function Franqueado() {
                   key={city.name}
                   className="rounded-2xl p-5 flex flex-col gap-2"
                   style={{
-                    border: city.status === 'ativa' ? '1px solid rgba(255,210,63,0.35)' : '1px solid #232336',
-                    background: city.status === 'ativa' ? 'rgba(255,210,63,0.06)' : 'rgba(255,255,255,0.02)',
+                    border: city.status === 'ativa' ? '1px solid rgba(255,210,63,0.35)' : '1px solid rgba(0,0,0,0.09)',
+                    background: city.status === 'ativa' ? 'rgba(255,210,63,0.06)' : '#ffffff',
+                    boxShadow: '0 1px 8px rgba(0,0,0,0.04)',
                   }}
                 >
                   <div className="flex items-center gap-2">
                     <div
                       className="w-2 h-2 rounded-full"
                       style={{
-                        background: city.status === 'ativa' ? '#FFD23F' : '#3a3a52',
+                        background: city.status === 'ativa' ? '#FFD23F' : '#cbd5e1',
                         boxShadow: city.status === 'ativa' ? '0 0 8px #FFD23F' : 'none',
                       }}
                     />
-                    <span className="text-[11px] font-black uppercase tracking-widest" style={{ color: city.status === 'ativa' ? '#FFD23F' : '#5a5a6a' }}>
+                    <span className="text-[11px] font-black uppercase tracking-widest" style={{ color: city.status === 'ativa' ? '#FF9500' : '#94a3b8' }}>
                       {city.status}
                     </span>
                   </div>
-                  <span className="font-semibold text-sm" style={{ color: city.status === 'ativa' ? '#F5F5F0' : '#A5B0BD' }}>
+                  <span className="font-semibold text-sm" style={{ color: city.status === 'ativa' ? '#100D24' : '#64748B' }}>
                     {city.name}
                   </span>
                 </div>
               ))}
-              <div className="rounded-2xl p-5 flex flex-col gap-2" style={{ border: '1.5px dashed #2a2a40' }}>
+              <div className="rounded-2xl p-5 flex flex-col gap-2" style={{ border: '1.5px dashed rgba(0,0,0,0.15)' }}>
                 <span className="text-[11px] font-black uppercase tracking-widest text-silver/50">em breve</span>
                 <span className="font-semibold text-sm text-silver/50">Sua cidade aqui?</span>
               </div>
@@ -259,7 +260,7 @@ export default function Franqueado() {
       </section>
 
       {/* ETAPAS */}
-      <section className="section" style={{ background: '#0F0F12' }}>
+      <section className="section" style={{ background: '#F7F5FF' }}>
         <div className="container max-w-2xl mx-auto">
           <ScrollReveal className="text-center mb-14">
             <div className="tag tag-gold mb-5 inline-flex">Como se tornar franqueado</div>
@@ -275,10 +276,7 @@ export default function Franqueado() {
               style={{ background: 'linear-gradient(180deg,#FFD23F,#C13EFF,rgba(193,62,255,0))' }}
             />
             {onboardingSteps.map((step, i) => (
-              <div
-                key={i}
-                className="flex gap-6 mb-10 relative"
-              >
+              <div key={i} className="flex gap-6 mb-10 relative">
                 <div
                   className="w-12 h-12 rounded-full flex items-center justify-center font-black text-base flex-shrink-0 relative z-10"
                   style={{
@@ -304,7 +302,7 @@ export default function Franqueado() {
       <section
         id="contato"
         className="section"
-        style={{ background: 'radial-gradient(ellipse at 50% 0%,rgba(255,210,63,.15),transparent 60%),radial-gradient(ellipse at 50% 100%,rgba(193,62,255,.2),transparent 60%),#070707' }}
+        style={{ background: 'radial-gradient(ellipse at 50% 0%,rgba(255,210,63,.1),transparent 60%),radial-gradient(ellipse at 50% 100%,rgba(193,62,255,.1),transparent 60%),#F7F5FF' }}
       >
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-4xl mx-auto">
@@ -336,7 +334,7 @@ export default function Franqueado() {
                 <form
                   onSubmit={handleSubmit}
                   className="rounded-2xl p-8 flex flex-col gap-4"
-                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid #232336' }}
+                  style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.09)', boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}
                 >
                   <h3 className="bebas text-2xl mb-2">Formulário de interesse</h3>
                   {[
@@ -354,12 +352,12 @@ export default function Franqueado() {
                       onChange={handleChange}
                       className="w-full px-5 py-4 rounded-xl text-sm outline-none transition-all"
                       style={{
-                        background: 'rgba(255,255,255,0.05)',
-                        border: '1px solid rgba(255,255,255,0.12)',
-                        color: '#F5F5F0',
+                        background: '#F7F5FF',
+                        border: '1px solid rgba(0,0,0,0.12)',
+                        color: '#100D24',
                       }}
                       onFocus={(e) => { (e.target as HTMLInputElement).style.borderColor = '#FFD23F'; }}
-                      onBlur={(e) => { (e.target as HTMLInputElement).style.borderColor = 'rgba(255,255,255,0.12)'; }}
+                      onBlur={(e) => { (e.target as HTMLInputElement).style.borderColor = 'rgba(0,0,0,0.12)'; }}
                     />
                   ))}
                   <button type="submit" className="btn-gold justify-center mt-2">

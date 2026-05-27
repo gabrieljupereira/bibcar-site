@@ -44,18 +44,18 @@ const faq = [
 function FAQItem({ item, index }: { item: { q: string; a: string }; index: number }) {
   const [open, setOpen] = useState(false);
   return (
-    <div style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+    <div style={{ borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
       <button
         className="w-full flex items-center justify-between py-5 text-left gap-4 hover:text-purple-elec transition-colors"
         onClick={() => setOpen(!open)}
-        style={{ color: open ? '#C13EFF' : '#F5F5F0' }}
+        style={{ color: open ? '#C13EFF' : '#100D24' }}
       >
         <span className="font-semibold" style={{ fontSize: 16 }}>{item.q}</span>
         <span
           className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-lg font-bold transition-all"
           style={{
-            background: open ? 'rgba(193,62,255,0.15)' : 'rgba(255,255,255,0.05)',
-            color: open ? '#C13EFF' : '#A5B0BD',
+            background: open ? 'rgba(193,62,255,0.15)' : 'rgba(0,0,0,0.05)',
+            color: open ? '#C13EFF' : '#64748B',
             transform: open ? 'rotate(45deg)' : 'none',
           }}
         >
@@ -80,9 +80,9 @@ export default function Passageiro() {
   return (
     <>
       {/* HERO */}
-      <section className="relative overflow-hidden" style={{ minHeight: '90vh', display: 'flex', alignItems: 'center', background: '#0d0b1e' }}>
+      <section className="relative overflow-hidden" style={{ minHeight: '90vh', display: 'flex', alignItems: 'center', background: '#F7F5FF' }}>
         <FloatingOrbs variant="passageiro" className="absolute inset-0" style={{ zIndex: 0 }} />
-        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 25% 50%,rgba(7,7,7,0.7) 0%,rgba(7,7,7,0.3) 60%,transparent 100%)', zIndex: 1 }} />
+        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 25% 50%,rgba(241,235,255,0.85) 0%,transparent 70%)', zIndex: 1 }} />
         <div className="container relative py-28" style={{ zIndex: 2 }}>
           <div className="max-w-2xl">
             <div className="tag mb-8 inline-flex">
@@ -109,7 +109,7 @@ export default function Passageiro() {
       </section>
 
       {/* COMO FUNCIONA */}
-      <section className="section" style={{ background: 'linear-gradient(180deg,#070707 0%,#0c0814 100%)' }}>
+      <section className="section" style={{ background: '#ffffff' }}>
         <div className="container">
           <ScrollReveal className="text-center mb-16 max-w-xl mx-auto">
             <div className="tag mb-5 inline-flex">Como funciona</div>
@@ -125,7 +125,7 @@ export default function Passageiro() {
               <ScrollReveal key={step.num} delay={i * 0.15} className="text-center">
                 <div
                   className="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center text-4xl mb-6 relative"
-                  style={{ background: 'linear-gradient(135deg,rgba(193,62,255,0.25),rgba(169,48,240,0.1))', border: '1px solid rgba(193,62,255,0.4)' }}
+                  style={{ background: 'linear-gradient(135deg,rgba(193,62,255,0.12),rgba(169,48,240,0.06))', border: '1px solid rgba(193,62,255,0.25)' }}
                 >
                   {step.icon}
                   <span
@@ -135,7 +135,7 @@ export default function Passageiro() {
                     {i + 1}
                   </span>
                 </div>
-                <div className="text-silver/40 text-6xl font-black mb-2 bebas">{step.num}</div>
+                <div className="text-purple/20 text-6xl font-black mb-2 bebas">{step.num}</div>
                 <h3 className="bebas text-3xl mb-3">{step.title}</h3>
                 <p className="text-silver text-sm leading-relaxed max-w-xs mx-auto">{step.desc}</p>
               </ScrollReveal>
@@ -145,7 +145,7 @@ export default function Passageiro() {
       </section>
 
       {/* SEGURANÇA */}
-      <section className="section" style={{ background: '#0F0F12' }}>
+      <section className="section" style={{ background: '#F7F5FF' }}>
         <div className="container">
           <ScrollReveal className="text-center mb-14 max-w-xl mx-auto">
             <div className="tag mb-5 inline-flex">Segurança em primeiro lugar</div>
@@ -163,21 +163,23 @@ export default function Passageiro() {
               <ScrollReveal key={feat.title} delay={i * 0.1}>
                 <div
                   className="rounded-2xl p-8 flex gap-5 transition-all duration-300"
-                  style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid #1f1f2e' }}
+                  style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.09)', boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}
                   onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(193,62,255,0.4)';
-                    (e.currentTarget as HTMLElement).style.background = 'rgba(193,62,255,0.06)';
+                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(193,62,255,0.35)';
+                    (e.currentTarget as HTMLElement).style.background = 'rgba(193,62,255,0.04)';
                     (e.currentTarget as HTMLElement).style.transform = 'translateY(-4px)';
+                    (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 32px rgba(193,62,255,0.12)';
                   }}
                   onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = '#1f1f2e';
-                    (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.025)';
+                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(0,0,0,0.09)';
+                    (e.currentTarget as HTMLElement).style.background = '#ffffff';
                     (e.currentTarget as HTMLElement).style.transform = 'none';
+                    (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 12px rgba(0,0,0,0.04)';
                   }}
                 >
                   <div
                     className="text-3xl w-14 h-14 flex-shrink-0 rounded-xl flex items-center justify-center"
-                    style={{ background: 'linear-gradient(135deg,rgba(193,62,255,0.2),rgba(169,48,240,0.1))', border: '1px solid rgba(193,62,255,0.3)' }}
+                    style={{ background: 'linear-gradient(135deg,rgba(193,62,255,0.12),rgba(169,48,240,0.06))', border: '1px solid rgba(193,62,255,0.2)' }}
                   >
                     {feat.icon}
                   </div>
@@ -193,13 +195,13 @@ export default function Passageiro() {
       </section>
 
       {/* BIB DELAS */}
-      <section id="delas" className="section relative overflow-hidden" style={{ background: 'linear-gradient(135deg,#1d0d28 0%,#0a0612 100%)' }}>
-        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 70% 30%,rgba(255,45,142,.2),transparent 50%)' }} />
+      <section id="delas" className="section relative overflow-hidden" style={{ background: 'linear-gradient(135deg,#fff5fa 0%,#fce8ff 100%)' }}>
+        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 70% 30%,rgba(255,45,142,.15),transparent 55%)' }} />
         <div className="container relative" style={{ zIndex: 2 }}>
           <ScrollReveal>
             <div
               className="rounded-3xl p-12 md:p-16 text-center max-w-3xl mx-auto"
-              style={{ background: 'rgba(255,45,142,0.06)', border: '1px solid rgba(255,45,142,0.2)' }}
+              style={{ background: 'rgba(255,45,142,0.05)', border: '1px solid rgba(255,45,142,0.2)' }}
             >
               <div className="tag tag-pink mb-6 inline-flex">
                 <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#FF2D8E', boxShadow: '0 0 10px #FF2D8E', animation: 'blink 1.5s infinite' }} />
@@ -221,10 +223,7 @@ export default function Passageiro() {
       </section>
 
       {/* DOWNLOAD */}
-      <section
-        className="section text-center"
-        style={{ background: 'radial-gradient(ellipse at 50% 0%,rgba(193,62,255,.2),transparent 60%),#070707' }}
-      >
+      <section className="section text-center" style={{ background: '#F7F5FF' }}>
         <div className="container max-w-xl mx-auto">
           <ScrollReveal>
             <div className="tag mb-6 inline-flex">Baixe agora</div>
@@ -241,12 +240,12 @@ export default function Passageiro() {
                 target="_blank"
                 rel="noopener"
                 className="flex items-center gap-4 rounded-2xl transition-all hover:-translate-y-1"
-                style={{ background: '#0f0f18', border: '1.5px solid rgba(193,62,255,0.3)', padding: '14px 28px' }}
+                style={{ background: '#ffffff', border: '1.5px solid rgba(193,62,255,0.25)', padding: '14px 28px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}
               >
                 <span style={{ fontSize: 28 }}>🍎</span>
                 <span className="text-left">
                   <small className="block text-silver text-[11px] uppercase tracking-wider">Baixe na</small>
-                  <strong className="text-white font-bold text-base">App Store</strong>
+                  <strong className="font-bold text-base" style={{ color: '#100D24' }}>App Store</strong>
                 </span>
               </a>
               <a
@@ -254,12 +253,12 @@ export default function Passageiro() {
                 target="_blank"
                 rel="noopener"
                 className="flex items-center gap-4 rounded-2xl transition-all hover:-translate-y-1"
-                style={{ background: '#0f0f18', border: '1.5px solid rgba(193,62,255,0.3)', padding: '14px 28px' }}
+                style={{ background: '#ffffff', border: '1.5px solid rgba(193,62,255,0.25)', padding: '14px 28px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}
               >
                 <span style={{ fontSize: 28 }}>▶</span>
                 <span className="text-left">
                   <small className="block text-silver text-[11px] uppercase tracking-wider">Baixe no</small>
-                  <strong className="text-white font-bold text-base">Google Play</strong>
+                  <strong className="font-bold text-base" style={{ color: '#100D24' }}>Google Play</strong>
                 </span>
               </a>
             </div>
@@ -268,7 +267,7 @@ export default function Passageiro() {
       </section>
 
       {/* FAQ */}
-      <section className="section" style={{ background: '#0F0F12' }}>
+      <section className="section" style={{ background: '#ffffff' }}>
         <div className="container max-w-2xl mx-auto">
           <ScrollReveal className="text-center mb-12">
             <div className="tag mb-5 inline-flex">Dúvidas frequentes</div>
@@ -279,7 +278,7 @@ export default function Passageiro() {
           </ScrollReveal>
 
           <ScrollReveal>
-            <div className="rounded-2xl p-8" style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid #1f1f2e' }}>
+            <div className="rounded-2xl p-8" style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.08)', boxShadow: '0 2px 16px rgba(0,0,0,0.05)' }}>
               {faq.map((item, i) => (
                 <FAQItem key={i} item={item} index={i} />
               ))}

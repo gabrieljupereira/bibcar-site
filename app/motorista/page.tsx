@@ -65,12 +65,12 @@ function EarningsCalculator() {
   return (
     <div
       className="rounded-3xl p-8 md:p-12"
-      style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,210,63,0.2)' }}
+      style={{ background: '#ffffff', border: '1px solid rgba(255,210,63,0.3)', boxShadow: '0 4px 24px rgba(255,210,63,0.08)' }}
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-10">
         <div>
           <div className="flex justify-between items-center mb-3">
-            <label className="text-sm font-semibold" style={{ color: '#cfcfdc' }}>Horas por dia</label>
+            <label className="text-sm font-semibold text-silver">Horas por dia</label>
             <span className="bebas text-2xl gold-text">{hoursPerDay}h</span>
           </div>
           <input
@@ -79,14 +79,14 @@ function EarningsCalculator() {
             className="w-full h-2 rounded-full outline-none cursor-pointer"
             style={{ accentColor: '#FFD23F' }}
           />
-          <div className="flex justify-between text-xs mt-1" style={{ color: '#555' }}>
+          <div className="flex justify-between text-xs mt-1 text-silver">
             <span>1h</span><span>12h</span>
           </div>
         </div>
 
         <div>
           <div className="flex justify-between items-center mb-3">
-            <label className="text-sm font-semibold" style={{ color: '#cfcfdc' }}>Dias por semana</label>
+            <label className="text-sm font-semibold text-silver">Dias por semana</label>
             <span className="bebas text-2xl gold-text">{daysPerWeek} dias</span>
           </div>
           <input
@@ -95,7 +95,7 @@ function EarningsCalculator() {
             className="w-full h-2 rounded-full outline-none cursor-pointer"
             style={{ accentColor: '#FFD23F' }}
           />
-          <div className="flex justify-between text-xs mt-1" style={{ color: '#555' }}>
+          <div className="flex justify-between text-xs mt-1 text-silver">
             <span>1 dia</span><span>7 dias</span>
           </div>
         </div>
@@ -103,18 +103,18 @@ function EarningsCalculator() {
 
       <div
         className="rounded-2xl p-8 text-center"
-        style={{ background: 'linear-gradient(135deg,rgba(255,210,63,0.12),rgba(255,150,0,0.08))', border: '1px solid rgba(255,210,63,0.3)' }}
+        style={{ background: 'linear-gradient(135deg,rgba(255,210,63,0.1),rgba(255,150,0,0.06))', border: '1px solid rgba(255,210,63,0.25)' }}
       >
         <p className="text-silver text-sm mb-2">Estimativa mensal</p>
         <p className="bebas gold-text" style={{ fontSize: 'clamp(52px, 10vw, 88px)', lineHeight: 1 }}>
           R$ {monthly.toLocaleString('pt-BR')}
         </p>
-        <p className="text-xs mt-3" style={{ color: '#666' }}>
+        <p className="text-xs mt-3 text-silver">
           Baseado em ~R${avgPerHour}/h · {hoursPerDay}h/dia · {daysPerWeek} dias/semana · 4,3 semanas/mês
         </p>
       </div>
 
-      <p className="text-center text-xs mt-6" style={{ color: '#444' }}>
+      <p className="text-center text-xs mt-6 text-silver">
         * Estimativa baseada na média da plataforma. Ganhos reais variam conforme cidade, horário e demanda.
       </p>
     </div>
@@ -125,9 +125,9 @@ export default function Motorista() {
   return (
     <>
       {/* HERO */}
-      <section className="relative overflow-hidden" style={{ minHeight: '90vh', display: 'flex', alignItems: 'center', background: '#0d0b1e' }}>
+      <section className="relative overflow-hidden" style={{ minHeight: '90vh', display: 'flex', alignItems: 'center', background: '#F7F5FF' }}>
         <FloatingOrbs variant="motorista" className="absolute inset-0" style={{ zIndex: 0 }} />
-        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 25% 50%,rgba(7,7,7,0.7) 0%,rgba(7,7,7,0.3) 60%,transparent 100%)', zIndex: 1 }} />
+        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 25% 50%,rgba(241,235,255,0.85) 0%,transparent 70%)', zIndex: 1 }} />
         <div className="container relative py-28" style={{ zIndex: 2 }}>
           <div className="max-w-2xl">
             <div className="tag tag-gold mb-8 inline-flex">
@@ -160,7 +160,7 @@ export default function Motorista() {
       </section>
 
       {/* POR QUE BIBCAR */}
-      <section className="section" style={{ background: 'linear-gradient(180deg,#070707 0%,#0c0814 100%)' }}>
+      <section className="section" style={{ background: '#ffffff' }}>
         <div className="container">
           <ScrollReveal className="text-center mb-14 max-w-xl mx-auto">
             <div className="tag tag-gold mb-5 inline-flex">Por que a BibCar</div>
@@ -178,21 +178,23 @@ export default function Motorista() {
               <ScrollReveal key={d.title} delay={i * 0.1}>
                 <div
                   className="rounded-2xl p-8 text-center transition-all duration-300 h-full"
-                  style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid #1f1f2e' }}
+                  style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.09)', boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}
                   onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,210,63,0.4)';
-                    (e.currentTarget as HTMLElement).style.background = 'rgba(255,210,63,0.05)';
+                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,210,63,0.45)';
+                    (e.currentTarget as HTMLElement).style.background = 'rgba(255,210,63,0.04)';
                     (e.currentTarget as HTMLElement).style.transform = 'translateY(-6px)';
+                    (e.currentTarget as HTMLElement).style.boxShadow = '0 16px 40px rgba(255,210,63,0.12)';
                   }}
                   onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = '#1f1f2e';
-                    (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.025)';
+                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(0,0,0,0.09)';
+                    (e.currentTarget as HTMLElement).style.background = '#ffffff';
                     (e.currentTarget as HTMLElement).style.transform = 'none';
+                    (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 12px rgba(0,0,0,0.04)';
                   }}
                 >
                   <div
                     className="text-3xl mb-4 w-14 h-14 mx-auto rounded-2xl flex items-center justify-center"
-                    style={{ background: 'linear-gradient(135deg,rgba(255,210,63,.2),rgba(255,150,0,.1))', border: '1px solid rgba(255,210,63,.3)' }}
+                    style={{ background: 'linear-gradient(135deg,rgba(255,210,63,.15),rgba(255,150,0,.08))', border: '1px solid rgba(255,210,63,.25)' }}
                   >
                     {d.icon}
                   </div>
@@ -206,7 +208,7 @@ export default function Motorista() {
       </section>
 
       {/* COMO SE CADASTRAR */}
-      <section className="section" style={{ background: '#0F0F12' }}>
+      <section className="section" style={{ background: '#F7F5FF' }}>
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
             <ScrollReveal>
@@ -225,10 +227,7 @@ export default function Motorista() {
                   style={{ background: 'linear-gradient(180deg,#FFD23F,#FF9500,rgba(255,210,63,0))' }}
                 />
                 {registerSteps.map((step, i) => (
-                  <div
-                    key={i}
-                    className="flex gap-6 mb-10 relative"
-                  >
+                  <div key={i} className="flex gap-6 mb-10 relative">
                     <div
                       className="w-12 h-12 rounded-full flex items-center justify-center font-black text-base flex-shrink-0 relative z-10"
                       style={{ background: 'linear-gradient(135deg,#FFD23F,#FF9500)', color: '#1a0f00' }}
@@ -260,20 +259,23 @@ export default function Motorista() {
                 Separe esses documentos antes de começar o cadastro. Tudo é enviado pelo app.
               </p>
 
-              <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(255,210,63,0.2)' }}>
+              <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(255,210,63,0.25)', boxShadow: '0 2px 16px rgba(0,0,0,0.05)' }}>
                 {documents.map((doc, i) => (
                   <div
                     key={doc}
                     className="flex items-center gap-4 px-6 py-4"
-                    style={{ borderBottom: i < documents.length - 1 ? '1px solid rgba(255,255,255,0.06)' : 'none', background: i % 2 === 0 ? 'rgba(255,210,63,0.03)' : 'transparent' }}
+                    style={{
+                      borderBottom: i < documents.length - 1 ? '1px solid rgba(0,0,0,0.06)' : 'none',
+                      background: i % 2 === 0 ? 'rgba(255,210,63,0.04)' : '#ffffff',
+                    }}
                   >
                     <div
                       className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-black"
-                      style={{ background: 'rgba(255,210,63,0.15)', color: '#FFD23F' }}
+                      style={{ background: 'rgba(255,210,63,0.15)', color: '#FF9500' }}
                     >
                       ✓
                     </div>
-                    <span className="text-sm" style={{ color: '#cfcfdc' }}>{doc}</span>
+                    <span className="text-sm text-silver">{doc}</span>
                   </div>
                 ))}
               </div>
@@ -283,10 +285,7 @@ export default function Motorista() {
       </section>
 
       {/* CALCULADORA DE GANHOS */}
-      <section
-        className="section"
-        style={{ background: 'radial-gradient(ellipse at 50% 50%,rgba(255,210,63,.12),transparent 70%),#070707' }}
-      >
+      <section className="section" style={{ background: '#ffffff' }}>
         <div className="container max-w-3xl mx-auto">
           <ScrollReveal className="text-center mb-12">
             <div className="tag tag-gold mb-6 inline-flex">Calculadora de ganhos</div>
@@ -303,7 +302,7 @@ export default function Motorista() {
       </section>
 
       {/* SUPORTE */}
-      <section className="section" style={{ background: '#0F0F12' }}>
+      <section className="section" style={{ background: '#F7F5FF' }}>
         <div className="container">
           <ScrollReveal className="text-center mb-14 max-w-xl mx-auto">
             <div className="tag tag-gold mb-5 inline-flex">Suporte BibCar</div>
@@ -318,14 +317,16 @@ export default function Motorista() {
               <ScrollReveal key={s.title} delay={i * 0.12}>
                 <div
                   className="rounded-2xl p-8 text-center h-full transition-all duration-300"
-                  style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid #1f1f2e' }}
+                  style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.09)', boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}
                   onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,210,63,0.35)';
+                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,210,63,0.45)';
                     (e.currentTarget as HTMLElement).style.transform = 'translateY(-4px)';
+                    (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 32px rgba(255,210,63,0.1)';
                   }}
                   onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = '#1f1f2e';
+                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(0,0,0,0.09)';
                     (e.currentTarget as HTMLElement).style.transform = 'none';
+                    (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 12px rgba(0,0,0,0.04)';
                   }}
                 >
                   <div className="text-4xl mb-4">{s.icon}</div>
@@ -339,10 +340,7 @@ export default function Motorista() {
       </section>
 
       {/* CTA FINAL */}
-      <section
-        className="section text-center"
-        style={{ background: 'radial-gradient(ellipse at 50% 100%,rgba(255,210,63,.25),transparent 70%),#070707' }}
-      >
+      <section className="section text-center" style={{ background: 'radial-gradient(ellipse at 50% 100%,rgba(255,210,63,.15),transparent 70%),#F7F5FF' }}>
         <div className="container max-w-xl mx-auto">
           <ScrollReveal>
             <h2 className="bebas mb-4" style={{ fontSize: 'clamp(48px, 8vw, 96px)', lineHeight: 0.95 }}>
