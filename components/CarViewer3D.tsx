@@ -169,8 +169,9 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
               // KEEP: tires — matte + dark + rubber-like
               if (origR > 0.55 && origM < 0.15 && origLum < 0.15) return;
 
-              // KEEP: polished metallic rims/chrome — shiny metal
-              if (origM > 0.65 && origR < 0.4) return;
+              // KEEP: polished metallic rims/chrome — very shiny AND light-colored (silver)
+              // Body panels are dark metallic (low origLum), chrome is light (high origLum)
+              if (origM > 0.8 && origR < 0.25 && origLum > 0.25) return;
 
               // PAINT: body panels (and anything else that isn't glass/lights/tires/rims)
               m.color.set(paintColor);
