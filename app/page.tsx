@@ -74,7 +74,7 @@ export default function Home() {
           <div className="hidden md:flex justify-center items-center relative" style={{ height: 480 }}>
             <ClientCarViewer
               modelPath="/car.glb"
-              bodyColor="#8B2FBE"
+              bodyColor="#7F00FF"
               style={{ width: '100%', height: '100%' }}
             />
             <p

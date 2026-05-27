@@ -46,22 +46,42 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
       renderer.toneMappingExposure = 1.1;
       container.appendChild(renderer.domElement);
 
-      // Environment map for realistic reflections on metallic surfaces
+      // Environment map — RoomEnvironment immediately, upgrade to HDRI if available
       const pmremGenerator = new THREE.PMREMGenerator(renderer);
       pmremGenerator.compileEquirectangularShader();
-      const envTexture = pmremGenerator.fromScene(new RoomEnvironment()).texture;
-      scene.environment = envTexture;
-      pmremGenerator.dispose();
+      const roomEnvTexture = pmremGenerator.fromScene(new RoomEnvironment()).texture;
+      scene.environment = roomEnvTexture;
 
-      // Lights — dramatic studio setup for deep shadows + chrome highlights
-      const ambient = new THREE.AmbientLight(0xffffff, 0.3);
+      // Try loading a real studio HDRI for Sketchfab-level quality
+      let hdrEnvTexture: import('three').Texture | null = null;
+      (async () => {
+        try {
+          const { RGBELoader } = await import('three/examples/jsm/loaders/RGBELoader.js');
+          const hdr = await new Promise<import('three').DataTexture>((res, rej) => {
+            new RGBELoader().load(
+              'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/studio_small_09_1k.hdr',
+              res, undefined, rej
+            );
+          });
+          hdrEnvTexture = pmremGenerator.fromEquirectangular(hdr).texture;
+          scene.environment = hdrEnvTexture;
+          hdr.dispose();
+          roomEnvTexture.dispose();
+          pmremGenerator.dispose();
+        } catch {
+          pmremGenerator.dispose();
+        }
+      })();
+
+      // Studio lights — soft and even, let env map do most work
+      const ambient = new THREE.AmbientLight(0xffffff, 1.2);
       scene.add(ambient);
 
-      // Main key light — strong warm from top-front
-      const keyLight = new THREE.DirectionalLight(0xfff8f0, 4.0);
-      keyLight.position.set(4, 8, 5);
+      // Soft key from top-front
+      const keyLight = new THREE.DirectionalLight(0xfff8f0, 2.5);
+      keyLight.position.set(3, 7, 5);
       keyLight.castShadow = true;
-      keyLight.shadow.mapSize.set(2048, 2048);
+      keyLight.shadow.mapSize.set(4096, 4096);
       keyLight.shadow.camera.near = 0.1;
       keyLight.shadow.camera.far = 30;
       keyLight.shadow.camera.left = -6;
@@ -71,25 +91,15 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
       keyLight.shadow.bias = -0.001;
       scene.add(keyLight);
 
-      // Fill light — cool blue side
-      const fillLight = new THREE.DirectionalLight(0xd0e8ff, 1.8);
+      // Soft fill from side
+      const fillLight = new THREE.DirectionalLight(0xe8f0ff, 1.2);
       fillLight.position.set(-5, 3, 2);
       scene.add(fillLight);
 
-      // Rim light — strong back-edge to outline car in white
-      const rimLight = new THREE.DirectionalLight(0xffffff, 2.5);
+      // Rim light — separates car from background
+      const rimLight = new THREE.DirectionalLight(0xffffff, 1.8);
       rimLight.position.set(0, 5, -6);
       scene.add(rimLight);
-
-      // Subtle under-car fill
-      const underFill = new THREE.PointLight(0xffffff, 0.4, 5);
-      underFill.position.set(0, -0.3, 0);
-      scene.add(underFill);
-
-      // Soft front fill
-      const frontLight = new THREE.PointLight(0xffffff, 0.8, 8);
-      frontLight.position.set(0, 1.5, 4);
-      scene.add(frontLight);
 
       // Invisible shadow-catcher plane (no visible surface)
       const shadowGeo = new THREE.PlaneGeometry(14, 14);
@@ -136,13 +146,29 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
 
           const paintColor = new THREE.Color(bodyColor);
 
+          // Non-body part keywords — skip painting these meshes entirely
+          const SKIP_KEYWORDS = [
+            'engine', 'motor', 'exhaust', 'muffler', 'header', 'intake',
+            'wheel', 'rim', 'tire', 'tyre', 'rubber', 'brake', 'caliper', 'disc', 'rotor',
+            'glass', 'window', 'windsh', 'windscreen',
+            'light', 'lamp', 'led',
+            'badge', 'logo', 'emblem', 'lottering', 'lettering',
+            'seat', 'interior', 'dash', 'gauge', 'display', 'screen', 'cluster',
+            'grill', 'vent',
+            'v8_', 'gasca', 'vivacc',
+          ];
+
           model.traverse((child) => {
             const mesh = child as import('three').Mesh;
             if (!mesh.isMesh) return;
             mesh.castShadow = true;
             mesh.receiveShadow = true;
 
-            // Clone so we don't mutate shared material instances
+            // Skip non-body parts by name — preserves tires, rims, glass, lights, logos
+            const n = mesh.name.toLowerCase();
+            if (SKIP_KEYWORDS.some(k => n.includes(k))) return;
+
+            // Clone materials before modifying
             if (Array.isArray(mesh.material)) {
               mesh.material = mesh.material.map(m => m.clone());
             } else {
@@ -152,37 +178,18 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
             const applyPaint = (mat: import('three').Material) => {
               const m = mat as import('three').MeshStandardMaterial;
               if (!m.color) return;
-
-              const origM = m.metalness;
-              const origR = m.roughness;
-              const origE = (m as unknown as { emissiveIntensity?: number }).emissiveIntensity ?? 0;
+              // Skip transparent glass panels
+              if (m.transparent && m.opacity < 0.9) return;
+              if ('transmission' in m && (m as unknown as { transmission: number }).transmission > 0.05) return;
+              // Skip materials that actually glow (non-black emissive)
               const emissiveColor = (m as unknown as { emissive?: { r: number; g: number; b: number } }).emissive;
-              const { r, g, b } = m.color;
-              const origLum = 0.299 * r + 0.587 * g + 0.114 * b;
+              const origE = (m as unknown as { emissiveIntensity?: number }).emissiveIntensity ?? 0;
               const emissiveLum = emissiveColor
                 ? (0.299 * emissiveColor.r + 0.587 * emissiveColor.g + 0.114 * emissiveColor.b) * origE
                 : 0;
-
-              // KEEP: glass / transparent
-              if (m.transparent && m.opacity < 0.9) return;
-              if ('transmission' in m && (m as unknown as { transmission: number }).transmission > 0.05) return;
-
-              // KEEP: actually glowing lights (non-black emissive color × intensity)
-              // emissiveIntensity=1.0 with black emissive = no glow — don't exclude those
               if (emissiveLum > 0.02) return;
-
-              // KEEP: tires — matte + dark + rubber-like
-              if (origR > 0.55 && origM < 0.15 && origLum < 0.15) return;
-
-              // KEEP: polished metallic rims/chrome — very shiny AND light-colored (silver)
-              // Body panels are dark metallic (low origLum), chrome is light (high origLum)
-              if (origM > 0.8 && origR < 0.25 && origLum > 0.25) return;
-
-              // PAINT: body panels (and anything else that isn't glass/lights/tires/rims)
+              // Paint: only change base color — preserve all texture maps + PBR values
               m.color.set(paintColor);
-              m.metalness = 0.35;
-              m.roughness = 0.3;
-              m.envMapIntensity = 1.2;
               m.needsUpdate = true;
             };
 
@@ -222,7 +229,8 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
         ro.disconnect();
         cancelAnimationFrame(animId);
         renderer.dispose();
-        envTexture.dispose();
+        roomEnvTexture.dispose();
+        hdrEnvTexture?.dispose();
         if (container.contains(renderer.domElement)) {
           container.removeChild(renderer.domElement);
         }
