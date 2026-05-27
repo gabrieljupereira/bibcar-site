@@ -81,14 +81,14 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
       rimLight.position.set(0, 4, -6);
       scene.add(rimLight);
 
-      // Purple underglow — brand color pop
-      const underGlow = new THREE.PointLight(0xc13eff, 3, 6);
-      underGlow.position.set(0, -0.5, 0);
-      scene.add(underGlow);
+      // Subtle under-car fill — very soft, no color cast
+      const underFill = new THREE.PointLight(0xffffff, 0.6, 5);
+      underFill.position.set(0, -0.3, 0);
+      scene.add(underFill);
 
-      // Gold accent light from front
-      const frontLight = new THREE.PointLight(0xffd23f, 2, 8);
-      frontLight.position.set(0, 2, 4);
+      // Soft front fill — neutral white, avoid color cast
+      const frontLight = new THREE.PointLight(0xffffff, 1.2, 8);
+      frontLight.position.set(0, 1.5, 4);
       scene.add(frontLight);
 
       // Invisible shadow-catcher plane (no visible surface)
@@ -146,17 +146,19 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
               const m = mat as import('three').MeshStandardMaterial;
               if (!m.color) return;
               // Skip transparent (glass/windows)
-              if (m.transparent && m.opacity < 0.7) return;
-              // Skip very dark (tires, chassis, trim)
+              if (m.transparent && m.opacity < 0.85) return;
               const { r, g, b } = m.color;
               const lum = 0.299 * r + 0.587 * g + 0.114 * b;
-              if (lum > 0.08) {
-                m.color.set(paintColor);
-                m.metalness = 0.65;
-                m.roughness = 0.28;
-                m.envMapIntensity = 1.4;
-                m.needsUpdate = true;
-              }
+              // Skip very dark (tires, chassis, interior trim)
+              if (lum < 0.18) return;
+              // Skip chrome/metallic parts (rims, exhaust, trim) — high metalness in original
+              if (m.metalness > 0.55) return;
+              // Paint body panels
+              m.color.set(paintColor);
+              m.metalness = 0.6;
+              m.roughness = 0.32;
+              m.envMapIntensity = 1.6;
+              m.needsUpdate = true;
             };
 
             if (Array.isArray(mesh.material)) {
