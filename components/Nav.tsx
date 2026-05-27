@@ -13,19 +13,19 @@ const links = [
 ];
 
 const accentColor: Record<string, string> = {
-  '/passageiro': '#C13EFF',
-  '/motorista': '#FFD23F',
-  '/franqueado': '#FFD23F',
+  '/passageiro': '#A830E8',
+  '/motorista': '#FFB800',
+  '/franqueado': '#FFB800',
 };
 
 export default function Nav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
-  const accent = accentColor[pathname] || '#FFD23F';
+  const accent = accentColor[pathname] || '#A830E8';
 
   return (
-    <nav className="sticky top-0 z-50" style={{ backdropFilter: 'blur(16px)', background: 'rgba(7,7,7,0.82)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+    <nav className="sticky top-0 z-50" style={{ backdropFilter: 'blur(16px)', background: 'rgba(247,245,255,0.92)', borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
       <div className="container flex items-center justify-between h-20">
         <Link href="/" className="flex items-center gap-3" onClick={() => setOpen(false)}>
           <Image
@@ -34,7 +34,6 @@ export default function Nav() {
             width={130}
             height={48}
             className="h-12 w-auto"
-            style={{ filter: 'drop-shadow(0 0 12px rgba(255,210,63,.4))' }}
             priority
           />
         </Link>
@@ -48,9 +47,9 @@ export default function Nav() {
                 key={link.href}
                 href={link.href}
                 className="text-sm font-semibold tracking-wide transition-colors duration-200"
-                style={{ color: isActive ? accent : '#A5B0BD' }}
+                style={{ color: isActive ? accent : '#64748B' }}
                 onMouseEnter={(e) => { (e.target as HTMLElement).style.color = accent; }}
-                onMouseLeave={(e) => { (e.target as HTMLElement).style.color = isActive ? accent : '#A5B0BD'; }}
+                onMouseLeave={(e) => { (e.target as HTMLElement).style.color = isActive ? accent : '#64748B'; }}
               >
                 {link.label}
               </Link>
@@ -63,7 +62,7 @@ export default function Nav() {
           target="_blank"
           rel="noopener"
           className="hidden md:inline-flex items-center font-black text-sm px-6 py-3 rounded-full uppercase tracking-wide transition-all hover:-translate-y-0.5"
-          style={{ background: 'linear-gradient(135deg,#FFD23F,#FFB627,#FF9500)', color: '#1a0f00', boxShadow: '0 8px 24px rgba(255,180,55,.35)' }}
+          style={{ background: 'linear-gradient(135deg,#FFB800,#FF9500,#FF7A00)', color: '#1a0f00', boxShadow: '0 8px 24px rgba(255,149,0,.3)' }}
         >
           Baixar o app
         </a>
@@ -75,9 +74,9 @@ export default function Nav() {
           aria-label="Menu"
         >
           <div className="w-6 flex flex-col gap-1.5">
-            <span className="block h-0.5 bg-white rounded transition-all duration-300" style={{ transform: open ? 'rotate(45deg) translateY(8px)' : 'none' }} />
-            <span className="block h-0.5 bg-white rounded transition-all duration-300" style={{ opacity: open ? 0 : 1 }} />
-            <span className="block h-0.5 bg-white rounded transition-all duration-300" style={{ transform: open ? 'rotate(-45deg) translateY(-8px)' : 'none' }} />
+            <span className="block h-0.5 rounded transition-all duration-300" style={{ background: '#100D24', transform: open ? 'rotate(45deg) translateY(8px)' : 'none' }} />
+            <span className="block h-0.5 rounded transition-all duration-300" style={{ background: '#100D24', opacity: open ? 0 : 1 }} />
+            <span className="block h-0.5 rounded transition-all duration-300" style={{ background: '#100D24', transform: open ? 'rotate(-45deg) translateY(-8px)' : 'none' }} />
           </div>
         </button>
       </div>
@@ -86,8 +85,8 @@ export default function Nav() {
         <div
           className="md:hidden overflow-hidden"
           style={{
-            background: 'rgba(15,15,18,0.98)',
-            borderTop: '1px solid rgba(255,255,255,0.08)',
+            background: 'rgba(247,245,255,0.98)',
+            borderTop: '1px solid rgba(0,0,0,0.08)',
             animation: 'navSlideDown 0.25s ease forwards',
           }}
         >
@@ -97,7 +96,8 @@ export default function Nav() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className="text-lg font-semibold text-silver hover:text-gold transition-colors"
+                className="text-lg font-semibold transition-colors"
+                style={{ color: '#64748B' }}
               >
                 {link.label}
               </Link>
