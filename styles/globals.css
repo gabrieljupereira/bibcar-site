@@ -5,16 +5,16 @@
 @tailwind utilities;
 
 :root {
-  --gold: #FFD23F;
-  --gold2: #FFB627;
-  --gold-warm: #FF9500;
-  --purple: #A930F0;
-  --purple-elec: #C13EFF;
-  --pink: #FF2D8E;
-  --dark: #070707;
-  --dark2: #0F0F12;
-  --card: #141420;
-  --silver: #A5B0BD;
+  --gold: #FFB800;
+  --gold2: #FF9500;
+  --gold-warm: #FF7A00;
+  --purple: #9B27D8;
+  --purple-elec: #A830E8;
+  --pink: #E8267A;
+  --dark: #F7F5FF;
+  --dark2: #EDE9FF;
+  --card: #FFFFFF;
+  --silver: #64748B;
 }
 
 * {
@@ -28,8 +28,8 @@ html {
 }
 
 body {
-  background-color: #070707;
-  color: #F5F5F0;
+  background-color: #F7F5FF;
+  color: #100D24;
   font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
@@ -40,47 +40,47 @@ body {
 }
 
 .gold-text {
-  background: linear-gradient(135deg, #FFD23F 0%, #FFB627 50%, #FF9500 100%);
+  background: linear-gradient(135deg, #FFB800 0%, #FF9500 50%, #FF7A00 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 .purple-text {
-  background: linear-gradient(135deg, #C13EFF 0%, #A930F0 50%, #6B3FA0 100%);
+  background: linear-gradient(135deg, #A830E8 0%, #9B27D8 50%, #6B3FA0 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 .pink-text {
-  background: linear-gradient(135deg, #FF2D8E 0%, #C13EFF 100%);
+  background: linear-gradient(135deg, #E8267A 0%, #A830E8 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, #FFD23F 0%, #C13EFF 100%);
+  background: linear-gradient(135deg, #FFB800 0%, #A830E8 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 .card-border {
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: #141420;
+  border: 1px solid rgba(0, 0, 0, 0.09);
+  background: #FFFFFF;
   transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
 }
 
 .card-border:hover {
-  border-color: rgba(255, 210, 63, 0.35);
+  border-color: rgba(168, 48, 232, 0.3);
   transform: translateY(-6px);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
 }
 
 .btn-gold {
-  background: linear-gradient(135deg, #FFD23F 0%, #FFB627 50%, #FF9500 100%);
+  background: linear-gradient(135deg, #FFB800 0%, #FF9500 50%, #FF7A00 100%);
   color: #1a0f00;
   font-weight: 800;
   border-radius: 14px;
@@ -92,16 +92,16 @@ body {
   text-transform: uppercase;
   font-size: 14px;
   transition: transform 0.2s, box-shadow 0.2s;
-  box-shadow: 0 8px 24px rgba(255, 180, 55, 0.35);
+  box-shadow: 0 8px 24px rgba(255, 149, 0, 0.35);
 }
 
 .btn-gold:hover {
   transform: translateY(-3px);
-  box-shadow: 0 14px 36px rgba(255, 180, 55, 0.55);
+  box-shadow: 0 14px 36px rgba(255, 149, 0, 0.5);
 }
 
 .btn-purple {
-  background: linear-gradient(135deg, #C13EFF 0%, #A930F0 50%, #6B3FA0 100%);
+  background: linear-gradient(135deg, #A830E8 0%, #9B27D8 50%, #6B3FA0 100%);
   color: #fff;
   font-weight: 800;
   border-radius: 14px;
@@ -113,17 +113,17 @@ body {
   text-transform: uppercase;
   font-size: 14px;
   transition: transform 0.2s, box-shadow 0.2s;
-  box-shadow: 0 8px 24px rgba(169, 48, 240, 0.4);
+  box-shadow: 0 8px 24px rgba(155, 39, 216, 0.35);
 }
 
 .btn-purple:hover {
   transform: translateY(-3px);
-  box-shadow: 0 14px 36px rgba(169, 48, 240, 0.6);
+  box-shadow: 0 14px 36px rgba(155, 39, 216, 0.55);
 }
 
 .btn-ghost {
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  color: #fff;
+  border: 2px solid rgba(16, 13, 36, 0.2);
+  color: #100D24;
   font-weight: 800;
   border-radius: 14px;
   padding: 14px 30px;
@@ -137,13 +137,13 @@ body {
 }
 
 .btn-ghost:hover {
-  border-color: var(--gold);
-  color: var(--gold);
-  background: rgba(255, 210, 63, 0.08);
+  border-color: var(--purple-elec);
+  color: var(--purple-elec);
+  background: rgba(168, 48, 232, 0.07);
 }
 
 .btn-rose {
-  background: linear-gradient(135deg, #FF2D8E 0%, #C13EFF 100%);
+  background: linear-gradient(135deg, #E8267A 0%, #A830E8 100%);
   color: #fff;
   font-weight: 800;
   border-radius: 14px;
@@ -155,12 +155,12 @@ body {
   text-transform: uppercase;
   font-size: 14px;
   transition: transform 0.2s, box-shadow 0.2s;
-  box-shadow: 0 8px 24px rgba(255, 45, 142, 0.35);
+  box-shadow: 0 8px 24px rgba(232, 38, 122, 0.3);
 }
 
 .btn-rose:hover {
   transform: translateY(-3px);
-  box-shadow: 0 14px 36px rgba(255, 45, 142, 0.55);
+  box-shadow: 0 14px 36px rgba(232, 38, 122, 0.5);
 }
 
 .tag {
@@ -175,19 +175,19 @@ body {
   text-transform: uppercase;
   padding: 7px 18px;
   border-radius: 30px;
-  background: rgba(193, 62, 255, 0.08);
+  background: rgba(168, 48, 232, 0.07);
 }
 
 .tag-gold {
   border-color: var(--gold);
-  color: var(--gold);
-  background: rgba(255, 210, 63, 0.08);
+  color: var(--gold2);
+  background: rgba(255, 184, 0, 0.1);
 }
 
 .tag-pink {
   border-color: var(--pink);
   color: var(--pink);
-  background: rgba(255, 45, 142, 0.08);
+  background: rgba(232, 38, 122, 0.08);
 }
 
 .section {
