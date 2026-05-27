@@ -51,7 +51,7 @@ export default function Home() {
             zIndex: 1,
           }}
         />
-        <div className="container relative grid grid-cols-1 md:grid-cols-2 gap-12 items-center py-28" style={{ zIndex: 2 }}>
+        <div className="container relative grid grid-cols-1 md:grid-cols-2 gap-12 items-center py-16 md:py-28" style={{ zIndex: 2 }}>
           <div>
             <div className="tag mb-8 inline-flex">
               <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#C13EFF', boxShadow: '0 0 10px #C13EFF', animation: 'blink 1.5s infinite' }} />
@@ -71,7 +71,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="hidden md:flex justify-center items-center relative" style={{ height: 480 }}>
+          <div className="flex justify-center items-center relative h-[280px] md:h-[480px]">
             <ClientCarViewer
               modelPath="/car.glb"
               bodyColor="#7F00FF"
@@ -81,7 +81,8 @@ export default function Home() {
               className="absolute bottom-2 left-0 right-0 text-center"
               style={{ fontSize: 10, color: 'rgba(165,176,189,0.4)', letterSpacing: 2, textTransform: 'uppercase', pointerEvents: 'none' }}
             >
-              Arraste para girar · Scroll para zoom
+              <span className="md:hidden">Toque para girar</span>
+              <span className="hidden md:inline">Arraste para girar · Scroll para zoom</span>
             </p>
           </div>
         </div>
