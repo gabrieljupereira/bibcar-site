@@ -175,9 +175,9 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
 
               // PAINT: body panels (and anything else that isn't glass/lights/tires/rims)
               m.color.set(paintColor);
-              m.metalness = 0.5;
-              m.roughness = 0.1;
-              m.envMapIntensity = 0.5;
+              m.metalness = 0.35;
+              m.roughness = 0.3;
+              m.envMapIntensity = 1.2;
               m.needsUpdate = true;
             };
 
