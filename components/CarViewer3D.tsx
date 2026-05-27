@@ -226,37 +226,6 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
             }
           });
 
-                    scene.add(model);
-
-          // Place BibCar logo          scene.add(model);
-
-          // Place BibCar logo firstMat.color.r > 0.55           scene.add(model);
-
-          // Place BibCar logo          scene.add(model);
-
-          // Place BibCar logo firstMat.color.g < 0.25           scene.add(model);
-
-          // Place BibCar logo          scene.add(model);
-
-          // Place BibCar logo firstMat.color.b < 0.25;
-            if (!byName           scene.add(model);
-
-          // Place BibCar logo          scene.add(model);
-
-          // Place BibCar logo !byColor) return;
-            if (Array.isArray(cMesh.material)) {
-              cMesh.material = cMesh.material.map(m => {
-                const c = (m as import('three').MeshStandardMaterial).clone();
-                c.color.set(caliperColor); c.metalness = 0.2; c.roughness = 0.35; c.needsUpdate = true;
-                return c;
-              });
-            } else {
-              cMesh.material = (cMesh.material as import('three').MeshStandardMaterial).clone();
-              const cm = cMesh.material as import('three').MeshStandardMaterial;
-              cm.color.set(caliperColor); cm.metalness = 0.2; cm.roughness = 0.35; cm.needsUpdate = true;
-            }
-          });
-
           scene.add(model);
 
           // Place BibCar logo on both sides of car
