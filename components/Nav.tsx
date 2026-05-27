@@ -25,7 +25,7 @@ export default function Nav() {
   const accent = accentColor[pathname] || '#A830E8';
 
   return (
-    <nav className="sticky top-0 z-50" style={{ backdropFilter: 'blur(16px)', background: 'rgba(18,8,40,0.92)', borderBottom: '1px solid rgba(161,48,232,0.25)' }}>
+    <nav className="sticky top-0 z-50" style={{ backdropFilter: 'blur(16px)', background: 'linear-gradient(135deg, rgba(224,112,255,0.92) 0%, rgba(160,32,240,0.95) 50%, rgba(91,15,168,0.97) 100%)', borderBottom: '1px solid rgba(224,112,255,0.2)' }}>
       <div className="container flex items-center justify-between h-20">
         <Link href="/" className="flex items-center gap-3" onClick={() => setOpen(false)}>
           <Image
@@ -85,8 +85,8 @@ export default function Nav() {
         <div
           className="md:hidden overflow-hidden"
           style={{
-            background: 'rgba(18,8,40,0.97)',
-            borderTop: '1px solid rgba(161,48,232,0.25)',
+            background: 'linear-gradient(135deg, rgba(224,112,255,0.97) 0%, rgba(160,32,240,0.98) 50%, rgba(91,15,168,1) 100%)',
+            borderTop: '1px solid rgba(224,112,255,0.2)',
             animation: 'navSlideDown 0.25s ease forwards',
           }}
         >
