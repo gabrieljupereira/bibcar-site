@@ -156,15 +156,20 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
               const origM = m.metalness;
               const origR = m.roughness;
               const origE = (m as unknown as { emissiveIntensity?: number }).emissiveIntensity ?? 0;
+              const emissiveColor = (m as unknown as { emissive?: { r: number; g: number; b: number } }).emissive;
               const { r, g, b } = m.color;
               const origLum = 0.299 * r + 0.587 * g + 0.114 * b;
+              const emissiveLum = emissiveColor
+                ? (0.299 * emissiveColor.r + 0.587 * emissiveColor.g + 0.114 * emissiveColor.b) * origE
+                : 0;
 
               // KEEP: glass / transparent
               if (m.transparent && m.opacity < 0.9) return;
               if ('transmission' in m && (m as unknown as { transmission: number }).transmission > 0.05) return;
 
-              // KEEP: lights with emissive (faróis LED, lanternas vermelhas)
-              if (origE > 0.05) return;
+              // KEEP: actually glowing lights (non-black emissive color × intensity)
+              // emissiveIntensity=1.0 with black emissive = no glow — don't exclude those
+              if (emissiveLum > 0.02) return;
 
               // KEEP: tires — matte + dark + rubber-like
               if (origR > 0.55 && origM < 0.15 && origLum < 0.15) return;
@@ -191,29 +196,6 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
           scene.add(model);
           controls.target.set(0, size.y * scale * 0.38, 0);
           controls.update();
-
-          // DEBUG: show material properties as overlay
-          const dbg = document.createElement('div');
-          dbg.style.cssText = 'position:absolute;top:0;left:0;background:rgba(0,0,0,0.85);color:#0f0;font-size:8px;line-height:1.3;padding:5px;max-height:100%;overflow:auto;pointer-events:none;font-family:monospace;z-index:999;max-width:420px;white-space:pre;';
-          const lines: string[] = [];
-          model.traverse((child) => {
-            const mesh = child as import('three').Mesh;
-            if (!mesh.isMesh) return;
-            const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-            mats.forEach((mat, idx) => {
-              const m = mat as import('three').MeshStandardMaterial;
-              const oM = m.metalness?.toFixed(2) ?? '?';
-              const oR = m.roughness?.toFixed(2) ?? '?';
-              const { r, g, b } = m.color ?? { r: 0, g: 0, b: 0 };
-              const lum = (0.299 * r + 0.587 * g + 0.114 * b).toFixed(3);
-              const oE = ((m as unknown as {emissiveIntensity?:number}).emissiveIntensity ?? 0).toFixed(2);
-              const tr = m.transparent ? `op${m.opacity?.toFixed(1)}` : '-';
-              lines.push(`${mesh.name.slice(0,22).padEnd(22)}[${idx}] M=${oM} R=${oR} L=${lum} E=${oE} T=${tr}`);
-            });
-          });
-          (container as HTMLElement).style.position = 'relative';
-          dbg.textContent = lines.join('\n');
-          container.appendChild(dbg);
         },
         undefined,
         (err) => console.warn('CarViewer3D: model not found', err)
