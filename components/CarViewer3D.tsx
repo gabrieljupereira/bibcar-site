@@ -4,11 +4,12 @@ import { useEffect, useRef } from 'react';
 
 interface Props {
   modelPath?: string;
+  bodyColor?: string;
   className?: string;
   style?: React.CSSProperties;
 }
 
-export default function CarViewer3D({ modelPath = '/car.glb', className = '', style }: Props) {
+export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13EFF', className = '', style }: Props) {
   const mountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -114,10 +115,34 @@ export default function CarViewer3D({ modelPath = '/car.glb', className = '', st
           model.position.y = 0;
           model.castShadow = true;
 
+          const paintColor = new THREE.Color(bodyColor);
+
           model.traverse((child) => {
-            if ((child as import('three').Mesh).isMesh) {
-              child.castShadow = true;
-              child.receiveShadow = true;
+            const mesh = child as import('three').Mesh;
+            if (!mesh.isMesh) return;
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+
+            const applyPaint = (mat: import('three').Material) => {
+              const m = mat as import('three').MeshStandardMaterial;
+              if (!m.color) return;
+              // Skip transparent materials (windows/glass)
+              if (m.transparent && m.opacity < 0.65) return;
+              // Skip very dark materials (tires, chassis, dark trim)
+              const { r, g, b } = m.color;
+              const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+              if (luminance > 0.06) {
+                m.color.set(paintColor);
+                m.metalness = 0.88;
+                m.roughness = 0.12;
+                m.needsUpdate = true;
+              }
+            };
+
+            if (Array.isArray(mesh.material)) {
+              mesh.material.forEach(applyPaint);
+            } else {
+              applyPaint(mesh.material);
             }
           });
 
@@ -164,7 +189,7 @@ export default function CarViewer3D({ modelPath = '/car.glb', className = '', st
       const c = container as unknown as { _cleanup?: () => void };
       c._cleanup?.();
     };
-  }, [modelPath]);
+  }, [modelPath, bodyColor]);
 
   return (
     <div
