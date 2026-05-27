@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import ScrollReveal from '@/components/ScrollReveal';
 import FloatingOrbs from '@/components/FloatingOrbs';
 
@@ -52,6 +53,73 @@ const supports = [
   { icon: '⚡', title: 'Resposta rápida', desc: 'Sem burocracia pra resolver problema de corrida. Chamou, resolvemos.' },
   { icon: '👥', title: 'Comunidade', desc: 'Grupo de motoristas parceiros onde você troca experiência, dica e informação.' },
 ];
+
+function EarningsCalculator() {
+  const [hoursPerDay, setHoursPerDay] = useState(6);
+  const [daysPerWeek, setDaysPerWeek] = useState(5);
+
+  const avgPerHour = 28;
+  const monthlyRaw = hoursPerDay * daysPerWeek * 4.33 * avgPerHour;
+  const monthly = Math.round(monthlyRaw / 10) * 10;
+
+  return (
+    <div
+      className="rounded-3xl p-8 md:p-12"
+      style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,210,63,0.2)' }}
+    >
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-10">
+        <div>
+          <div className="flex justify-between items-center mb-3">
+            <label className="text-sm font-semibold" style={{ color: '#cfcfdc' }}>Horas por dia</label>
+            <span className="bebas text-2xl gold-text">{hoursPerDay}h</span>
+          </div>
+          <input
+            type="range" min={1} max={12} value={hoursPerDay}
+            onChange={(e) => setHoursPerDay(Number(e.target.value))}
+            className="w-full h-2 rounded-full outline-none cursor-pointer"
+            style={{ accentColor: '#FFD23F' }}
+          />
+          <div className="flex justify-between text-xs mt-1" style={{ color: '#555' }}>
+            <span>1h</span><span>12h</span>
+          </div>
+        </div>
+
+        <div>
+          <div className="flex justify-between items-center mb-3">
+            <label className="text-sm font-semibold" style={{ color: '#cfcfdc' }}>Dias por semana</label>
+            <span className="bebas text-2xl gold-text">{daysPerWeek} dias</span>
+          </div>
+          <input
+            type="range" min={1} max={7} value={daysPerWeek}
+            onChange={(e) => setDaysPerWeek(Number(e.target.value))}
+            className="w-full h-2 rounded-full outline-none cursor-pointer"
+            style={{ accentColor: '#FFD23F' }}
+          />
+          <div className="flex justify-between text-xs mt-1" style={{ color: '#555' }}>
+            <span>1 dia</span><span>7 dias</span>
+          </div>
+        </div>
+      </div>
+
+      <div
+        className="rounded-2xl p-8 text-center"
+        style={{ background: 'linear-gradient(135deg,rgba(255,210,63,0.12),rgba(255,150,0,0.08))', border: '1px solid rgba(255,210,63,0.3)' }}
+      >
+        <p className="text-silver text-sm mb-2">Estimativa mensal</p>
+        <p className="bebas gold-text" style={{ fontSize: 'clamp(52px, 10vw, 88px)', lineHeight: 1 }}>
+          R$ {monthly.toLocaleString('pt-BR')}
+        </p>
+        <p className="text-xs mt-3" style={{ color: '#666' }}>
+          Baseado em ~R${avgPerHour}/h · {hoursPerDay}h/dia · {daysPerWeek} dias/semana · 4,3 semanas/mês
+        </p>
+      </div>
+
+      <p className="text-center text-xs mt-6" style={{ color: '#444' }}>
+        * Estimativa baseada na média da plataforma. Ganhos reais variam conforme cidade, horário e demanda.
+      </p>
+    </div>
+  );
+}
 
 export default function Motorista() {
   return (
@@ -214,34 +282,23 @@ export default function Motorista() {
         </div>
       </section>
 
-      {/* GANHOS */}
+      {/* CALCULADORA DE GANHOS */}
       <section
         className="section"
         style={{ background: 'radial-gradient(ellipse at 50% 50%,rgba(255,210,63,.12),transparent 70%),#070707' }}
       >
-        <div className="container max-w-3xl mx-auto text-center">
-          <ScrollReveal>
-            <div className="tag tag-gold mb-6 inline-flex">Seus ganhos</div>
-            <h2 className="bebas mb-6" style={{ fontSize: 'clamp(44px, 7vw, 84px)', lineHeight: 0.95 }}>
-              Você decide quando trabalha.{' '}
-              <span className="gold-text">Nós garantimos que vale.</span>
+        <div className="container max-w-3xl mx-auto">
+          <ScrollReveal className="text-center mb-12">
+            <div className="tag tag-gold mb-6 inline-flex">Calculadora de ganhos</div>
+            <h2 className="bebas mb-4" style={{ fontSize: 'clamp(44px, 7vw, 84px)', lineHeight: 0.95 }}>
+              Quanto você pode{' '}
+              <span className="gold-text">ganhar?</span>
             </h2>
-            <p className="text-silver mb-10 mx-auto" style={{ fontSize: 18, lineHeight: 1.7, maxWidth: 600 }}>
-              Sem meta obrigatória. Sem penalidade por não aceitar corrida. Sem taxa escondida. Quanto mais você roda, mais você ganha — e o dinheiro é seu.
+            <p className="text-silver" style={{ fontSize: 18, lineHeight: 1.7 }}>
+              Simule sua renda mensal. Ajuste as horas e veja a estimativa.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 text-center mb-10">
-              {[
-                { num: '100%', label: 'Transparência na taxa' },
-                { num: '48h', label: 'Para aprovação do cadastro' },
-                { num: '0', label: 'Taxa de clandestino aqui' },
-              ].map((stat) => (
-                <div key={stat.label} className="rounded-2xl py-8 px-6" style={{ background: 'rgba(255,210,63,0.06)', border: '1px solid rgba(255,210,63,0.2)' }}>
-                  <div className="bebas text-gold mb-2" style={{ fontSize: 52, lineHeight: 1 }}>{stat.num}</div>
-                  <div className="text-silver text-sm">{stat.label}</div>
-                </div>
-              ))}
-            </div>
           </ScrollReveal>
+          <EarningsCalculator />
         </div>
       </section>
 

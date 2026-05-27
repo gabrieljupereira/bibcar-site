@@ -2,15 +2,61 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState } from 'react';
 import ScrollReveal from '@/components/ScrollReveal';
 import FloatingOrbs from '@/components/FloatingOrbs';
 import ClientCarViewer from '@/components/ClientCarViewer';
 
+function FaqItem({ question, answer }: { question: string; answer: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div
+      className="rounded-2xl overflow-hidden transition-all duration-200 cursor-pointer"
+      style={{ background: '#FFFFFF', border: `1.5px solid ${open ? 'rgba(193,62,255,0.35)' : 'rgba(0,0,0,0.08)'}` }}
+      onClick={() => setOpen(!open)}
+    >
+      <div className="flex items-center justify-between px-7 py-5">
+        <span className="font-bold text-sm md:text-base" style={{ color: '#111' }}>{question}</span>
+        <span className="ml-4 flex-shrink-0 transition-transform duration-200" style={{ transform: open ? 'rotate(45deg)' : 'none', color: '#C13EFF', fontSize: 22, fontWeight: 300 }}>+</span>
+      </div>
+      {open && (
+        <div className="px-7 pb-5 text-sm leading-relaxed" style={{ color: '#555', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+          <p className="pt-4">{answer}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+const featureIcons: Record<string, React.ReactNode> = {
+  shield: (
+    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+    </svg>
+  ),
+  heart: (
+    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+    </svg>
+  ),
+  pin: (
+    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+      <circle cx="12" cy="10" r="3"/>
+    </svg>
+  ),
+  bolt: (
+    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+    </svg>
+  ),
+};
+
 const features = [
-  { icon: '🛡️', title: 'Motorista verificado', desc: 'Todos passam por análise de CNH, CRLV e antecedentes criminais. Nada de clandestino.' },
-  { icon: '💜', title: 'Bib Delas', desc: 'Programa especial com mais cuidado e atenção para as passageiras da BibCar.' },
-  { icon: '📍', title: 'Da sua cidade', desc: 'Equipe e motoristas que conhecem as ruas onde você anda de verdade.' },
-  { icon: '⚡', title: 'Tecnologia de ponta', desc: 'Plataforma robusta por trás da operação. Rápida, confiável, escalável.' },
+  { iconKey: 'shield', color: '#FFD23F', title: 'Motorista verificado', desc: 'Todos passam por análise de CNH, CRLV e antecedentes criminais. Nada de clandestino.' },
+  { iconKey: 'heart', color: '#FF2D8E', title: 'Bib Delas', desc: 'Programa especial com mais cuidado e atenção para as passageiras da BibCar.' },
+  { iconKey: 'pin', color: '#C13EFF', title: 'Da sua cidade', desc: 'Equipe e motoristas que conhecem as ruas onde você anda de verdade.' },
+  { iconKey: 'bolt', color: '#FF9500', title: 'Tecnologia de ponta', desc: 'Plataforma robusta por trás da operação. Rápida, confiável, escalável.' },
 ];
 
 const cities = [
@@ -208,10 +254,10 @@ export default function Home() {
                   }}
                 >
                   <div
-                    className="text-3xl mb-4 w-14 h-14 mx-auto rounded-2xl flex items-center justify-center"
-                    style={{ background: 'linear-gradient(135deg,rgba(255,184,0,.12),rgba(168,48,232,.12))', border: '1px solid rgba(168,48,232,.2)' }}
+                    className="mb-4 w-14 h-14 mx-auto rounded-2xl flex items-center justify-center"
+                    style={{ background: `${feat.color}18`, border: `1px solid ${feat.color}44`, color: feat.color }}
                   >
-                    {feat.icon}
+                    {featureIcons[feat.iconKey]}
                   </div>
                   <h3 className="bebas text-2xl mb-2">{feat.title}</h3>
                   <p className="text-silver text-sm leading-relaxed">{feat.desc}</p>
@@ -350,6 +396,94 @@ export default function Home() {
                 Vire franqueado e leve a BibCar até ela →
               </Link>
             </p>
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* DEPOIMENTOS */}
+      <section className="section" style={{ background: '#EDE9FF' }}>
+        <div className="container">
+          <ScrollReveal className="text-center mb-14 max-w-xl mx-auto">
+            <div className="tag mb-5 inline-flex">Quem já usou aprovou</div>
+            <h2 className="bebas mb-4" style={{ fontSize: 'clamp(36px, 5vw, 62px)' }}>
+              O que dizem os <span className="purple-text">nossos usuários</span>
+            </h2>
+          </ScrollReveal>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              {
+                name: 'Ana Paula S.',
+                city: 'Fernandópolis · SP',
+                role: 'Passageira',
+                stars: 5,
+                text: 'Uso todo dia pra ir ao trabalho. O motorista sempre é pontual e educado. Me sinto muito mais segura do que no clandestino.',
+                color: '#C13EFF',
+              },
+              {
+                name: 'Carlos Eduardo M.',
+                city: 'Votuporanga · SP',
+                role: 'Motorista parceiro',
+                stars: 5,
+                text: 'Comecei há 4 meses e já consigo uma renda muito melhor. O suporte da BibCar é diferente — eles realmente falam de igual pra igual.',
+                color: '#FFB800',
+              },
+              {
+                name: 'Fernanda L.',
+                city: 'Muriaé · MG',
+                role: 'Passageira',
+                stars: 5,
+                text: 'Ótimo app, corrida rastreada e tarifa combinada antes. Nunca tive surpresa no valor. Recomendo pra todo mundo!',
+                color: '#FF2D8E',
+              },
+            ].map((dep, i) => (
+              <ScrollReveal key={dep.name} delay={i * 0.12}>
+                <div className="rounded-3xl p-8 h-full flex flex-col" style={{ background: '#FFFFFF', border: '1px solid rgba(0,0,0,0.08)' }}>
+                  <div className="flex gap-1 mb-4">
+                    {Array.from({ length: dep.stars }).map((_, s) => (
+                      <svg key={s} width="18" height="18" viewBox="0 0 24 24" fill="#FFB800">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                      </svg>
+                    ))}
+                  </div>
+                  <p className="text-sm leading-relaxed flex-1 mb-6" style={{ color: '#374151' }}>&ldquo;{dep.text}&rdquo;</p>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white text-sm" style={{ background: dep.color }}>
+                      {dep.name.charAt(0)}
+                    </div>
+                    <div>
+                      <p className="font-bold text-sm" style={{ color: '#111' }}>{dep.name}</p>
+                      <p className="text-xs" style={{ color: '#888' }}>{dep.role} · {dep.city}</p>
+                    </div>
+                  </div>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="section" style={{ background: '#F7F5FF' }}>
+        <div className="container max-w-3xl mx-auto">
+          <ScrollReveal className="text-center mb-12">
+            <div className="tag mb-5 inline-flex">Dúvidas frequentes</div>
+            <h2 className="bebas mb-4" style={{ fontSize: 'clamp(36px, 5vw, 62px)' }}>
+              Perguntas <span className="gold-text">frequentes</span>
+            </h2>
+          </ScrollReveal>
+          <ScrollReveal>
+            <div className="flex flex-col gap-3">
+              {[
+                { q: 'Como faço para pedir uma corrida?', a: 'Baixe o app BibCar, crie sua conta, informe o destino e confirme. Em segundos um motorista verificado aceitará a sua corrida.' },
+                { q: 'Como me cadastro como motorista?', a: 'Acesse a página "Motorista", preencha o formulário ou fale pelo WhatsApp. Você precisará de CNH, CRLV e documento com foto. A aprovação é rápida.' },
+                { q: 'Como funciona o pagamento?', a: 'A tarifa é calculada e mostrada antes de você confirmar a corrida — sem surpresas. Aceitamos PIX, cartão de crédito/débito e dinheiro.' },
+                { q: 'O que é o Bib Delas?', a: 'Programa especial para passageiras com foco em segurança e conforto. Conta com motoristas selecionados e suporte dedicado para as usuárias.' },
+                { q: 'Posso ser franqueado na minha cidade?', a: 'Sim! Se sua cidade ainda não tem BibCar, você pode levar a marca pra lá. Acesse a página "Franqueado" e entre em contato com nossa equipe.' },
+                { q: 'Como funciona a verificação dos motoristas?', a: 'Todo motorista passa por análise de CNH, CRLV, certidão de antecedentes criminais e entrevista antes de começar a operar.' },
+              ].map((item, i) => (
+                <FaqItem key={i} question={item.q} answer={item.a} />
+              ))}
+            </div>
           </ScrollReveal>
         </div>
       </section>
