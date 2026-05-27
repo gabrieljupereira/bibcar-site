@@ -16,10 +16,10 @@ const features = [
 const cities = [
   { name: 'Fernandópolis · SP', active: true },
   { name: 'Votuporanga · SP', active: true },
-  { name: 'Muriaé · MG', active: true },
-  { name: 'Manhuaçu · MG', active: true },
-  { name: 'Viçosa · MG', active: true },
-  { name: 'Sete Lagoas · MG', active: true },
+  { name: 'Muriaé · MG', active: false },
+  { name: 'Manhuaçu · MG', active: false },
+  { name: 'Viçosa · MG', active: false },
+  { name: 'Sete Lagoas · MG', active: false },
 ];
 
 export default function Home() {
@@ -42,7 +42,7 @@ export default function Home() {
       </div>
 
       {/* HERO */}
-      <section className="relative overflow-hidden" style={{ minHeight: '92vh', display: 'flex', alignItems: 'center' }}>
+      <section className="relative overflow-hidden flex items-start md:items-center" style={{ minHeight: '92vh' }}>
         <FloatingOrbs variant="home" className="absolute inset-0" style={{ zIndex: 0 }} />
         <div
           className="absolute inset-0"
@@ -51,7 +51,7 @@ export default function Home() {
             zIndex: 1,
           }}
         />
-        <div className="container relative grid grid-cols-1 md:grid-cols-2 gap-12 items-center py-16 md:py-28" style={{ zIndex: 2 }}>
+        <div className="container relative grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-12 items-center py-20 md:py-28" style={{ zIndex: 2 }}>
           <div>
             <div className="tag mb-8 inline-flex">
               <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#C13EFF', boxShadow: '0 0 10px #C13EFF', animation: 'blink 1.5s infinite' }} />
@@ -71,7 +71,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex justify-center items-center relative h-[280px] md:h-[480px]">
+          <div className="flex justify-center items-center relative h-[320px] md:h-[480px]">
             <ClientCarViewer
               modelPath="/car.glb"
               bodyColor="#7F00FF"
