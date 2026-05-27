@@ -51,7 +51,7 @@ export default function Home() {
             zIndex: 1,
           }}
         />
-        <div className="container relative grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center py-10 md:py-28" style={{ zIndex: 2 }}>
+        <div className="container relative grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center pt-20 pb-10 md:py-28" style={{ zIndex: 2 }}>
           <div>
             <div className="tag mb-6 inline-flex" style={{ fontSize: "clamp(8.5px, 2.5vw, 11px)", letterSpacing: "clamp(0.2px, 0.1vw, 2px)", padding: "clamp(5px, 1.5vw, 7px) clamp(10px, 4vw, 18px)" }}>
               <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#C13EFF', boxShadow: '0 0 10px #C13EFF', animation: 'blink 1.5s infinite', flexShrink: 0 }} />
