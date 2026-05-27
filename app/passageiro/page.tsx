@@ -1,11 +1,9 @@
 'use client';
 
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useState } from 'react';
 import ScrollReveal from '@/components/ScrollReveal';
-
-const FloatingOrbs = dynamic(() => import('@/components/FloatingOrbs'), { ssr: false });
+import FloatingOrbs from '@/components/FloatingOrbs';
 
 const steps = [
   { num: '01', icon: '📱', title: 'Baixe o app', desc: 'Disponível no iOS e Android. Grátis, rápido, sem complicação. Cadastre-se em menos de 2 minutos.' },

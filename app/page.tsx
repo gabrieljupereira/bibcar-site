@@ -2,10 +2,8 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
 import ScrollReveal from '@/components/ScrollReveal';
-
-const FloatingOrbs = dynamic(() => import('@/components/FloatingOrbs'), { ssr: false });
+import FloatingOrbs from '@/components/FloatingOrbs';
 
 const features = [
   { icon: '🛡️', title: 'Motorista verificado', desc: 'Todos passam por análise de CNH, CRLV e antecedentes criminais. Nada de clandestino.' },

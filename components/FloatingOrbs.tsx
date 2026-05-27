@@ -1,101 +1,41 @@
-'use client';
-
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Float, MeshDistortMaterial, Sparkles } from '@react-three/drei';
-import React, { useState, useCallback, useRef } from 'react';
-import * as THREE from 'three';
-
 export type OrbVariant = 'home' | 'passageiro' | 'motorista' | 'franqueado';
 
-interface OrbConfig {
-  position: [number, number, number];
+interface OrbDef {
   color: string;
-  emissive: string;
-  scale: number;
-  speed: number;
-  distort: number;
+  glow: string;
+  size: number;
+  x: number;
+  y: number;
+  duration: number;
+  delay: number;
 }
 
-const CONFIGS: Record<OrbVariant, OrbConfig[]> = {
+const ORBS: Record<OrbVariant, OrbDef[]> = {
   home: [
-    { position: [2.8, 1.2, -2], color: '#FFD23F', emissive: '#FFD23F', scale: 1.15, speed: 1.4, distort: 0.38 },
-    { position: [-2.8, -0.6, -1.5], color: '#C13EFF', emissive: '#C13EFF', scale: 0.85, speed: 2.0, distort: 0.55 },
-    { position: [0.4, 2.2, -3], color: '#FF9500', emissive: '#FF9500', scale: 0.65, speed: 1.7, distort: 0.48 },
-    { position: [3.8, -1.6, -2.5], color: '#A930F0', emissive: '#A930F0', scale: 0.95, speed: 1.2, distort: 0.3 },
-    { position: [-0.8, 1.8, -1.8], color: '#FFB627', emissive: '#FFB627', scale: 0.55, speed: 2.3, distort: 0.62 },
-    { position: [-3.8, 0.6, -3], color: '#C13EFF', emissive: '#C13EFF', scale: 1.05, speed: 1.6, distort: 0.42 },
-  ],
-  motorista: [
-    { position: [2.8, 1.2, -2], color: '#FFD23F', emissive: '#FFD23F', scale: 1.25, speed: 1.4, distort: 0.38 },
-    { position: [-2.5, -0.6, -1.5], color: '#FFB627', emissive: '#FFB627', scale: 0.85, speed: 2.0, distort: 0.55 },
-    { position: [0.4, 2.2, -3], color: '#FF9500', emissive: '#FF9500', scale: 0.7, speed: 1.7, distort: 0.48 },
-    { position: [3.8, -1.6, -2.5], color: '#FFD23F', emissive: '#FFD23F', scale: 0.95, speed: 1.2, distort: 0.3 },
-    { position: [-0.8, 1.8, -1.8], color: '#FFB627', emissive: '#FFB627', scale: 0.6, speed: 2.3, distort: 0.62 },
-    { position: [-3.8, 0.6, -3], color: '#FF9500', emissive: '#FF9500', scale: 1.05, speed: 1.6, distort: 0.42 },
+    { color: '#FFD23F', glow: 'rgba(255,210,63,0.55)', size: 480, x: 78, y: 28, duration: 7, delay: 0 },
+    { color: '#C13EFF', glow: 'rgba(193,62,255,0.45)', size: 340, x: 88, y: 72, duration: 9, delay: -3 },
+    { color: '#FF9500', glow: 'rgba(255,149,0,0.35)', size: 240, x: 55, y: 15, duration: 8, delay: -5 },
+    { color: '#A930F0', glow: 'rgba(169,48,240,0.3)', size: 180, x: 68, y: 85, duration: 11, delay: -2 },
   ],
   passageiro: [
-    { position: [2.8, 1.2, -2], color: '#C13EFF', emissive: '#C13EFF', scale: 1.15, speed: 1.4, distort: 0.42 },
-    { position: [-2.8, -0.6, -1.5], color: '#FF2D8E', emissive: '#FF2D8E', scale: 0.85, speed: 2.0, distort: 0.58 },
-    { position: [0.4, 2.2, -3], color: '#A930F0', emissive: '#A930F0', scale: 0.65, speed: 1.7, distort: 0.48 },
-    { position: [3.8, -1.6, -2.5], color: '#C13EFF', emissive: '#C13EFF', scale: 0.95, speed: 1.2, distort: 0.35 },
-    { position: [-0.8, 1.8, -1.8], color: '#FF2D8E', emissive: '#FF2D8E', scale: 0.55, speed: 2.3, distort: 0.65 },
-    { position: [-3.8, 0.6, -3], color: '#A930F0', emissive: '#A930F0', scale: 1.05, speed: 1.6, distort: 0.44 },
+    { color: '#C13EFF', glow: 'rgba(193,62,255,0.55)', size: 500, x: 80, y: 32, duration: 7, delay: 0 },
+    { color: '#FF2D8E', glow: 'rgba(255,45,142,0.4)', size: 320, x: 90, y: 75, duration: 9, delay: -3 },
+    { color: '#A930F0', glow: 'rgba(169,48,240,0.35)', size: 220, x: 60, y: 10, duration: 8, delay: -4 },
+    { color: '#C13EFF', glow: 'rgba(193,62,255,0.25)', size: 160, x: 72, y: 88, duration: 10, delay: -1 },
+  ],
+  motorista: [
+    { color: '#FFD23F', glow: 'rgba(255,210,63,0.55)', size: 500, x: 78, y: 30, duration: 7, delay: 0 },
+    { color: '#FF9500', glow: 'rgba(255,149,0,0.45)', size: 340, x: 88, y: 72, duration: 9, delay: -3 },
+    { color: '#FFB627', glow: 'rgba(255,182,39,0.35)', size: 220, x: 60, y: 12, duration: 8, delay: -5 },
+    { color: '#FFD23F', glow: 'rgba(255,210,63,0.25)', size: 160, x: 70, y: 85, duration: 11, delay: -2 },
   ],
   franqueado: [
-    { position: [2.8, 1.2, -2], color: '#FFD23F', emissive: '#FFD23F', scale: 1.15, speed: 1.4, distort: 0.38 },
-    { position: [-2.8, -0.6, -1.5], color: '#C13EFF', emissive: '#C13EFF', scale: 0.85, speed: 2.0, distort: 0.55 },
-    { position: [0.4, 2.2, -3], color: '#FFB627', emissive: '#FFB627', scale: 0.65, speed: 1.7, distort: 0.48 },
-    { position: [3.8, -1.6, -2.5], color: '#A930F0', emissive: '#A930F0', scale: 0.95, speed: 1.2, distort: 0.3 },
-    { position: [-0.8, 1.8, -1.8], color: '#FFD23F', emissive: '#FFD23F', scale: 0.55, speed: 2.3, distort: 0.62 },
-    { position: [-3.8, 0.6, -3], color: '#C13EFF', emissive: '#C13EFF', scale: 1.05, speed: 1.6, distort: 0.42 },
+    { color: '#FFD23F', glow: 'rgba(255,210,63,0.5)', size: 460, x: 76, y: 28, duration: 7, delay: 0 },
+    { color: '#C13EFF', glow: 'rgba(193,62,255,0.4)', size: 320, x: 88, y: 72, duration: 9, delay: -3 },
+    { color: '#FF9500', glow: 'rgba(255,149,0,0.3)', size: 220, x: 58, y: 14, duration: 8, delay: -4 },
+    { color: '#A930F0', glow: 'rgba(169,48,240,0.25)', size: 160, x: 70, y: 86, duration: 10, delay: -1 },
   ],
 };
-
-function Orb({ position, color, emissive, scale, speed, distort }: OrbConfig) {
-  const meshRef = useRef<THREE.Mesh>(null);
-  return (
-    <Float speed={speed} rotationIntensity={0.25} floatIntensity={1.4}>
-      <mesh ref={meshRef} position={position} scale={scale}>
-        <sphereGeometry args={[1, 48, 48]} />
-        <MeshDistortMaterial
-          color={color}
-          emissive={emissive}
-          emissiveIntensity={0.38}
-          distort={distort}
-          speed={1.6}
-          transparent
-          opacity={0.82}
-        />
-      </mesh>
-    </Float>
-  );
-}
-
-function Scene({ mouse, variant }: { mouse: { x: number; y: number }; variant: OrbVariant }) {
-  const { camera } = useThree();
-  const orbs = CONFIGS[variant];
-  const light1 = variant === 'motorista' ? '#FF9500' : '#FFD23F';
-  const light2 = variant === 'motorista' ? '#FFD23F' : '#C13EFF';
-
-  useFrame(() => {
-    (camera as THREE.PerspectiveCamera).position.x += (mouse.x * 1.2 - camera.position.x) * 0.04;
-    (camera as THREE.PerspectiveCamera).position.y += (-mouse.y * 0.7 - camera.position.y) * 0.04;
-    camera.lookAt(0, 0, 0);
-  });
-
-  return (
-    <>
-      <ambientLight intensity={0.04} />
-      <pointLight position={[6, 4, 3]} color={light1} intensity={4} />
-      <pointLight position={[-6, -4, 2]} color={light2} intensity={4} />
-      <Sparkles count={90} scale={12} size={2.2} speed={0.35} color={light1} />
-      <Sparkles count={70} scale={10} size={1.6} speed={0.5} color={light2} />
-      {orbs.map((orb, i) => (
-        <Orb key={i} {...orb} />
-      ))}
-    </>
-  );
-}
 
 interface Props {
   variant?: OrbVariant;
@@ -104,25 +44,29 @@ interface Props {
 }
 
 export default function FloatingOrbs({ variant = 'home', className = '', style }: Props) {
-  const [mouse, setMouse] = useState({ x: 0, y: 0 });
-
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setMouse({
-      x: ((e.clientX - rect.left) / rect.width) * 2 - 1,
-      y: -((e.clientY - rect.top) / rect.height) * 2 + 1,
-    });
-  }, []);
+  const orbs = ORBS[variant];
 
   return (
-    <div className={className} style={style} onMouseMove={handleMouseMove}>
-      <Canvas
-        camera={{ position: [0, 0, 7], fov: 52 }}
-        gl={{ antialias: true, alpha: true }}
-        style={{ background: 'transparent' }}
-      >
-        <Scene mouse={mouse} variant={variant} />
-      </Canvas>
+    <div className={className} style={{ ...style, overflow: 'hidden', pointerEvents: 'none' }}>
+      {orbs.map((orb, i) => (
+        <div
+          key={i}
+          style={{
+            position: 'absolute',
+            width: orb.size,
+            height: orb.size,
+            borderRadius: '50%',
+            left: `${orb.x}%`,
+            top: `${orb.y}%`,
+            transform: 'translate(-50%, -50%)',
+            background: `radial-gradient(circle at 38% 38%, ${orb.color}cc 0%, ${orb.color}44 40%, transparent 70%)`,
+            boxShadow: `0 0 ${orb.size * 0.3}px ${orb.glow}, 0 0 ${orb.size * 0.6}px ${orb.glow.replace(')', ', 0.2)')}`,
+            filter: 'blur(2px)',
+            animation: `float ${orb.duration}s ease-in-out infinite`,
+            animationDelay: `${orb.delay}s`,
+          }}
+        />
+      ))}
     </div>
   );
 }

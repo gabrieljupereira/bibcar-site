@@ -1,10 +1,8 @@
 'use client';
 
-import dynamic from 'next/dynamic';
 import ScrollReveal from '@/components/ScrollReveal';
+import FloatingOrbs from '@/components/FloatingOrbs';
 import { useState } from 'react';
-
-const FloatingOrbs = dynamic(() => import('@/components/FloatingOrbs'), { ssr: false });
 
 const pillars = [
   {

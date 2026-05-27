@@ -1,9 +1,7 @@
 'use client';
 
-import dynamic from 'next/dynamic';
 import ScrollReveal from '@/components/ScrollReveal';
-
-const FloatingOrbs = dynamic(() => import('@/components/FloatingOrbs'), { ssr: false });
+import FloatingOrbs from '@/components/FloatingOrbs';
 
 const differentials = [
   { icon: '💰', title: 'Ganho melhor', desc: 'Por corrida, você fica com mais. Nossa taxa é justa e transparente — sem surpresas no final do dia.' },
