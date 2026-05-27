@@ -8,17 +8,17 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        dark: '#070707',
-        dark2: '#0F0F12',
-        card: '#141420',
-        gold: '#FFD23F',
-        gold2: '#FFB627',
-        'gold-warm': '#FF9500',
-        purple: '#A930F0',
-        'purple-elec': '#C13EFF',
+        dark: '#F7F5FF',
+        dark2: '#EDE9FF',
+        card: '#FFFFFF',
+        gold: '#FFB800',
+        gold2: '#FF9500',
+        'gold-warm': '#FF7A00',
+        purple: '#9B27D8',
+        'purple-elec': '#A830E8',
         violet: '#6B3FA0',
-        pink: '#FF2D8E',
-        silver: '#A5B0BD',
+        pink: '#E8267A',
+        silver: '#64748B',
       },
       fontFamily: {
         bebas: ['"Bebas Neue"', 'sans-serif'],
