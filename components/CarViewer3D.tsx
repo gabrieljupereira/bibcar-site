@@ -23,16 +23,17 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
       const THREE = await import('three');
       const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader.js');
       const { OrbitControls } = await import('three/examples/jsm/controls/OrbitControls.js');
+      const { RoomEnvironment } = await import('three/examples/jsm/environments/RoomEnvironment.js');
 
-      const w = container.clientWidth;
-      const h = container.clientHeight;
+      const w = container.clientWidth || 600;
+      const h = container.clientHeight || 480;
 
       // Scene
       const scene = new THREE.Scene();
 
-      // Camera
-      const camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 100);
-      camera.position.set(0, 1.2, 4.5);
+      // Camera — low angle, cinematic
+      const camera = new THREE.PerspectiveCamera(42, w / h, 0.1, 100);
+      camera.position.set(0, 1.0, 5.5);
 
       // Renderer
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -42,56 +43,76 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.4;
+      renderer.toneMappingExposure = 1.8;
       container.appendChild(renderer.domElement);
 
+      // Environment map for realistic reflections on metallic surfaces
+      const pmremGenerator = new THREE.PMREMGenerator(renderer);
+      pmremGenerator.compileEquirectangularShader();
+      const envTexture = pmremGenerator.fromScene(new RoomEnvironment()).texture;
+      scene.environment = envTexture;
+      pmremGenerator.dispose();
+
       // Lights
-      const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+      const ambient = new THREE.AmbientLight(0xffffff, 1.2);
       scene.add(ambient);
 
-      const keyLight = new THREE.DirectionalLight(0xffd23f, 3.5);
-      keyLight.position.set(5, 6, 4);
+      // Main key light — warm top front
+      const keyLight = new THREE.DirectionalLight(0xfff4e0, 5);
+      keyLight.position.set(4, 8, 5);
       keyLight.castShadow = true;
-      keyLight.shadow.mapSize.set(1024, 1024);
+      keyLight.shadow.mapSize.set(2048, 2048);
+      keyLight.shadow.camera.near = 0.1;
+      keyLight.shadow.camera.far = 30;
+      keyLight.shadow.camera.left = -6;
+      keyLight.shadow.camera.right = 6;
+      keyLight.shadow.camera.top = 6;
+      keyLight.shadow.camera.bottom = -6;
+      keyLight.shadow.bias = -0.001;
       scene.add(keyLight);
 
-      const fillLight = new THREE.DirectionalLight(0xc13eff, 1.8);
-      fillLight.position.set(-5, 2, -3);
+      // Fill light — cool side
+      const fillLight = new THREE.DirectionalLight(0xc8d8ff, 2.5);
+      fillLight.position.set(-5, 3, 2);
       scene.add(fillLight);
 
-      const rimLight = new THREE.DirectionalLight(0xffffff, 1.2);
+      // Rim light — back edge highlight
+      const rimLight = new THREE.DirectionalLight(0xffffff, 3);
       rimLight.position.set(0, 4, -6);
       scene.add(rimLight);
 
-      // Ground reflection plane
-      const groundGeo = new THREE.PlaneGeometry(12, 12);
-      const groundMat = new THREE.MeshStandardMaterial({
-        color: 0x0a0a12,
-        roughness: 0.1,
-        metalness: 0.8,
-        transparent: true,
-        opacity: 0.6,
-      });
-      const ground = new THREE.Mesh(groundGeo, groundMat);
-      ground.rotation.x = -Math.PI / 2;
-      ground.position.y = 0;
-      ground.receiveShadow = true;
-      scene.add(ground);
+      // Purple underglow — brand color pop
+      const underGlow = new THREE.PointLight(0xc13eff, 3, 6);
+      underGlow.position.set(0, -0.5, 0);
+      scene.add(underGlow);
+
+      // Gold accent light from front
+      const frontLight = new THREE.PointLight(0xffd23f, 2, 8);
+      frontLight.position.set(0, 2, 4);
+      scene.add(frontLight);
+
+      // Invisible shadow-catcher plane (no visible surface)
+      const shadowGeo = new THREE.PlaneGeometry(14, 14);
+      const shadowMat = new THREE.ShadowMaterial({ opacity: 0.35, transparent: true });
+      const shadowPlane = new THREE.Mesh(shadowGeo, shadowMat);
+      shadowPlane.rotation.x = -Math.PI / 2;
+      shadowPlane.position.y = 0;
+      shadowPlane.receiveShadow = true;
+      scene.add(shadowPlane);
 
       // Controls
       const controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
-      controls.dampingFactor = 0.06;
+      controls.dampingFactor = 0.05;
       controls.enablePan = false;
-      controls.minDistance = 2.5;
-      controls.maxDistance = 8;
-      controls.minPolarAngle = Math.PI * 0.25;
-      controls.maxPolarAngle = Math.PI * 0.58;
+      controls.minDistance = 3;
+      controls.maxDistance = 9;
+      controls.minPolarAngle = Math.PI * 0.2;
+      controls.maxPolarAngle = Math.PI * 0.52;
       controls.autoRotate = true;
-      controls.autoRotateSpeed = 1.2;
-      controls.target.set(0, 0.6, 0);
+      controls.autoRotateSpeed = 0.9;
+      controls.target.set(0, 0.7, 0);
 
-      // Stop auto-rotate on user interaction
       renderer.domElement.addEventListener('pointerdown', () => {
         controls.autoRotate = false;
       });
@@ -103,17 +124,15 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
         (gltf) => {
           const model = gltf.scene;
 
-          // Center and scale model
           const box = new THREE.Box3().setFromObject(model);
           const center = box.getCenter(new THREE.Vector3());
           const size = box.getSize(new THREE.Vector3());
           const maxDim = Math.max(size.x, size.y, size.z);
-          const scale = 2.8 / maxDim;
+          const scale = 3.2 / maxDim;
 
           model.scale.setScalar(scale);
           model.position.sub(center.multiplyScalar(scale));
           model.position.y = 0;
-          model.castShadow = true;
 
           const paintColor = new THREE.Color(bodyColor);
 
@@ -126,15 +145,16 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
             const applyPaint = (mat: import('three').Material) => {
               const m = mat as import('three').MeshStandardMaterial;
               if (!m.color) return;
-              // Skip transparent materials (windows/glass)
-              if (m.transparent && m.opacity < 0.65) return;
-              // Skip very dark materials (tires, chassis, dark trim)
+              // Skip transparent (glass/windows)
+              if (m.transparent && m.opacity < 0.7) return;
+              // Skip very dark (tires, chassis, trim)
               const { r, g, b } = m.color;
-              const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
-              if (luminance > 0.06) {
+              const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+              if (lum > 0.08) {
                 m.color.set(paintColor);
-                m.metalness = 0.88;
-                m.roughness = 0.12;
+                m.metalness = 0.65;
+                m.roughness = 0.28;
+                m.envMapIntensity = 1.4;
                 m.needsUpdate = true;
               }
             };
@@ -147,16 +167,14 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
           });
 
           scene.add(model);
-          controls.target.set(0, size.y * scale * 0.35, 0);
+          controls.target.set(0, size.y * scale * 0.38, 0);
           controls.update();
         },
         undefined,
-        (err) => {
-          console.warn('CarViewer3D: model not found at', modelPath, err);
-        }
+        (err) => console.warn('CarViewer3D: model not found', err)
       );
 
-      // Resize observer
+      // Resize
       const ro = new ResizeObserver(() => {
         const nw = container.clientWidth;
         const nh = container.clientHeight;
@@ -166,7 +184,6 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
       });
       ro.observe(container);
 
-      // Render loop
       const animate = () => {
         animId = requestAnimationFrame(animate);
         controls.update();
@@ -174,11 +191,11 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
       };
       animate();
 
-      // Cleanup captured in closure
       (container as unknown as { _cleanup: () => void })._cleanup = () => {
         ro.disconnect();
         cancelAnimationFrame(animId);
         renderer.dispose();
+        envTexture.dispose();
         if (container.contains(renderer.domElement)) {
           container.removeChild(renderer.domElement);
         }
@@ -195,10 +212,7 @@ export default function CarViewer3D({ modelPath = '/car.glb', bodyColor = '#C13E
     <div
       ref={mountRef}
       className={className}
-      style={{
-        cursor: 'grab',
-        ...style,
-      }}
+      style={{ cursor: 'grab', ...style }}
     />
   );
 }
