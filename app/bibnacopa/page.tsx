@@ -1,362 +1,292 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import ScrollReveal from '@/components/ScrollReveal';
 import FloatingOrbs from '@/components/FloatingOrbs';
 import PlayerTransformer from '@/components/PlayerTransformer';
 
-const heroItem = {
-  hidden: { opacity: 0, y: 32 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] } },
-};
+const ease = [0.22, 1, 0.36, 1] as [number, number, number, number];
+const hi = { hidden: { opacity: 0, y: 28 }, show: { opacity: 1, y: 0, transition: { duration: 0.65, ease } } };
 
-/* ─── floating football SVGs ─────────────────────────── */
-const balls = [
-  { size: 90,  left: '6%',  top: '12%', dur: 6.5, delay: 0,  opacity: 0.22 },
-  { size: 52,  left: '91%', top: '20%', dur: 8,   delay: -2, opacity: 0.16 },
-  { size: 68,  left: '14%', top: '75%', dur: 7,   delay: -4, opacity: 0.18 },
-  { size: 38,  left: '84%', top: '62%', dur: 9,   delay: -1, opacity: 0.13 },
-  { size: 60,  left: '48%', top: '6%',  dur: 7.5, delay: -3, opacity: 0.14 },
-  { size: 28,  left: '22%', top: '48%', dur: 10,  delay: -5, opacity: 0.09 },
-  { size: 44,  left: '75%', top: '90%', dur: 8.5, delay: -2, opacity: 0.12 },
-];
-
-function FootballSVG({ size, style }: { size: number; style: React.CSSProperties }) {
-  return (
-    <div style={{ width: size, height: size, position: 'absolute', pointerEvents: 'none', ...style }}>
-      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
-        <circle cx="24" cy="24" r="22" stroke="rgba(255,223,0,0.5)" strokeWidth="2" />
-        <polygon points="24,5 30,14 40,14 34,22 37,33 24,27 11,33 14,22 8,14 18,14"
-          fill="none" stroke="rgba(255,223,0,0.35)" strokeWidth="1.5" strokeLinejoin="round" />
-        <circle cx="24" cy="24" r="4" fill="rgba(0,156,59,0.4)" />
-      </svg>
-    </div>
-  );
-}
-
-/* ─── match schedule ─────────────────────────────────── */
+/* ─── Data ───────────────────────────────────────────────── */
 const matches = [
-  { label: 'Jogo 1 · Fase de Grupos', flag: '🇧🇷', opponent: 'A definir', date: '14 Jun 2026', time: '15:00 BRT', venue: 'Los Angeles, EUA' },
-  { label: 'Jogo 2 · Fase de Grupos', flag: '🇧🇷', opponent: 'A definir', date: '19 Jun 2026', time: '21:00 BRT', venue: 'Dallas, EUA' },
-  { label: 'Jogo 3 · Fase de Grupos', flag: '🇧🇷', opponent: 'A definir', date: '24 Jun 2026', time: '18:00 BRT', venue: 'San Francisco, EUA' },
+  { id: 'm1', away: 'A definir', date: '14 Jun 2026', time: '15:00 BRT', venue: 'Los Angeles, EUA' },
+  { id: 'm2', away: 'A definir', date: '19 Jun 2026', time: '21:00 BRT', venue: 'Dallas, EUA' },
+  { id: 'm3', away: 'A definir', date: '24 Jun 2026', time: '18:00 BRT', venue: 'San Francisco, EUA' },
 ];
 
-/* ─── benefits ───────────────────────────────────────── */
-const benefits = [
-  { icon: '🍺', title: 'Bebe e torce à vontade', desc: 'Comemora cada gol sem preocupação com volante. A BibCar te leva e te traz com segurança total.' },
-  { icon: '💚', title: '30% automático', desc: 'O desconto ativa sozinho durante os jogos do Brasil. Abre o app, pede a corrida — simples assim.' },
-  { icon: '🛡️', title: 'Motoristas verificados', desc: 'CNH, antecedentes e veículo — tudo checado. Você vai na festa seguro desde o primeiro toque na tela.' },
-  { icon: '⚡', title: 'Motorista perto de você', desc: 'Sem esperar sozinho na calçada quando o jogo acabar. Pediu, chegou.' },
+const ecosystem = [
+  { icon: '🚗', title: 'Corrida Copa',   desc: '30% OFF automático durante todos os jogos do Brasil. Abre o app e pede.', tag: 'ATIVO',    color: '#00e054' },
+  { icon: '🎰', title: 'Bolão BibCar',   desc: 'Chuta o placar, acumule Copa Points e concorra a corridas grátis.', tag: 'NOVO',     color: '#FFDF00' },
+  { icon: '🃏', title: 'Figurinha IA',   desc: 'IA te transforma em craque Panini 2026. Compartilha no story.', tag: 'IA',       color: '#00c9ff' },
+  { icon: '🏆', title: 'Copa Rewards',   desc: 'Pontos em cada corrida e palpite. Sobe no ranking, ganha prêmios.', tag: 'EM BREVE', color: '#ff9500' },
 ];
 
-/* ─── CountdownTimer ─────────────────────────────────── */
+const prizesTiers = [
+  { pts: 500,  prize: '1 corrida grátis',         icon: '🎟' },
+  { pts: 1000, prize: '3 corridas grátis',         icon: '🎁' },
+  { pts: 2000, prize: 'Mês inteiro com 50% OFF',  icon: '⭐' },
+  { pts: 5000, prize: 'Experiência VIP Copa 2026', icon: '🏆' },
+];
+
+const pointsTable = [
+  { action: '🚗 Corrida durante jogo do Brasil',   pts: '+50'  },
+  { action: '🎰 Palpite correto (resultado)',       pts: '+100' },
+  { action: '⚽ Palpite correto (placar exato)',    pts: '+250' },
+  { action: '🃏 Compartilhar figurinha IA',         pts: '+30'  },
+  { action: '👥 Indicar amigo que faz corrida',    pts: '+80'  },
+];
+
+const mockRanking = [
+  { name: 'Thales M.', pts: 1420, rides: 18, correct: 9,  medal: '🥇' },
+  { name: 'Ana C.',    pts: 1280, rides: 15, correct: 8,  medal: '🥈' },
+  { name: 'Bruno K.',  pts: 1100, rides: 12, correct: 7,  medal: '🥉' },
+  { name: 'Carol S.',  pts: 890,  rides: 10, correct: 5,  medal: '4' },
+  { name: 'Diego P.',  pts: 750,  rides: 9,  correct: 4,  medal: '5' },
+];
+
+/* ─── Countdown ──────────────────────────────────────────── */
 function CountdownTimer({ target }: { target: Date }) {
   const [diff, setDiff] = useState({ d: 0, h: 0, m: 0, s: 0 });
-
   useEffect(() => {
     const tick = () => {
       const ms = target.getTime() - Date.now();
       if (ms <= 0) { setDiff({ d: 0, h: 0, m: 0, s: 0 }); return; }
-      const d = Math.floor(ms / 86400000);
-      const h = Math.floor((ms % 86400000) / 3600000);
-      const m = Math.floor((ms % 3600000) / 60000);
-      const s = Math.floor((ms % 60000) / 1000);
-      setDiff({ d, h, m, s });
+      setDiff({ d: Math.floor(ms / 86400000), h: Math.floor((ms % 86400000) / 3600000), m: Math.floor((ms % 3600000) / 60000), s: Math.floor((ms % 60000) / 1000) });
     };
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
+    tick(); const id = setInterval(tick, 1000); return () => clearInterval(id);
   }, [target]);
-
   const pad = (n: number) => String(n).padStart(2, '0');
-
   return (
-    <div className="flex items-center justify-center gap-3 flex-wrap">
-      {[
-        { val: diff.d, label: 'dias' },
-        { val: diff.h, label: 'horas' },
-        { val: diff.m, label: 'min' },
-        { val: diff.s, label: 'seg' },
-      ].map(({ val, label }, i) => (
-        <div key={label} className="flex items-center gap-3">
-          <div className="text-center">
-            <div
-              className="bebas text-5xl md:text-6xl tabular-nums"
-              style={{ color: '#FFDF00', textShadow: '0 0 20px rgba(255,223,0,0.6)', lineHeight: 1 }}
-            >
-              {pad(val)}
-            </div>
-            <div className="text-xs font-bold uppercase tracking-widest mt-1" style={{ color: 'rgba(255,255,255,0.45)' }}>{label}</div>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, flexWrap: 'wrap' }}>
+      {[{ v: diff.d, l: 'dias' }, { v: diff.h, l: 'horas' }, { v: diff.m, l: 'min' }, { v: diff.s, l: 'seg' }].map(({ v, l }, i) => (
+        <div key={l} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ textAlign: 'center', minWidth: 64 }}>
+            <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 'clamp(44px,8vw,76px)', lineHeight: 1, color: '#FFDF00', textShadow: '0 0 28px rgba(255,223,0,0.65)' }}>{pad(v)}</div>
+            <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.3)', marginTop: 4 }}>{l}</div>
           </div>
-          {i < 3 && <span className="bebas text-4xl" style={{ color: 'rgba(255,223,0,0.5)', marginBottom: 18 }}>:</span>}
+          {i < 3 && <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 44, color: 'rgba(255,223,0,0.35)', marginBottom: 18 }}>:</div>}
         </div>
       ))}
     </div>
   );
 }
 
-/* ─── Page ───────────────────────────────────────────── */
+/* ─── Bolão ──────────────────────────────────────────────── */
+type Resultado = 'home' | 'draw' | 'away';
+interface Palpite { matchId: string; result: Resultado; scoreH: number; scoreA: number; code: string; }
+const genCode = () => 'BIB-' + Math.random().toString(36).toUpperCase().slice(2, 7);
+const LABEL: Record<Resultado, string> = { home: '🇧🇷 Brasil vence', draw: '➖ Empate', away: '🌍 Adversário vence' };
+
+function BolaoSection() {
+  const [result, setResult] = useState<Resultado | null>(null);
+  const [scoreH, setScoreH] = useState('');
+  const [scoreA, setScoreA] = useState('');
+  const [done, setDone] = useState(false);
+  const [code, setCode] = useState('');
+  const [confirmedResult, setConfirmedResult] = useState<Resultado | null>(null);
+  const [palpites, setPalpites] = useState<Palpite[]>([]);
+  const match = matches[0];
+
+  useEffect(() => {
+    try { setPalpites(JSON.parse(localStorage.getItem('bib_palpites') || '[]')); } catch { /* */ }
+  }, []);
+
+  const submit = () => {
+    if (!result) return;
+    const c = genCode();
+    const p: Palpite = { matchId: match.id, result, scoreH: Number(scoreH) || 0, scoreA: Number(scoreA) || 0, code: c };
+    const upd = [p, ...palpites];
+    localStorage.setItem('bib_palpites', JSON.stringify(upd));
+    setPalpites(upd); setCode(c); setConfirmedResult(result); setDone(true);
+  };
+
+  const reset = () => { setResult(null); setScoreH(''); setScoreA(''); setDone(false); setCode(''); setConfirmedResult(null); };
+
+  const card: React.CSSProperties = { background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 20, padding: '28px 24px' };
+  const inp: React.CSSProperties = { width: 64, height: 58, borderRadius: 14, background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.18)', color: '#fff', fontSize: 28, fontWeight: 900, textAlign: 'center', outline: 'none' };
+
+  return (
+    <div style={{ maxWidth: 540, margin: '0 auto' }}>
+      <AnimatePresence mode="wait">
+        {!done ? (
+          <motion.div key="form" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+            {/* Match header */}
+            <div style={{ ...card, marginBottom: 14 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+                <div style={{ textAlign: 'center', flex: 1 }}>
+                  <div style={{ fontSize: 42 }}>🇧🇷</div>
+                  <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 22, color: '#fff', marginTop: 4 }}>BRASIL</div>
+                </div>
+                <div style={{ textAlign: 'center', flex: 1 }}>
+                  <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 34, color: 'rgba(255,255,255,0.25)' }}>VS</div>
+                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', fontWeight: 700 }}>{match.date}</div>
+                </div>
+                <div style={{ textAlign: 'center', flex: 1 }}>
+                  <div style={{ fontSize: 42 }}>❓</div>
+                  <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 22, color: '#fff', marginTop: 4 }}>A DEFINIR</div>
+                </div>
+              </div>
+              <div style={{ textAlign: 'center', fontSize: 11, color: 'rgba(255,255,255,0.3)', fontWeight: 600 }}>📍 {match.venue} · {match.time}</div>
+            </div>
+
+            {/* Result */}
+            <p style={{ fontSize: 10, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.35)', textAlign: 'center', marginBottom: 10 }}>Qual o resultado?</p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginBottom: 20 }}>
+              {(['home', 'draw', 'away'] as Resultado[]).map(opt => (
+                <button key={opt} onClick={() => setResult(opt)} style={{
+                  padding: '13px 6px', borderRadius: 14, cursor: 'pointer', transition: 'all 0.15s',
+                  border: `2px solid ${result === opt ? '#FFDF00' : 'rgba(255,255,255,0.1)'}`,
+                  background: result === opt ? 'rgba(255,223,0,0.14)' : 'rgba(255,255,255,0.03)',
+                  color: result === opt ? '#FFDF00' : 'rgba(255,255,255,0.55)',
+                  fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em',
+                }}>
+                  {opt === 'home' ? '🇧🇷 Brasil' : opt === 'draw' ? '➖ Empate' : '🌍 Adversário'}
+                </button>
+              ))}
+            </div>
+
+            {/* Score */}
+            <p style={{ fontSize: 10, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.35)', textAlign: 'center', marginBottom: 10 }}>Placar exato — opcional (vale +250 pts!)</p>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, marginBottom: 24 }}>
+              <input type="number" min={0} max={20} value={scoreH} onChange={e => setScoreH(e.target.value)} placeholder="0" style={inp} />
+              <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 26, fontWeight: 900 }}>×</span>
+              <input type="number" min={0} max={20} value={scoreA} onChange={e => setScoreA(e.target.value)} placeholder="0" style={inp} />
+            </div>
+
+            <button onClick={submit} disabled={!result} style={{
+              width: '100%', padding: '16px', borderRadius: 999, border: 'none', fontSize: 16, fontWeight: 900, cursor: result ? 'pointer' : 'not-allowed', transition: 'all 0.2s',
+              background: result ? 'linear-gradient(135deg,#009C3B,#FFDF00)' : 'rgba(255,255,255,0.08)',
+              color: result ? '#051505' : 'rgba(255,255,255,0.3)',
+              boxShadow: result ? '0 8px 28px rgba(0,156,59,0.35)' : 'none',
+            }}>
+              {result ? '⚽ Registrar Palpite' : 'Escolha um resultado'}
+            </button>
+          </motion.div>
+        ) : (
+          <motion.div key="ok" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} style={{ textAlign: 'center', ...card }}>
+            <div style={{ fontSize: 56, marginBottom: 12 }}>✅</div>
+            <h3 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 34, color: '#fff', marginBottom: 6 }}>Palpite Registrado!</h3>
+            <p style={{ color: 'rgba(255,255,255,0.5)', marginBottom: 24, fontSize: 14 }}>{confirmedResult ? LABEL[confirmedResult] : ''}</p>
+            <div style={{ display: 'inline-block', background: 'rgba(255,223,0,0.1)', border: '2px solid rgba(255,223,0,0.35)', borderRadius: 16, padding: '14px 36px', marginBottom: 20 }}>
+              <p style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.15em', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', marginBottom: 4 }}>Código do Palpite</p>
+              <p style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 38, color: '#FFDF00', letterSpacing: '0.08em' }}>#{code}</p>
+            </div>
+            <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 12, marginBottom: 22 }}>Guarda este código — você vai precisar para resgatar seus pontos.</p>
+            <button onClick={reset} style={{ background: 'rgba(255,255,255,0.07)', color: '#fff', fontWeight: 700, padding: '11px 28px', borderRadius: 999, border: '1px solid rgba(255,255,255,0.15)', cursor: 'pointer', fontSize: 14 }}>+ Fazer outro palpite</button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {palpites.length > 0 && (
+        <div style={{ marginTop: 20 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.25)', marginBottom: 8 }}>Seus palpites ({palpites.length})</p>
+          {palpites.slice(0, 3).map(p => (
+            <div key={p.code} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', background: 'rgba(255,255,255,0.03)', borderRadius: 10, marginBottom: 6, border: '1px solid rgba(255,255,255,0.06)' }}>
+              <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12 }}>{LABEL[p.result]}</span>
+              <span style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 13, color: 'rgba(255,223,0,0.65)' }}>#{p.code}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── Page ───────────────────────────────────────────────── */
 export default function BibNaCopa() {
   const firstMatch = new Date('2026-06-14T15:00:00-07:00');
 
+  const darkBg = 'linear-gradient(150deg,#020A02 0%,#050F05 55%,#02080F 100%)';
+  const glass: React.CSSProperties = { background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.09)', borderRadius: 20 };
+
   return (
     <>
-      {/* ══ HERO ══════════════════════════════════════════════════════════ */}
-      <section
-        className="relative overflow-hidden"
-        style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', background: 'linear-gradient(150deg,#020d02 0%,#051505 45%,#020810 100%)' }}
-      >
+      {/* ════ HERO ════ */}
+      <section style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', background: darkBg, position: 'relative', overflow: 'hidden' }}>
         <FloatingOrbs variant="copa" className="absolute inset-0" style={{ zIndex: 0 }} />
 
-        {/* floating footballs */}
-        {balls.map((b, i) => (
-          <FootballSVG
-            key={i}
-            size={b.size}
-            style={{
-              left: b.left,
-              top: b.top,
-              opacity: b.opacity,
-              animation: `float ${b.dur}s ease-in-out infinite`,
-              animationDelay: `${b.delay}s`,
-              zIndex: 1,
-            }}
-          />
-        ))}
+        {/* Grid texture */}
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px)', backgroundSize: '56px 56px', zIndex: 1, pointerEvents: 'none' }} />
+        {/* Radial glows */}
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 75% 25%,rgba(255,223,0,0.09),transparent 45%),radial-gradient(ellipse at 15% 75%,rgba(0,156,59,0.14),transparent 50%)', zIndex: 2, pointerEvents: 'none' }} />
 
-        {/* stadium light sweep */}
-        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 20% 50%,rgba(0,156,59,0.18) 0%,transparent 55%),radial-gradient(ellipse at 80% 30%,rgba(255,223,0,0.1) 0%,transparent 50%)', zIndex: 2 }} />
+        <div className="container relative" style={{ zIndex: 3, paddingTop: 128, paddingBottom: 80 }}>
+          <motion.div variants={{ hidden: {}, show: { transition: { staggerChildren: 0.12 } } }} initial="hidden" animate="show" style={{ maxWidth: 780 }}>
 
-        <div className="container relative py-28" style={{ zIndex: 3 }}>
-          <motion.div className="max-w-3xl" variants={{ hidden: {}, show: { transition: { staggerChildren: 0.15 } } }} initial="hidden" animate="show">
-            {/* promo badge */}
-            <motion.div variants={heroItem} className="inline-flex items-center gap-3 rounded-full mb-8 px-5 py-2.5"
-              style={{ background: 'rgba(0,156,59,0.2)', border: '1.5px solid rgba(0,156,59,0.5)' }}>
-              <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#00FF44', boxShadow: '0 0 10px #00FF44', animation: 'blink 1s infinite', display: 'inline-block' }} />
-              <span className="text-xs font-black uppercase tracking-widest" style={{ color: '#4dff88' }}>⚽ Promoção Copa 2026 · Ativa</span>
+            <motion.div variants={hi} style={{ display: 'inline-flex', alignItems: 'center', gap: 10, borderRadius: 999, border: '1.5px solid rgba(0,156,59,0.5)', background: 'rgba(0,156,59,0.1)', padding: '7px 18px', marginBottom: 24 }}>
+              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#00FF44', boxShadow: '0 0 10px #00FF44', display: 'inline-block', animation: 'blink 1s infinite' }} />
+              <span style={{ fontSize: 10, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.13em', color: '#4dff88' }}>⚽ Copa 2026 · Ecossistema BibCar</span>
             </motion.div>
 
-            <motion.h1 variants={heroItem} className="bebas mb-3" style={{ fontSize: 'clamp(72px, 13vw, 160px)', lineHeight: 0.88 }}>
-              <span style={{ background: 'linear-gradient(135deg,#009C3B 0%,#00c94a 40%,#FFDF00 80%,#FFB800 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                Bib
-              </span>
-              <br />
-              <span style={{ color: '#ffffff' }}>
-                na Copa
-              </span>
+            <motion.h1 variants={hi} style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 'clamp(80px,14vw,176px)', lineHeight: 0.86, marginBottom: 6 }}>
+              <span style={{ background: 'linear-gradient(135deg,#009C3B 0%,#00e054 40%,#FFDF00 80%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Bib</span><br />
+              <span style={{ color: '#ffffff' }}>na Copa</span>
             </motion.h1>
 
-            {/* scoreboard 30% */}
-            <motion.div variants={heroItem} className="inline-flex flex-col items-start mb-8">
-              <div
-                className="rounded-2xl px-8 py-5 flex items-center gap-5"
-                style={{ background: 'linear-gradient(135deg,rgba(255,223,0,0.12),rgba(0,156,59,0.08))', border: '2px solid rgba(255,223,0,0.4)', backdropFilter: 'blur(10px)' }}
-              >
-                <span className="bebas" style={{ fontSize: 'clamp(48px, 8vw, 88px)', lineHeight: 1, color: '#FFDF00', textShadow: '0 0 30px rgba(255,223,0,0.7)' }}>30%</span>
-                <div>
-                  <div className="font-black text-white uppercase tracking-wider" style={{ fontSize: 'clamp(14px, 2vw, 18px)' }}>de desconto</div>
-                  <div className="font-semibold" style={{ fontSize: 'clamp(12px, 1.5vw, 15px)', color: 'rgba(255,255,255,0.6)' }}>em todas as corridas</div>
-                  <div className="font-bold" style={{ fontSize: 'clamp(11px, 1.3vw, 13px)', color: '#4dff88', marginTop: 2 }}>⚡ na hora do jogo do Brasil</div>
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.p variants={heroItem} style={{ fontSize: 'clamp(16px, 1.8vw, 20px)', color: 'rgba(255,255,255,0.7)', lineHeight: 1.65, maxWidth: 520, marginBottom: 40 }}>
-              Vai na torcida sem preocupação. A BibCar te leva, te traz e ainda te dá 30% de desconto enquanto o Brasil joga.
+            <motion.p variants={hi} style={{ fontSize: 'clamp(15px,1.7vw,19px)', color: 'rgba(255,255,255,0.58)', lineHeight: 1.65, maxWidth: 530, marginBottom: 28 }}>
+              Corrida com 30% OFF · Bolão de palpites · Figurinha IA · Ranking dos craques — tudo dentro do app BibCar, o ecossistema completo da Copa 2026.
             </motion.p>
 
-            <motion.div variants={heroItem} className="flex flex-wrap gap-4">
-              <a
-                href="https://apps.apple.com/br/app/bib-car-brasil/id6444271115"
-                target="_blank"
-                rel="noopener"
-                className="btn-gold"
-                style={{ background: 'linear-gradient(135deg,#FFDF00,#FFB800)', color: '#1a0f00', boxShadow: '0 8px 32px rgba(255,223,0,0.4)' }}
-              >
-                Baixar para iOS →
+            {/* Ecosystem pills */}
+            <motion.div variants={hi} style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 36 }}>
+              {ecosystem.map(f => (
+                <span key={f.title} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 999, border: `1px solid ${f.color}40`, background: `${f.color}12`, fontSize: 12, fontWeight: 700, color: f.color }}>
+                  {f.icon} {f.title}
+                </span>
+              ))}
+            </motion.div>
+
+            <motion.div variants={hi} style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
+              <a href="https://apps.apple.com/br/app/bib-car-brasil/id6444271115" target="_blank" rel="noopener"
+                style={{ display: 'inline-block', padding: '15px 30px', borderRadius: 999, background: 'linear-gradient(135deg,#FFDF00,#FFB800)', color: '#1a0f00', fontWeight: 900, fontSize: 15, textDecoration: 'none', boxShadow: '0 8px 32px rgba(255,223,0,0.38)' }}>
+                Baixar o app →
               </a>
-              <a
-                href="https://play.google.com/store/apps/details?id=br.com.bibcarbrasil.passenger.drivermachine"
-                target="_blank"
-                rel="noopener"
-                className="btn-ghost"
-                style={{ borderColor: 'rgba(255,255,255,0.3)', color: '#ffffff' }}
-              >
-                Baixar para Android
+              <a href="#bolao"
+                style={{ display: 'inline-block', padding: '15px 30px', borderRadius: 999, background: 'rgba(255,255,255,0.06)', color: '#fff', fontWeight: 700, fontSize: 15, textDecoration: 'none', border: '1px solid rgba(255,255,255,0.18)' }}>
+                🎰 Entrar no Bolão
               </a>
             </motion.div>
+
           </motion.div>
         </div>
 
-        {/* bottom fade */}
-        <div className="absolute bottom-0 left-0 right-0 h-32" style={{ background: 'linear-gradient(to top,#020d02,transparent)', zIndex: 4 }} />
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 100, background: 'linear-gradient(to top,#020A02,transparent)', zIndex: 4 }} />
       </section>
 
-      {/* ══ COUNTDOWN ═════════════════════════════════════════════════════ */}
-      <section style={{ background: '#020d02', paddingTop: 56, paddingBottom: 64 }}>
-        <div className="container max-w-2xl mx-auto text-center">
-          <p className="text-xs font-black uppercase tracking-widest mb-4" style={{ color: 'rgba(255,255,255,0.35)' }}>
-            ⚽ 1º jogo do Brasil começa em
-          </p>
+      {/* ════ COUNTDOWN ════ */}
+      <section style={{ background: '#020A02', padding: '52px 0' }}>
+        <div className="container" style={{ maxWidth: 640, margin: '0 auto', textAlign: 'center' }}>
+          <p style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.16em', color: 'rgba(255,255,255,0.28)', marginBottom: 18 }}>⚽ 1º jogo do Brasil na Copa em</p>
           <CountdownTimer target={firstMatch} />
-          <p className="text-xs mt-4" style={{ color: 'rgba(255,255,255,0.25)' }}>
-            14 Jun 2026 · Los Angeles, EUA · Data sujeita a confirmação oficial
-          </p>
+          <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)', marginTop: 14 }}>14 Jun 2026 · Los Angeles, EUA · Data sujeita a confirmação oficial</p>
         </div>
       </section>
 
-      {/* ══ COMO FUNCIONA ═════════════════════════════════════════════════ */}
-      <section className="section" style={{ background: '#ffffff' }}>
+      {/* ════ ECOSSISTEMA ════ */}
+      <section style={{ background: '#020A02', padding: '88px 0' }}>
         <div className="container">
-          <ScrollReveal className="text-center mb-14 max-w-xl mx-auto">
-            <div className="tag mb-5 inline-flex" style={{ borderColor: '#009C3B', color: '#009C3B', background: 'rgba(0,156,59,0.07)' }}>Como funciona</div>
-            <h2 className="bebas mb-4" style={{ fontSize: 'clamp(36px, 5vw, 64px)' }}>
-              Desconto{' '}
-              <span style={{ background: 'linear-gradient(135deg,#009C3B,#FFDF00)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>automático.</span>
+          <ScrollReveal className="text-center" style={{ marginBottom: 52 }}>
+            <div style={{ display: 'inline-block', padding: '4px 16px', borderRadius: 999, border: '1px solid rgba(255,223,0,0.3)', background: 'rgba(255,223,0,0.07)', color: '#FFDF00', fontSize: 10, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 14 }}>O Ecossistema</div>
+            <h2 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 'clamp(40px,6vw,78px)', color: '#fff', lineHeight: 1, marginBottom: 10 }}>
+              Quatro produtos.{' '}
+              <span style={{ background: 'linear-gradient(135deg,#009C3B,#FFDF00)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Um app.</span>
             </h2>
-            <p className="text-silver" style={{ fontSize: 17 }}>Sem cupom, sem cadastro extra, sem enrolação.</p>
+            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 15, maxWidth: 440, margin: '0 auto' }}>Tudo pensado juntos para o maior evento do planeta em 2026.</p>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            {[
-              { num: '01', icon: '📱', title: 'Baixe o app', desc: 'BibCar disponível no iOS e Android. Faça o cadastro em menos de 2 minutos.' },
-              { num: '02', icon: '⚽', title: 'Hora do jogo', desc: 'Quando o Brasil entrar em campo, abra o app e peça sua corrida normalmente.' },
-              { num: '03', icon: '💰', title: '30% menos', desc: 'O desconto é aplicado automaticamente no preço da corrida. Sem código, sem complicação.' },
-            ].map((step, i) => (
-              <ScrollReveal key={step.num} delay={i * 0.15} className="text-center">
-                <div
-                  className="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center text-4xl mb-6 relative"
-                  style={{ background: 'linear-gradient(135deg,rgba(0,156,59,0.12),rgba(255,223,0,0.08))', border: '1px solid rgba(0,156,59,0.25)' }}
-                >
-                  {step.icon}
-                  <span
-                    className="absolute -top-3 -right-3 w-7 h-7 rounded-full flex items-center justify-center text-xs font-black"
-                    style={{ background: 'linear-gradient(135deg,#009C3B,#007a2e)', color: '#fff' }}
-                  >
-                    {i + 1}
-                  </span>
-                </div>
-                <div className="bebas text-5xl font-black mb-2" style={{ color: 'rgba(0,156,59,0.15)' }}>{step.num}</div>
-                <h3 className="bebas text-3xl mb-3">{step.title}</h3>
-                <p className="text-silver text-sm leading-relaxed max-w-xs mx-auto">{step.desc}</p>
-              </ScrollReveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══ JOGOS ═════════════════════════════════════════════════════════ */}
-      <section
-        className="section"
-        style={{ background: 'linear-gradient(150deg,#020d02 0%,#051505 60%,#020810 100%)' }}
-      >
-        <div className="container max-w-3xl mx-auto">
-          <ScrollReveal className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 rounded-full px-5 py-2 mb-6"
-              style={{ background: 'rgba(0,156,59,0.15)', border: '1px solid rgba(0,156,59,0.4)' }}>
-              <span className="text-xs font-black uppercase tracking-widest" style={{ color: '#4dff88' }}>🇧🇷 Jogos do Brasil · Copa 2026</span>
-            </div>
-            <h2 className="bebas mb-4 text-white" style={{ fontSize: 'clamp(40px, 6vw, 76px)' }}>
-              Marque na{' '}
-              <span style={{ background: 'linear-gradient(135deg,#FFDF00,#FFB800)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>agenda.</span>
-            </h2>
-            <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 17 }}>
-              Em todos esses jogos, o desconto de 30% está ativo no app BibCar.
-            </p>
-          </ScrollReveal>
-
-          <div className="flex flex-col gap-4">
-            {matches.map((match, i) => (
-              <ScrollReveal key={i} delay={i * 0.12}>
-                <div
-                  className="rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
-                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,223,0,0.2)', backdropFilter: 'blur(8px)' }}
-                >
-                  <div className="flex items-center gap-5">
-                    <div
-                      className="w-14 h-14 rounded-xl flex items-center justify-center text-3xl flex-shrink-0"
-                      style={{ background: 'linear-gradient(135deg,rgba(0,156,59,0.25),rgba(255,223,0,0.1))', border: '1px solid rgba(255,223,0,0.25)' }}
-                    >
-                      🇧🇷
-                    </div>
-                    <div>
-                      <div className="text-xs font-black uppercase tracking-widest mb-1" style={{ color: 'rgba(255,255,255,0.4)' }}>{match.label}</div>
-                      <div className="bebas text-xl text-white">Brasil vs. {match.opponent}</div>
-                      <div className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.45)' }}>📍 {match.venue}</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4 sm:flex-col sm:items-end">
-                    <div className="bebas text-2xl" style={{ color: '#FFDF00' }}>{match.date}</div>
-                    <div
-                      className="rounded-xl px-4 py-2 text-center"
-                      style={{ background: 'rgba(255,223,0,0.1)', border: '1px solid rgba(255,223,0,0.3)' }}
-                    >
-                      <div className="text-xs font-black uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.4)' }}>horário</div>
-                      <div className="bebas text-lg" style={{ color: '#FFDF00' }}>{match.time}</div>
-                    </div>
-                  </div>
-                  <div
-                    className="flex-shrink-0 rounded-xl px-5 py-3 text-center"
-                    style={{ background: 'linear-gradient(135deg,rgba(0,156,59,0.3),rgba(0,156,59,0.15))', border: '1px solid rgba(0,156,59,0.5)' }}
-                  >
-                    <div className="bebas text-3xl" style={{ color: '#4dff88', textShadow: '0 0 15px rgba(77,255,136,0.5)' }}>30%</div>
-                    <div className="text-xs font-bold" style={{ color: 'rgba(255,255,255,0.5)' }}>OFF ativo</div>
-                  </div>
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
-
-          <ScrollReveal delay={0.3} className="text-center mt-8">
-            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
-              * Datas e horários sujeitos a confirmação oficial pela FIFA. Adversários definidos após sorteio dos grupos.
-            </p>
-          </ScrollReveal>
-        </div>
-      </section>
-
-      {/* ══ POR QUE BIBNACOPA ════════════════════════════════════════════ */}
-      <section className="section" style={{ background: '#F7FFF9' }}>
-        <div className="container">
-          <ScrollReveal className="text-center mb-14 max-w-xl mx-auto">
-            <div className="tag mb-5 inline-flex" style={{ borderColor: '#009C3B', color: '#009C3B', background: 'rgba(0,156,59,0.07)' }}>Por que usar</div>
-            <h2 className="bebas mb-4" style={{ fontSize: 'clamp(36px, 5vw, 64px)' }}>
-              Torce sem{' '}
-              <span style={{ background: 'linear-gradient(135deg,#009C3B,#FFDF00)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>preocupação.</span>
-            </h2>
-            <p className="text-silver" style={{ fontSize: 17 }}>
-              A BibCar cuida do trajeto. Você cuida da torcida.
-            </p>
-          </ScrollReveal>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {benefits.map((b, i) => (
-              <ScrollReveal key={b.title} delay={i * 0.1}>
-                <div
-                  className="rounded-2xl p-8 flex gap-5 transition-all duration-300 h-full"
-                  style={{ background: '#ffffff', border: '1px solid rgba(0,156,59,0.15)', boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(0,156,59,0.4)';
-                    (e.currentTarget as HTMLElement).style.transform = 'translateY(-4px)';
-                    (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 32px rgba(0,156,59,0.1)';
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(0,156,59,0.15)';
-                    (e.currentTarget as HTMLElement).style.transform = 'none';
-                    (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 12px rgba(0,0,0,0.04)';
-                  }}
-                >
-                  <div
-                    className="text-3xl w-14 h-14 flex-shrink-0 rounded-xl flex items-center justify-center"
-                    style={{ background: 'linear-gradient(135deg,rgba(0,156,59,0.12),rgba(255,223,0,0.08))', border: '1px solid rgba(0,156,59,0.2)' }}
-                  >
-                    {b.icon}
-                  </div>
-                  <div>
-                    <h3 className="bebas text-2xl mb-2">{b.title}</h3>
-                    <p className="text-silver text-sm leading-relaxed">{b.desc}</p>
-                  </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(232px,1fr))', gap: 14, maxWidth: 1080, margin: '0 auto' }}>
+            {ecosystem.map((f, i) => (
+              <ScrollReveal key={f.title} delay={i * 0.09}>
+                <div {...{ style: { ...glass, padding: 28, height: '100%', position: 'relative', overflow: 'hidden', transition: 'border-color 0.2s,transform 0.2s' } as React.CSSProperties }}
+                  onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = `${f.color}44`; el.style.transform = 'translateY(-5px)'; }}
+                  onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = 'rgba(255,255,255,0.09)'; el.style.transform = 'none'; }}>
+                  <div style={{ position: 'absolute', top: -32, right: -32, width: 100, height: 100, borderRadius: '50%', background: `${f.color}0e`, pointerEvents: 'none' }} />
+                  <div style={{ display: 'inline-block', padding: '3px 10px', borderRadius: 999, border: `1px solid ${f.color}50`, background: `${f.color}14`, color: f.color, fontSize: 10, fontWeight: 900, letterSpacing: '0.1em', marginBottom: 18 }}>{f.tag}</div>
+                  <div style={{ fontSize: 36, marginBottom: 10 }}>{f.icon}</div>
+                  <h3 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 28, color: '#fff', marginBottom: 8 }}>{f.title}</h3>
+                  <p style={{ color: 'rgba(255,255,255,0.42)', fontSize: 13, lineHeight: 1.6 }}>{f.desc}</p>
                 </div>
               </ScrollReveal>
             ))}
@@ -364,70 +294,169 @@ export default function BibNaCopa() {
         </div>
       </section>
 
-      {/* ══ IA JOGADOR ═══════════════════════════════════════════════════ */}
-      <section style={{ background: 'linear-gradient(150deg,#020d02 0%,#051505 60%,#020810 100%)', position: 'relative', overflow: 'hidden' }}>
-        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 60% 50%,rgba(0,156,59,0.15),transparent 60%),radial-gradient(ellipse at 20% 30%,rgba(255,223,0,0.08),transparent 50%)', pointerEvents: 'none' }} />
+      {/* ════ BOLÃO ════ */}
+      <section id="bolao" style={{ background: 'linear-gradient(150deg,#070E07 0%,#0c1a0a 50%,#070E07 100%)', padding: '96px 0', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 0%,rgba(255,223,0,0.07),transparent 50%)', pointerEvents: 'none' }} />
+        <div className="container relative" style={{ zIndex: 2 }}>
+          <ScrollReveal className="text-center" style={{ marginBottom: 48 }}>
+            <div style={{ display: 'inline-block', padding: '4px 16px', borderRadius: 999, border: '1px solid rgba(255,223,0,0.35)', background: 'rgba(255,223,0,0.08)', color: '#FFDF00', fontSize: 10, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 14 }}>🎰 Bolão BibCar</div>
+            <h2 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 'clamp(40px,6vw,76px)', color: '#fff', marginBottom: 10 }}>
+              Chuta o{' '}
+              <span style={{ background: 'linear-gradient(135deg,#FFDF00,#FFB800)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>resultado.</span>
+            </h2>
+            <p style={{ color: 'rgba(255,255,255,0.42)', fontSize: 15, maxWidth: 440, margin: '0 auto' }}>Acumule Copa Points com cada palpite certo e concorra a corridas grátis e prêmios exclusivos.</p>
+          </ScrollReveal>
+          <ScrollReveal delay={0.12}><BolaoSection /></ScrollReveal>
+        </div>
+      </section>
+
+      {/* ════ FIGURINHA IA ════ */}
+      <section style={{ background: darkBg, position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 60% 50%,rgba(0,156,59,0.12),transparent 55%)', pointerEvents: 'none' }} />
         <div className="container relative" style={{ zIndex: 2 }}>
           <PlayerTransformer />
         </div>
       </section>
 
-      {/* ══ CTA FINAL ════════════════════════════════════════════════════ */}
-      <section
-        className="section text-center"
-        style={{ background: 'linear-gradient(150deg,#020d02 0%,#051505 50%,#020810 100%)', position: 'relative', overflow: 'hidden' }}
-      >
-        {/* glow */}
-        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 80%,rgba(0,156,59,0.25),transparent 65%),radial-gradient(ellipse at 50% 0%,rgba(255,223,0,0.12),transparent 55%)', pointerEvents: 'none' }} />
+      {/* ════ JOGOS & 30% OFF ════ */}
+      <section style={{ background: '#020A02', padding: '88px 0' }}>
+        <div className="container" style={{ maxWidth: 700, margin: '0 auto' }}>
+          <ScrollReveal className="text-center" style={{ marginBottom: 44 }}>
+            <div style={{ display: 'inline-block', padding: '4px 16px', borderRadius: 999, border: '1px solid rgba(0,156,59,0.4)', background: 'rgba(0,156,59,0.08)', color: '#4dff88', fontSize: 10, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 14 }}>🇧🇷 Jogos do Brasil · Copa 2026</div>
+            <h2 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 'clamp(40px,6vw,74px)', color: '#fff', marginBottom: 10 }}>
+              30% OFF em{' '}
+              <span style={{ background: 'linear-gradient(135deg,#009C3B,#FFDF00)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>todos os jogos.</span>
+            </h2>
+            <p style={{ color: 'rgba(255,255,255,0.38)', fontSize: 15 }}>Desconto automático, sem cupom, sem enrolação.</p>
+          </ScrollReveal>
 
-        <div className="container max-w-2xl mx-auto relative" style={{ zIndex: 2 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {matches.map((m, i) => (
+              <ScrollReveal key={m.id} delay={i * 0.1}>
+                <div style={{ ...glass, padding: '20px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 14 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                    <div style={{ width: 46, height: 46, borderRadius: 12, background: 'rgba(0,156,59,0.15)', border: '1px solid rgba(0,156,59,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 }}>🇧🇷</div>
+                    <div>
+                      <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.3)', marginBottom: 3 }}>Fase de Grupos · Jogo {i + 1}</div>
+                      <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 20, color: '#fff' }}>Brasil vs. {m.away}</div>
+                      <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginTop: 2 }}>📍 {m.venue}</div>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 20, color: '#FFDF00' }}>{m.date}</div>
+                      <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.38)' }}>{m.time}</div>
+                    </div>
+                    <div style={{ padding: '10px 16px', borderRadius: 12, background: 'rgba(0,156,59,0.15)', border: '1px solid rgba(0,156,59,0.4)', textAlign: 'center', minWidth: 64 }}>
+                      <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 28, color: '#4dff88', lineHeight: 1 }}>30%</div>
+                      <div style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.35)' }}>OFF</div>
+                    </div>
+                  </div>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ════ COPA REWARDS ════ */}
+      <section style={{ background: 'linear-gradient(150deg,#0a0600 0%,#160d00 50%,#0a0600 100%)', padding: '96px 0', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 50%,rgba(255,149,0,0.07),transparent 50%)', pointerEvents: 'none' }} />
+        <div className="container relative" style={{ zIndex: 2 }}>
+          <ScrollReveal className="text-center" style={{ marginBottom: 52 }}>
+            <div style={{ display: 'inline-block', padding: '4px 16px', borderRadius: 999, border: '1px solid rgba(255,149,0,0.4)', background: 'rgba(255,149,0,0.08)', color: '#ff9500', fontSize: 10, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 14 }}>🏆 Copa Rewards · Em Breve</div>
+            <h2 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 'clamp(40px,6vw,74px)', color: '#fff', marginBottom: 10 }}>
+              Cada corrida,{' '}
+              <span style={{ background: 'linear-gradient(135deg,#ff9500,#FFDF00)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>mais pontos.</span>
+            </h2>
+            <p style={{ color: 'rgba(255,255,255,0.38)', fontSize: 15, maxWidth: 440, margin: '0 auto' }}>Use BibCar durante a Copa, acerte palpites e suba no ranking para ganhar corridas grátis e prêmios.</p>
+          </ScrollReveal>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 10, maxWidth: 860, margin: '0 auto 44px' }}>
+            {pointsTable.map((r, i) => (
+              <ScrollReveal key={i} delay={i * 0.07}>
+                <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,149,0,0.14)', borderRadius: 14, padding: '16px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
+                  <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: 12, lineHeight: 1.45 }}>{r.action}</span>
+                  <span style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 26, color: '#ff9500', flexShrink: 0 }}>{r.pts}</span>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+
           <ScrollReveal>
-            {/* flag */}
-            <div className="text-7xl mb-6" style={{ filter: 'drop-shadow(0 0 20px rgba(0,156,59,0.6))' }}>🇧🇷</div>
+            <div style={{ maxWidth: 560, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {prizesTiers.map((t, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 14, padding: '16px 20px' }}>
+                  <span style={{ fontSize: 24 }}>{t.icon}</span>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: 800, color: '#fff', fontSize: 14 }}>{t.prize}</div>
+                  </div>
+                  <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 22, color: '#ff9500' }}>{t.pts.toLocaleString()} pts</div>
+                </div>
+              ))}
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
 
-            <h2 className="bebas mb-4 text-white" style={{ fontSize: 'clamp(56px, 10vw, 112px)', lineHeight: 0.92 }}>
+      {/* ════ RANKING ════ */}
+      <section style={{ background: '#020A02', padding: '88px 0' }}>
+        <div className="container" style={{ maxWidth: 580, margin: '0 auto' }}>
+          <ScrollReveal className="text-center" style={{ marginBottom: 36 }}>
+            <div style={{ display: 'inline-block', padding: '4px 16px', borderRadius: 999, border: '1px solid rgba(201,162,39,0.4)', background: 'rgba(201,162,39,0.08)', color: '#C9A227', fontSize: 10, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 14 }}>🏅 Ranking dos Craques</div>
+            <h2 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 'clamp(36px,5vw,64px)', color: '#fff', marginBottom: 6 }}>Quem acerta mais?</h2>
+            <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 12 }}>Preview — ranking oficial abre no primeiro jogo do Brasil</p>
+          </ScrollReveal>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {mockRanking.map((u, i) => (
+              <ScrollReveal key={u.name} delay={i * 0.07}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 14, background: i === 0 ? 'rgba(201,162,39,0.07)' : 'rgba(255,255,255,0.03)', border: `1px solid ${i === 0 ? 'rgba(201,162,39,0.3)' : 'rgba(255,255,255,0.07)'}`, borderRadius: 14, padding: '14px 18px' }}>
+                  <span style={{ fontSize: i < 3 ? 22 : 15, width: 30, textAlign: 'center', fontFamily: 'Bebas Neue,sans-serif', color: 'rgba(255,255,255,0.4)' }}>{u.medal}</span>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: 800, color: '#fff', fontSize: 14 }}>{u.name}</div>
+                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)' }}>{u.rides} corridas · {u.correct} palpites certos</div>
+                  </div>
+                  <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 26, color: i === 0 ? '#C9A227' : 'rgba(255,255,255,0.45)' }}>{u.pts.toLocaleString()}</div>
+                  <div style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.2)' }}>pts</div>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+
+          <ScrollReveal delay={0.4} style={{ textAlign: 'center', marginTop: 22 }}>
+            <p style={{ color: 'rgba(255,255,255,0.22)', fontSize: 12 }}>Você entra no ranking hoje mesmo — baixe o app e comece a usar a BibCar.</p>
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* ════ CTA FINAL ════ */}
+      <section style={{ background: darkBg, padding: '96px 0', position: 'relative', overflow: 'hidden', textAlign: 'center' }}>
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 100%,rgba(0,156,59,0.18),transparent 55%)', pointerEvents: 'none' }} />
+        <div className="container relative" style={{ maxWidth: 620, margin: '0 auto', zIndex: 2 }}>
+          <ScrollReveal>
+            <div style={{ fontSize: 64, marginBottom: 14, filter: 'drop-shadow(0 0 24px rgba(0,156,59,0.55))' }}>🇧🇷</div>
+            <h2 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 'clamp(56px,10vw,116px)', color: '#fff', lineHeight: 0.9, marginBottom: 18 }}>
               Bora{' '}
               <span style={{ background: 'linear-gradient(135deg,#FFDF00,#FF9500)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>torcer!</span>
             </h2>
-
-            <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 18, marginBottom: 12, lineHeight: 1.6 }}>
-              Baixe o app, peça sua corrida na hora do jogo e aproveite{' '}
-              <strong style={{ color: '#FFDF00' }}>30% de desconto automático</strong>.
+            <p style={{ color: 'rgba(255,255,255,0.52)', fontSize: 17, marginBottom: 8, lineHeight: 1.6, maxWidth: 480, margin: '0 auto 32px' }}>
+              Baixe o app, entre no bolão, vira figurinha e ganhe <strong style={{ color: '#FFDF00' }}>30% OFF</strong> durante todos os jogos do Brasil.
             </p>
-            <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 14, marginBottom: 40 }}>
-              Promoção válida durante todos os jogos oficiais do Brasil na Copa do Mundo 2026.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href="https://apps.apple.com/br/app/bib-car-brasil/id6444271115"
-                target="_blank"
-                rel="noopener"
-                className="btn-gold justify-center"
-                style={{ background: 'linear-gradient(135deg,#FFDF00,#FFB800)', color: '#1a0f00', boxShadow: '0 8px 32px rgba(255,223,0,0.35)' }}
-              >
-                Baixar para iOS (App Store)
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center' }}>
+              <a href="https://apps.apple.com/br/app/bib-car-brasil/id6444271115" target="_blank" rel="noopener"
+                style={{ display: 'inline-block', padding: '16px 32px', borderRadius: 999, background: 'linear-gradient(135deg,#FFDF00,#FFB800)', color: '#1a0f00', fontWeight: 900, fontSize: 15, textDecoration: 'none', boxShadow: '0 8px 32px rgba(255,223,0,0.38)' }}>
+                Baixar para iOS
               </a>
-              <a
-                href="https://play.google.com/store/apps/details?id=br.com.bibcarbrasil.passenger.drivermachine"
-                target="_blank"
-                rel="noopener"
-                className="btn-ghost justify-center"
-                style={{ borderColor: 'rgba(255,255,255,0.25)', color: '#ffffff' }}
-              >
+              <a href="https://play.google.com/store/apps/details?id=br.com.bibcarbrasil.passenger.drivermachine" target="_blank" rel="noopener"
+                style={{ display: 'inline-block', padding: '16px 32px', borderRadius: 999, background: 'rgba(255,255,255,0.07)', color: '#fff', fontWeight: 700, fontSize: 15, textDecoration: 'none', border: '1px solid rgba(255,255,255,0.2)' }}>
                 Baixar para Android
               </a>
             </div>
-
-            <div className="mt-10">
-              <a
-                href="https://wa.me/551151924005"
-                target="_blank"
-                rel="noopener"
-                className="inline-flex items-center gap-2 text-sm font-semibold transition-opacity hover:opacity-80"
-                style={{ color: 'rgba(255,255,255,0.45)' }}
-              >
-                <span>💬</span> Dúvidas? Fala com a gente no WhatsApp
+            <div style={{ marginTop: 28 }}>
+              <a href="https://wa.me/551151924005" target="_blank" rel="noopener"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.35)', textDecoration: 'none' }}>
+                💬 Dúvidas? Fala com a gente no WhatsApp
               </a>
             </div>
           </ScrollReveal>

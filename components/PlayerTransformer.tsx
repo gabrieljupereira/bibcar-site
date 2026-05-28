@@ -55,37 +55,47 @@ async function blendFaceOnBody(bodyProxyUrl:string, userDataUrl:string):Promise<
     const [bodyImg,userImg]=await Promise.all([loadImg(bodyProxyUrl),loadImg(userDataUrl)]);
     const W=bodyImg.naturalWidth, H=bodyImg.naturalHeight;
 
-    // Face oval center for a "head and shoulders portrait" (portrait_4_3 = 768x1024)
-    const fx=W*0.5, fy=H*0.22;
-    const rw=W*0.26, rh=H*0.20;
+    // portrait_4_3 = 768×1024. Head centre is ~23% from top in a head-and-shoulders shot.
+    const fx=W*0.50, fy=H*0.235;
+    // Face target: ~34% of body image width (≈261px on 768px canvas)
+    const faceW=W*0.34, faceH=faceW*1.25; // face is taller than wide
+    const rx=faceW/2, ry=faceH/2;         // half-axes of the face oval
 
-    // Source face: top-center crop of user photo (face is always in top portion)
-    const srcSide=Math.min(userImg.naturalWidth, Math.round(userImg.naturalHeight*0.55));
-    const srcX=Math.round((userImg.naturalWidth-srcSide)/2);
+    // Crop just the face from the user selfie: top-centre square
+    // (covers forehead→chin without taking torso)
+    const cropH=Math.round(userImg.naturalHeight*0.56);
+    const cropW=Math.min(userImg.naturalWidth, cropH);
+    const cropX=Math.round((userImg.naturalWidth-cropW)/2);
 
-    // ── Build masked face canvas ──
+    // ── Build face layer ──
     const fc=document.createElement('canvas'); fc.width=W; fc.height=H;
     const fCtx=fc.getContext('2d')!;
-    // Draw face scaled to fit the oval
+    // Clip to oval slightly larger than target so we don't lose ear/hairline
     fCtx.save();
     fCtx.beginPath();
-    fCtx.ellipse(fx,fy,rw*1.4,rh*1.4,0,0,Math.PI*2);
+    fCtx.ellipse(fx, fy, rx*1.12, ry*1.12, 0, 0, Math.PI*2);
     fCtx.clip();
-    fCtx.drawImage(userImg,srcX,0,srcSide,srcSide,fx-rw*1.4,fy-rh*1.4,rw*2.8,rh*2.8);
+    // Draw: align top of crop (forehead) with top of ellipse
+    fCtx.drawImage(
+      userImg, cropX, 0, cropW, cropH,
+      fx - rx*1.12, fy - ry*1.12, rx*2.24, ry*2.24
+    );
     fCtx.restore();
-    // Feather edges with destination-in gradient
+
+    // Feather edges: solid core, soft wide fade
     fCtx.globalCompositeOperation='destination-in';
-    const g=fCtx.createRadialGradient(fx,fy,rw*0.5,fx,fy,rw*1.35);
-    g.addColorStop(0,'rgba(0,0,0,1)');
-    g.addColorStop(0.6,'rgba(0,0,0,0.95)');
-    g.addColorStop(1,'rgba(0,0,0,0)');
+    const g=fCtx.createRadialGradient(fx, fy, rx*0.30, fx, fy, rx*1.08);
+    g.addColorStop(0,  'rgba(0,0,0,1)');
+    g.addColorStop(0.42,'rgba(0,0,0,1)');
+    g.addColorStop(0.70,'rgba(0,0,0,0.85)');
+    g.addColorStop(0.90,'rgba(0,0,0,0.35)');
+    g.addColorStop(1,  'rgba(0,0,0,0)');
     fCtx.fillStyle=g; fCtx.fillRect(0,0,W,H);
 
     // ── Composite: footballer body + blended face ──
     const mc=document.createElement('canvas'); mc.width=W; mc.height=H;
     const ctx=mc.getContext('2d')!;
     ctx.drawImage(bodyImg,0,0,W,H);
-    ctx.globalCompositeOperation='source-over';
     ctx.drawImage(fc,0,0,W,H);
     return mc.toDataURL('image/jpeg',0.93);
   }catch(e){
@@ -472,8 +482,8 @@ export default function PlayerTransformer(){
 
   const runTransform=async(t:Team)=>{
     setStage('loading');
-    // Prompt for text-to-image: generates a professional footballer portrait
-    const prompt=`head and shoulders portrait of a professional soccer player wearing ${t.jersey}, looking directly at camera, confident athletic expression, blurred stadium crowd background, FIFA World Cup 2026, cinematic sports photography, sharp focus, photorealistic, 8k`;
+    // Prompt: explicit face position + frontal lighting helps the canvas face-blend look natural
+    const prompt=`head and shoulders portrait of a professional soccer player wearing ${t.jersey}, face centered in upper portion of frame, looking directly at camera, confident expression, soft frontal studio lighting on face, blurred stadium crowd bokeh background, FIFA World Cup 2026, photorealistic sports portrait, sharp focus, 8k`;
     try{
       // Server does pure text-to-image (flux/dev) — always works, no face reference needed
       const res=await fetch('/api/fal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})});
