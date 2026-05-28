@@ -37,14 +37,18 @@ function CountdownTimer({ target }: { target: Date }) {
   }, [target]);
   const pad = (n: number) => String(n).padStart(2, '0');
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, flexWrap: 'wrap' }}>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, flexWrap: 'wrap' }}>
       {[{ v: diff.d, l: 'dias' }, { v: diff.h, l: 'horas' }, { v: diff.m, l: 'min' }, { v: diff.s, l: 'seg' }].map(({ v, l }, i) => (
-        <div key={l} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <div style={{ textAlign: 'center', minWidth: 64 }}>
-            <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 'clamp(44px,8vw,76px)', lineHeight: 1, color: '#FFDF00', textShadow: '0 0 28px rgba(255,223,0,0.65)' }}>{pad(v)}</div>
-            <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.3)', marginTop: 4 }}>{l}</div>
+        <div key={l} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <div style={{ textAlign: 'center', minWidth: 70 }}>
+            <div style={{
+              fontFamily: 'Bebas Neue,sans-serif', fontSize: 'clamp(52px,9vw,88px)', lineHeight: 1,
+              color: '#FFDF00',
+              textShadow: '0 0 40px rgba(255,223,0,0.8), 0 0 80px rgba(255,223,0,0.3)',
+            }}>{pad(v)}</div>
+            <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.18em', color: 'rgba(255,255,255,0.28)', marginTop: 6 }}>{l}</div>
           </div>
-          {i < 3 && <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 44, color: 'rgba(255,223,0,0.35)', marginBottom: 18 }}>:</div>}
+          {i < 3 && <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 52, color: 'rgba(255,223,0,0.3)', marginBottom: 22, lineHeight: 1 }}>:</div>}
         </div>
       ))}
     </div>
@@ -102,13 +106,21 @@ function BolaoSection() {
     setPalpites(upd); setCode(c); setConfirmedResult(result); setDone(true);
   };
 
-  const card: React.CSSProperties = { background: 'rgba(127,0,255,0.05)', border: '1px solid rgba(127,0,255,0.18)', borderRadius: 20, padding: '28px 24px' };
-  const inp: React.CSSProperties = { width: 64, height: 58, borderRadius: 14, background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.18)', color: '#fff', fontSize: 28, fontWeight: 900, textAlign: 'center', outline: 'none' };
+  const card: React.CSSProperties = {
+    background: 'rgba(127,0,255,0.06)',
+    border: '1px solid rgba(127,0,255,0.2)',
+    borderRadius: 20,
+    padding: '28px 24px',
+    backdropFilter: 'blur(12px)',
+    WebkitBackdropFilter: 'blur(12px)',
+  };
+  const inp: React.CSSProperties = { width: 68, height: 62, borderRadius: 14, background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.18)', color: '#fff', fontSize: 30, fontWeight: 900, textAlign: 'center', outline: 'none' };
   const textInp = (ok: boolean): React.CSSProperties => ({
     width: '100%', padding: '13px 16px', borderRadius: 14, outline: 'none',
     background: 'rgba(255,255,255,0.06)', color: '#fff', fontSize: 15, fontWeight: 600,
-    border: `1.5px solid ${ok ? 'rgba(127,0,255,0.6)' : 'rgba(255,255,255,0.14)'}`,
-    transition: 'border-color 0.2s',
+    border: `1.5px solid ${ok ? 'rgba(127,0,255,0.65)' : 'rgba(255,255,255,0.14)'}`,
+    boxShadow: ok ? '0 0 12px rgba(127,0,255,0.15)' : 'none',
+    transition: 'border-color 0.2s, box-shadow 0.2s',
   });
 
   return (
@@ -116,13 +128,14 @@ function BolaoSection() {
       <AnimatePresence mode="wait">
 
         {status === 'waiting-draw' && (
-          <motion.div key="waiting" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} style={{ ...card, textAlign: 'center' }}>
-            <div style={{ fontSize: 52, marginBottom: 14 }}>🔒</div>
-            <h3 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 30, color: '#fff', marginBottom: 8 }}>Bolão ainda fechado</h3>
+          <motion.div key="waiting" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+            style={{ ...card, textAlign: 'center', animation: 'pulse-border 3s ease-in-out infinite' }}>
+            <div style={{ fontSize: 56, marginBottom: 16 }}>🔒</div>
+            <h3 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 32, color: '#fff', marginBottom: 8 }}>Bolão ainda fechado</h3>
             <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 14, lineHeight: 1.65, maxWidth: 340, margin: '0 auto 20px' }}>
               O bolão abre assim que a chave da Copa for sorteada e o adversário do Brasil for confirmado pela FIFA.
             </p>
-            <div style={{ display: 'inline-block', padding: '10px 24px', borderRadius: 999, background: 'rgba(255,223,0,0.08)', border: '1px solid rgba(255,223,0,0.3)' }}>
+            <div style={{ display: 'inline-block', padding: '10px 24px', borderRadius: 999, background: 'rgba(255,223,0,0.1)', border: '1px solid rgba(255,223,0,0.35)' }}>
               <span style={{ color: '#FFDF00', fontWeight: 800, fontSize: 13 }}>⚽ {match.date} · {match.time}</span>
             </div>
           </motion.div>
@@ -149,7 +162,7 @@ function BolaoSection() {
         {status === 'open' && (
           <motion.div key="form" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
 
-            <div style={{ ...card, marginBottom: 14 }}>
+            <div style={{ ...card, marginBottom: 12 }}>
               <p style={{ fontSize: 10, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.35)', marginBottom: 14 }}>👤 Seus dados para participar</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <div>
@@ -163,33 +176,34 @@ function BolaoSection() {
               </div>
             </div>
 
-            <div style={{ ...card, marginBottom: 14 }}>
+            <div style={{ ...card, marginBottom: 12 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
                 <div style={{ textAlign: 'center', flex: 1 }}>
-                  <div style={{ fontSize: 42 }}>🇧🇷</div>
+                  <div style={{ fontSize: 44 }}>🇧🇷</div>
                   <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 22, color: '#fff', marginTop: 4 }}>BRASIL</div>
                 </div>
                 <div style={{ textAlign: 'center', flex: 1 }}>
-                  <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 34, color: 'rgba(255,255,255,0.25)' }}>VS</div>
+                  <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 36, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.05em' }}>VS</div>
                   <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', fontWeight: 700 }}>{match.date}</div>
                 </div>
                 <div style={{ textAlign: 'center', flex: 1 }}>
-                  <div style={{ fontSize: 38 }}>🌍</div>
+                  <div style={{ fontSize: 40 }}>🌍</div>
                   <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: match.away.length > 8 ? 16 : 22, color: '#fff', marginTop: 4 }}>{match.away.toUpperCase()}</div>
                 </div>
               </div>
-              <div style={{ textAlign: 'center', fontSize: 11, color: 'rgba(255,255,255,0.3)', fontWeight: 600 }}>📍 {match.venue} · {match.time}</div>
+              <div style={{ textAlign: 'center', fontSize: 11, color: 'rgba(255,255,255,0.28)', fontWeight: 600 }}>📍 {match.venue} · {match.time}</div>
             </div>
 
             <p style={{ fontSize: 10, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.35)', textAlign: 'center', marginBottom: 10 }}>Qual o resultado?</p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginBottom: 20 }}>
               {(['home', 'draw', 'away'] as Resultado[]).map(opt => (
                 <button key={opt} onClick={() => setResult(opt)} style={{
-                  padding: '13px 6px', borderRadius: 14, cursor: 'pointer', transition: 'all 0.15s',
+                  padding: '14px 6px', borderRadius: 14, cursor: 'pointer', transition: 'all 0.15s',
                   border: `2px solid ${result === opt ? '#FFDF00' : 'rgba(255,255,255,0.1)'}`,
-                  background: result === opt ? 'rgba(255,223,0,0.14)' : 'rgba(255,255,255,0.03)',
-                  color: result === opt ? '#FFDF00' : 'rgba(255,255,255,0.55)',
+                  background: result === opt ? 'rgba(255,223,0,0.16)' : 'rgba(255,255,255,0.03)',
+                  color: result === opt ? '#FFDF00' : 'rgba(255,255,255,0.5)',
                   fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em',
+                  boxShadow: result === opt ? '0 0 18px rgba(255,223,0,0.2)' : 'none',
                 }}>
                   {opt === 'home' ? '🇧🇷 Brasil' : opt === 'draw' ? '➖ Empate' : '🌍 Adversário'}
                 </button>
@@ -197,18 +211,22 @@ function BolaoSection() {
             </div>
 
             <p style={{ fontSize: 10, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.35)', textAlign: 'center', marginBottom: 10 }}>Placar exato — opcional</p>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, marginBottom: 24 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, marginBottom: 24 }}>
               <input type="number" min={0} max={20} value={scoreH} onChange={e => setScoreH(e.target.value)} placeholder="0" style={inp} />
-              <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 26, fontWeight: 900 }}>×</span>
+              <span style={{ color: 'rgba(255,255,255,0.25)', fontSize: 28, fontWeight: 900 }}>×</span>
               <input type="number" min={0} max={20} value={scoreA} onChange={e => setScoreA(e.target.value)} placeholder="0" style={inp} />
             </div>
 
             <button onClick={submit} disabled={!canSubmit} style={{
-              width: '100%', padding: '16px', borderRadius: 999, border: 'none', fontSize: 16, fontWeight: 900,
+              width: '100%', padding: '17px', borderRadius: 999, border: 'none', fontSize: 16, fontWeight: 900,
               cursor: canSubmit ? 'pointer' : 'not-allowed', transition: 'all 0.2s',
-              background: canSubmit ? 'linear-gradient(135deg,#7F00FF,#FFDF00)' : 'rgba(255,255,255,0.08)',
+              background: canSubmit
+                ? 'linear-gradient(135deg,#7F00FF 0%,#A930F0 50%,#FFDF00 100%)'
+                : 'rgba(255,255,255,0.08)',
+              backgroundSize: canSubmit ? '200% auto' : undefined,
               color: canSubmit ? '#fff' : 'rgba(255,255,255,0.3)',
-              boxShadow: canSubmit ? '0 8px 28px rgba(127,0,255,0.4)' : 'none',
+              boxShadow: canSubmit ? '0 8px 32px rgba(127,0,255,0.45), 0 2px 8px rgba(0,0,0,0.3)' : 'none',
+              letterSpacing: '0.04em',
             }}>
               {canSubmit ? '⚽ Registrar Palpite' : 'Preencha nome, celular e resultado'}
             </button>
@@ -216,16 +234,18 @@ function BolaoSection() {
         )}
 
         {status === 'done' && (
-          <motion.div key="ok" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} style={{ textAlign: 'center', ...card }}>
-            <div style={{ fontSize: 56, marginBottom: 12 }}>✅</div>
-            <h3 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 34, color: '#fff', marginBottom: 4 }}>Palpite Registrado!</h3>
-            <p style={{ color: '#C13EFF', fontWeight: 700, fontSize: 15, marginBottom: 4 }}>{nome}</p>
+          <motion.div key="ok" initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} style={{ textAlign: 'center', ...card }}>
+            <motion.div
+              initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 300, damping: 18, delay: 0.1 }}
+              style={{ fontSize: 60, marginBottom: 14 }}>✅</motion.div>
+            <h3 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 36, color: '#fff', marginBottom: 4 }}>Palpite Registrado!</h3>
+            <p style={{ color: '#C13EFF', fontWeight: 700, fontSize: 15, marginBottom: 4, textShadow: '0 0 20px rgba(193,62,255,0.5)' }}>{nome}</p>
             <p style={{ color: 'rgba(255,255,255,0.5)', marginBottom: 24, fontSize: 14 }}>{confirmedResult ? LABEL[confirmedResult] : ''}</p>
-            <div style={{ display: 'inline-block', background: 'rgba(255,223,0,0.1)', border: '2px solid rgba(255,223,0,0.35)', borderRadius: 16, padding: '14px 36px', marginBottom: 20 }}>
-              <p style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.15em', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', marginBottom: 4 }}>Código do Palpite</p>
-              <p style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 38, color: '#FFDF00', letterSpacing: '0.08em' }}>#{code}</p>
+            <div style={{ display: 'inline-block', background: 'rgba(255,223,0,0.08)', border: '2px solid rgba(255,223,0,0.4)', borderRadius: 18, padding: '16px 40px', marginBottom: 20, boxShadow: '0 0 32px rgba(255,223,0,0.12)' }}>
+              <p style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.18em', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', marginBottom: 4 }}>Código do Palpite</p>
+              <p style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 40, color: '#FFDF00', letterSpacing: '0.08em', textShadow: '0 0 24px rgba(255,223,0,0.5)' }}>#{code}</p>
             </div>
-            <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 12, marginBottom: 0 }}>Guarda este código — você vai precisar para resgatar seus prêmios.</p>
+            <p style={{ color: 'rgba(255,255,255,0.28)', fontSize: 12, marginBottom: 0 }}>Guarda este código — você vai precisar para resgatar seus prêmios.</p>
           </motion.div>
         )}
 
@@ -233,9 +253,9 @@ function BolaoSection() {
 
       {palpites.length > 0 && status !== 'done' && (
         <div style={{ marginTop: 20 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.25)', marginBottom: 8 }}>Seus palpites ({palpites.length})</p>
+          <p style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.2)', marginBottom: 8 }}>Seus palpites ({palpites.length})</p>
           {palpites.slice(0, 3).map(p => (
-            <div key={p.code} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', background: 'rgba(127,0,255,0.04)', borderRadius: 10, marginBottom: 6, border: '1px solid rgba(127,0,255,0.12)' }}>
+            <div key={p.code} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', background: 'rgba(127,0,255,0.04)', borderRadius: 10, marginBottom: 6, border: '1px solid rgba(127,0,255,0.14)' }}>
               <div>
                 <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 12, fontWeight: 700 }}>{p.nome}</div>
                 <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11 }}>{LABEL[p.result]}</div>
@@ -254,7 +274,13 @@ export default function BibNaCopa() {
   const firstMatch = new Date('2026-06-14T15:00:00-07:00');
 
   const darkBg = 'linear-gradient(150deg,#04000D 0%,#080018 55%,#02000A 100%)';
-  const glass: React.CSSProperties = { background: 'rgba(127,0,255,0.04)', border: '1px solid rgba(127,0,255,0.14)', borderRadius: 20 };
+  const glass: React.CSSProperties = {
+    background: 'rgba(127,0,255,0.05)',
+    border: '1px solid rgba(127,0,255,0.15)',
+    borderRadius: 20,
+    backdropFilter: 'blur(12px)',
+    WebkitBackdropFilter: 'blur(12px)',
+  };
 
   return (
     <>
@@ -266,13 +292,40 @@ export default function BibNaCopa() {
       }}>
         <FloatingOrbs variant="copa" className="absolute inset-0" style={{ zIndex: 0 }} />
 
-        {/* Giant ⚽ watermark */}
+        {/* Giant ⚽ watermark — spinning slow */}
         <div style={{
           position: 'absolute', right: '-10%', top: '-8%',
           fontSize: 'clamp(360px,60vw,820px)', lineHeight: 1,
-          opacity: 0.045, filter: 'blur(3px)',
+          opacity: 0.05, filter: 'blur(2px)',
           userSelect: 'none', pointerEvents: 'none', zIndex: 1,
+          animation: 'spin-slow 100s linear infinite',
+          transformOrigin: 'center center',
         }}>⚽</div>
+
+        {/* Football pitch center circle */}
+        <div style={{
+          position: 'absolute', right: '8%', top: '50%',
+          width: 420, height: 420, borderRadius: '50%',
+          border: '1.5px solid rgba(127,0,255,0.12)',
+          transform: 'translate(30%, -50%)',
+          pointerEvents: 'none', zIndex: 1,
+        }}>
+          {/* Inner circle */}
+          <div style={{
+            position: 'absolute', top: '50%', left: '50%',
+            width: 100, height: 100, borderRadius: '50%',
+            border: '1px solid rgba(127,0,255,0.1)',
+            transform: 'translate(-50%, -50%)',
+          }}/>
+          {/* Center dot */}
+          <div style={{
+            position: 'absolute', top: '50%', left: '50%',
+            width: 10, height: 10, borderRadius: '50%',
+            background: 'rgba(193,62,255,0.5)',
+            transform: 'translate(-50%, -50%)',
+            boxShadow: '0 0 16px rgba(193,62,255,0.6)',
+          }}/>
+        </div>
 
         {/* 3D perspective football field grid */}
         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '58vh', overflow: 'hidden', pointerEvents: 'none', zIndex: 1 }}>
@@ -280,45 +333,45 @@ export default function BibNaCopa() {
             position: 'absolute', bottom: 0, left: '-60%', right: '-60%', height: '180%',
             transform: 'perspective(500px) rotateX(70deg)',
             transformOrigin: 'center bottom',
-            backgroundImage: 'linear-gradient(rgba(127,0,255,0.22) 1px,transparent 1px),linear-gradient(90deg,rgba(127,0,255,0.22) 1px,transparent 1px)',
+            backgroundImage: 'linear-gradient(rgba(127,0,255,0.25) 1px,transparent 1px),linear-gradient(90deg,rgba(127,0,255,0.25) 1px,transparent 1px)',
             backgroundSize: '78px 78px',
-            maskImage: 'linear-gradient(to top,rgba(0,0,0,0.6) 0%,transparent 80%)',
-            WebkitMaskImage: 'linear-gradient(to top,rgba(0,0,0,0.6) 0%,transparent 80%)',
+            maskImage: 'linear-gradient(to top,rgba(0,0,0,0.7) 0%,transparent 80%)',
+            WebkitMaskImage: 'linear-gradient(to top,rgba(0,0,0,0.7) 0%,transparent 80%)',
           }} />
         </div>
 
-        {/* Stadium light beams from top corners */}
+        {/* Stadium light beams */}
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 2,
-          background: 'linear-gradient(135deg,rgba(127,0,255,0.07) 0%,transparent 38%),linear-gradient(-135deg,rgba(193,62,255,0.05) 0%,transparent 36%)',
+          background: 'linear-gradient(130deg,rgba(127,0,255,0.09) 0%,transparent 35%),linear-gradient(-130deg,rgba(193,62,255,0.06) 0%,transparent 32%)',
         }} />
 
-        {/* Subtle grid texture overlay */}
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.018) 1px,transparent 1px)', backgroundSize: '56px 56px', zIndex: 2, pointerEvents: 'none' }} />
+        {/* Fine grid texture */}
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px)', backgroundSize: '56px 56px', zIndex: 2, pointerEvents: 'none' }} />
 
         {/* Radial glows */}
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 75% 25%,rgba(255,223,0,0.09),transparent 45%),radial-gradient(ellipse at 15% 75%,rgba(127,0,255,0.2),transparent 50%)', zIndex: 2, pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 75% 20%,rgba(255,223,0,0.1),transparent 42%),radial-gradient(ellipse at 12% 75%,rgba(127,0,255,0.22),transparent 48%)', zIndex: 2, pointerEvents: 'none' }} />
 
         <div className="container relative" style={{ zIndex: 3, paddingTop: 128, paddingBottom: 100 }}>
           <motion.div variants={{ hidden: {}, show: { transition: { staggerChildren: 0.12 } } }} initial="hidden" animate="show" style={{ maxWidth: 780 }}>
 
-            <motion.div variants={hi} style={{ display: 'inline-flex', alignItems: 'center', gap: 10, borderRadius: 999, border: '1.5px solid rgba(127,0,255,0.55)', background: 'rgba(127,0,255,0.12)', padding: '7px 18px', marginBottom: 24 }}>
-              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#C13EFF', boxShadow: '0 0 10px #C13EFF', display: 'inline-block', animation: 'blink 1s infinite' }} />
+            <motion.div variants={hi} style={{ display: 'inline-flex', alignItems: 'center', gap: 10, borderRadius: 999, border: '1.5px solid rgba(127,0,255,0.55)', background: 'rgba(127,0,255,0.12)', padding: '7px 18px', marginBottom: 24, backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}>
+              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#C13EFF', boxShadow: '0 0 12px #C13EFF', display: 'inline-block', animation: 'blink 1.2s infinite' }} />
               <span style={{ fontSize: 10, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.13em', color: '#C13EFF' }}>⚽ Copa 2026 · Ecossistema BibCar</span>
             </motion.div>
 
-            <motion.h1 variants={hi} style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 'clamp(80px,14vw,176px)', lineHeight: 0.86, marginBottom: 6 }}>
-              <span style={{ background: 'linear-gradient(135deg,#7F00FF 0%,#C13EFF 45%,#FFDF00 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Bib</span><br />
-              <span style={{ color: '#ffffff' }}>na Copa</span>
+            <motion.h1 variants={hi} style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 'clamp(80px,14vw,176px)', lineHeight: 0.86, marginBottom: 10 }}>
+              <span style={{ background: 'linear-gradient(135deg,#7F00FF 0%,#C13EFF 45%,#FFDF00 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(0 0 40px rgba(127,0,255,0.4))' }}>Bib</span><br />
+              <span style={{ color: '#ffffff', textShadow: '0 0 60px rgba(255,255,255,0.08)' }}>na Copa</span>
             </motion.h1>
 
-            <motion.p variants={hi} style={{ fontSize: 'clamp(15px,1.7vw,19px)', color: 'rgba(255,255,255,0.58)', lineHeight: 1.65, maxWidth: 530, marginBottom: 28 }}>
+            <motion.p variants={hi} style={{ fontSize: 'clamp(15px,1.7vw,19px)', color: 'rgba(255,255,255,0.55)', lineHeight: 1.7, maxWidth: 520, marginBottom: 28 }}>
               Corrida com 30% OFF · Bolão de palpites · Figurinha IA — tudo dentro do app BibCar, o ecossistema completo da Copa 2026.
             </motion.p>
 
-            <motion.div variants={hi} style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 36 }}>
+            <motion.div variants={hi} style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 38 }}>
               {ecosystem.map(f => (
-                <span key={f.title} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 999, border: `1px solid ${f.color}40`, background: `${f.color}12`, fontSize: 12, fontWeight: 700, color: f.color }}>
+                <span key={f.title} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '7px 16px', borderRadius: 999, border: `1px solid ${f.color}45`, background: `${f.color}14`, fontSize: 12, fontWeight: 700, color: f.color, backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}>
                   {f.icon} {f.title}
                 </span>
               ))}
@@ -326,11 +379,11 @@ export default function BibNaCopa() {
 
             <motion.div variants={hi} style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
               <a href="https://apps.apple.com/br/app/bib-car-brasil/id6444271115" target="_blank" rel="noopener"
-                style={{ display: 'inline-block', padding: '15px 30px', borderRadius: 999, background: 'linear-gradient(135deg,#FFDF00,#FFB800)', color: '#1a0f00', fontWeight: 900, fontSize: 15, textDecoration: 'none', boxShadow: '0 8px 32px rgba(255,223,0,0.38)' }}>
+                style={{ display: 'inline-block', padding: '15px 32px', borderRadius: 999, background: 'linear-gradient(135deg,#FFDF00,#FFB800)', color: '#1a0f00', fontWeight: 900, fontSize: 15, textDecoration: 'none', boxShadow: '0 8px 36px rgba(255,223,0,0.42), 0 2px 8px rgba(0,0,0,0.3)' }}>
                 Baixar o app →
               </a>
               <a href="#bolao"
-                style={{ display: 'inline-block', padding: '15px 30px', borderRadius: 999, background: 'rgba(127,0,255,0.14)', color: '#C13EFF', fontWeight: 700, fontSize: 15, textDecoration: 'none', border: '1px solid rgba(127,0,255,0.4)' }}>
+                style={{ display: 'inline-block', padding: '15px 32px', borderRadius: 999, background: 'rgba(127,0,255,0.16)', color: '#C13EFF', fontWeight: 700, fontSize: 15, textDecoration: 'none', border: '1px solid rgba(127,0,255,0.45)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}>
                 🎰 Entrar no Bolão
               </a>
             </motion.div>
@@ -338,41 +391,55 @@ export default function BibNaCopa() {
           </motion.div>
         </div>
 
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 120, background: 'linear-gradient(to top,#04000D,transparent)', zIndex: 4 }} />
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 140, background: 'linear-gradient(to top,#04000D,transparent)', zIndex: 4 }} />
       </section>
 
       {/* ════ COUNTDOWN ════ */}
-      <section style={{ background: '#04000D', padding: '52px 0' }}>
-        <div className="container" style={{ maxWidth: 640, margin: '0 auto', textAlign: 'center' }}>
-          <p style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.16em', color: 'rgba(255,255,255,0.28)', marginBottom: 18 }}>⚽ 1º jogo do Brasil na Copa em</p>
-          <CountdownTimer target={firstMatch} />
-          <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)', marginTop: 14 }}>14 Jun 2026 · Los Angeles, EUA · Data sujeita a confirmação oficial</p>
+      <section style={{ background: '#04000D', padding: '60px 0' }}>
+        <div className="container" style={{ maxWidth: 700, margin: '0 auto', textAlign: 'center' }}>
+          <p style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.18em', color: 'rgba(255,255,255,0.25)', marginBottom: 28 }}>⚽ 1º jogo do Brasil na Copa em</p>
+          <div style={{
+            display: 'inline-block',
+            background: 'rgba(127,0,255,0.06)',
+            border: '1px solid rgba(127,0,255,0.2)',
+            borderRadius: 28,
+            padding: '40px 48px',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            boxShadow: '0 0 60px rgba(127,0,255,0.1), inset 0 1px 0 rgba(255,255,255,0.04)',
+            animation: 'pulse-border 4s ease-in-out infinite',
+          }}>
+            <CountdownTimer target={firstMatch} />
+          </div>
+          <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.18)', marginTop: 20 }}>14 Jun 2026 · Los Angeles, EUA · Data sujeita a confirmação oficial</p>
         </div>
       </section>
 
       {/* ════ ECOSSISTEMA ════ */}
-      <section style={{ background: '#04000D', padding: '88px 0' }}>
+      <section style={{ background: '#04000D', padding: '96px 0' }}>
         <div className="container">
-          <ScrollReveal className="text-center" style={{ marginBottom: 52 }}>
+          <ScrollReveal className="text-center" style={{ marginBottom: 56 }}>
             <div style={{ display: 'inline-block', padding: '4px 16px', borderRadius: 999, border: '1px solid rgba(255,223,0,0.3)', background: 'rgba(255,223,0,0.07)', color: '#FFDF00', fontSize: 10, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 14 }}>O Ecossistema</div>
             <h2 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 'clamp(40px,6vw,78px)', color: '#fff', lineHeight: 1, marginBottom: 10 }}>
               Três produtos.{' '}
               <span style={{ background: 'linear-gradient(135deg,#7F00FF,#FFDF00)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Um app.</span>
             </h2>
-            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 15, maxWidth: 440, margin: '0 auto' }}>Tudo pensado juntos para o maior evento do planeta em 2026.</p>
+            <p style={{ color: 'rgba(255,255,255,0.38)', fontSize: 15, maxWidth: 440, margin: '0 auto' }}>Tudo pensado juntos para o maior evento do planeta em 2026.</p>
           </ScrollReveal>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(232px,1fr))', gap: 14, maxWidth: 1080, margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))', gap: 16, maxWidth: 1080, margin: '0 auto' }}>
             {ecosystem.map((f, i) => (
               <ScrollReveal key={f.title} delay={i * 0.09}>
-                <div {...{ style: { ...glass, padding: 28, height: '100%', position: 'relative', overflow: 'hidden', transition: 'border-color 0.2s,transform 0.2s' } as React.CSSProperties }}
-                  onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = `${f.color}44`; el.style.transform = 'translateY(-5px)'; }}
-                  onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = 'rgba(127,0,255,0.14)'; el.style.transform = 'none'; }}>
-                  <div style={{ position: 'absolute', top: -32, right: -32, width: 100, height: 100, borderRadius: '50%', background: `${f.color}0e`, pointerEvents: 'none' }} />
-                  <div style={{ display: 'inline-block', padding: '3px 10px', borderRadius: 999, border: `1px solid ${f.color}50`, background: `${f.color}14`, color: f.color, fontSize: 10, fontWeight: 900, letterSpacing: '0.1em', marginBottom: 18 }}>{f.tag}</div>
-                  <div style={{ fontSize: 36, marginBottom: 10 }}>{f.icon}</div>
-                  <h3 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 28, color: '#fff', marginBottom: 8 }}>{f.title}</h3>
-                  <p style={{ color: 'rgba(255,255,255,0.42)', fontSize: 13, lineHeight: 1.6 }}>{f.desc}</p>
+                <div
+                  style={{ ...glass, padding: 32, height: '100%', position: 'relative', overflow: 'hidden', transition: 'border-color 0.25s,transform 0.25s,box-shadow 0.25s' } as React.CSSProperties}
+                  onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = `${f.color}55`; el.style.transform = 'translateY(-6px)'; el.style.boxShadow = `0 20px 60px ${f.color}18`; }}
+                  onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = 'rgba(127,0,255,0.15)'; el.style.transform = 'none'; el.style.boxShadow = 'none'; }}>
+                  {/* Corner glow blob */}
+                  <div style={{ position: 'absolute', top: -50, right: -50, width: 180, height: 180, borderRadius: '50%', background: `${f.color}12`, pointerEvents: 'none', filter: 'blur(20px)' }} />
+                  <div style={{ display: 'inline-block', padding: '3px 10px', borderRadius: 999, border: `1px solid ${f.color}50`, background: `${f.color}16`, color: f.color, fontSize: 10, fontWeight: 900, letterSpacing: '0.1em', marginBottom: 20 }}>{f.tag}</div>
+                  <div style={{ fontSize: 40, marginBottom: 12 }}>{f.icon}</div>
+                  <h3 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 30, color: '#fff', marginBottom: 8 }}>{f.title}</h3>
+                  <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13, lineHeight: 1.65 }}>{f.desc}</p>
                 </div>
               </ScrollReveal>
             ))}
@@ -381,16 +448,18 @@ export default function BibNaCopa() {
       </section>
 
       {/* ════ BOLÃO ════ */}
-      <section id="bolao" style={{ background: 'linear-gradient(150deg,#07000E 0%,#0c0018 50%,#07000E 100%)', padding: '96px 0', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 0%,rgba(255,223,0,0.07),transparent 50%)', pointerEvents: 'none' }} />
+      <section id="bolao" style={{ background: 'linear-gradient(150deg,#07000E 0%,#0c0018 50%,#07000E 100%)', padding: '100px 0', position: 'relative', overflow: 'hidden' }}>
+        {/* Scanlines */}
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(127,0,255,0.015) 3px,rgba(127,0,255,0.015) 4px)', pointerEvents: 'none', zIndex: 1 }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 0%,rgba(255,223,0,0.07),transparent 50%)', pointerEvents: 'none', zIndex: 1 }} />
         <div className="container relative" style={{ zIndex: 2 }}>
-          <ScrollReveal className="text-center" style={{ marginBottom: 48 }}>
+          <ScrollReveal className="text-center" style={{ marginBottom: 52 }}>
             <div style={{ display: 'inline-block', padding: '4px 16px', borderRadius: 999, border: '1px solid rgba(255,223,0,0.35)', background: 'rgba(255,223,0,0.08)', color: '#FFDF00', fontSize: 10, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 14 }}>🎰 Bolão BibCar</div>
             <h2 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 'clamp(40px,6vw,76px)', color: '#fff', marginBottom: 10 }}>
               Chuta o{' '}
               <span style={{ background: 'linear-gradient(135deg,#FFDF00,#FFB800)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>resultado.</span>
             </h2>
-            <p style={{ color: 'rgba(255,255,255,0.42)', fontSize: 15, maxWidth: 440, margin: '0 auto' }}>Chuta o placar dos jogos do Brasil e concorra a corridas grátis.</p>
+            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 15, maxWidth: 440, margin: '0 auto' }}>Chuta o placar dos jogos do Brasil e concorra a corridas grátis.</p>
           </ScrollReveal>
           <ScrollReveal delay={0.12}><BolaoSection /></ScrollReveal>
         </div>
@@ -398,43 +467,43 @@ export default function BibNaCopa() {
 
       {/* ════ FIGURINHA IA ════ */}
       <section style={{ background: darkBg, position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 60% 50%,rgba(127,0,255,0.14),transparent 55%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 60% 50%,rgba(127,0,255,0.16),transparent 55%)', pointerEvents: 'none' }} />
         <div className="container relative" style={{ zIndex: 2 }}>
           <PlayerTransformer />
         </div>
       </section>
 
       {/* ════ JOGOS & 30% OFF ════ */}
-      <section style={{ background: '#04000D', padding: '88px 0' }}>
+      <section style={{ background: '#04000D', padding: '92px 0' }}>
         <div className="container" style={{ maxWidth: 700, margin: '0 auto' }}>
-          <ScrollReveal className="text-center" style={{ marginBottom: 44 }}>
+          <ScrollReveal className="text-center" style={{ marginBottom: 48 }}>
             <div style={{ display: 'inline-block', padding: '4px 16px', borderRadius: 999, border: '1px solid rgba(127,0,255,0.4)', background: 'rgba(127,0,255,0.08)', color: '#C13EFF', fontSize: 10, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 14 }}>🇧🇷 Jogos do Brasil · Copa 2026</div>
             <h2 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 'clamp(40px,6vw,74px)', color: '#fff', marginBottom: 10 }}>
               30% OFF em{' '}
               <span style={{ background: 'linear-gradient(135deg,#7F00FF,#FFDF00)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>todos os jogos.</span>
             </h2>
-            <p style={{ color: 'rgba(255,255,255,0.38)', fontSize: 15 }}>Desconto automático, sem cupom, sem enrolação.</p>
+            <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 15 }}>Desconto automático, sem cupom, sem enrolação.</p>
           </ScrollReveal>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {matches.map((m, i) => (
               <ScrollReveal key={m.id} delay={i * 0.1}>
-                <div style={{ ...glass, padding: '20px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 14 }}>
+                <div style={{ ...glass, padding: '20px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 14, borderLeft: '3px solid rgba(127,0,255,0.55)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                    <div style={{ width: 46, height: 46, borderRadius: 12, background: 'rgba(127,0,255,0.15)', border: '1px solid rgba(127,0,255,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 }}>🇧🇷</div>
+                    <div style={{ width: 46, height: 46, borderRadius: 12, background: 'rgba(127,0,255,0.18)', border: '1px solid rgba(127,0,255,0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 }}>🇧🇷</div>
                     <div>
-                      <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.3)', marginBottom: 3 }}>Fase de Grupos · Jogo {i + 1}</div>
+                      <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.28)', marginBottom: 3 }}>Fase de Grupos · Jogo {i + 1}</div>
                       <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 20, color: '#fff' }}>Brasil vs. {m.away}</div>
-                      <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginTop: 2 }}>📍 {m.venue}</div>
+                      <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.28)', marginTop: 2 }}>📍 {m.venue}</div>
                     </div>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     <div style={{ textAlign: 'right' }}>
                       <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 20, color: '#FFDF00' }}>{m.date}</div>
-                      <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.38)' }}>{m.time}</div>
+                      <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>{m.time}</div>
                     </div>
-                    <div style={{ padding: '10px 16px', borderRadius: 12, background: 'rgba(127,0,255,0.15)', border: '1px solid rgba(127,0,255,0.4)', textAlign: 'center', minWidth: 64 }}>
-                      <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 28, color: '#C13EFF', lineHeight: 1 }}>30%</div>
+                    <div style={{ padding: '10px 16px', borderRadius: 12, background: 'rgba(127,0,255,0.18)', border: '1px solid rgba(127,0,255,0.45)', textAlign: 'center', minWidth: 64, boxShadow: '0 0 20px rgba(127,0,255,0.25)' }}>
+                      <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 28, color: '#C13EFF', lineHeight: 1, textShadow: '0 0 16px rgba(193,62,255,0.5)' }}>30%</div>
                       <div style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.35)' }}>OFF</div>
                     </div>
                   </div>
@@ -446,31 +515,33 @@ export default function BibNaCopa() {
       </section>
 
       {/* ════ CTA FINAL ════ */}
-      <section style={{ background: darkBg, padding: '96px 0', position: 'relative', overflow: 'hidden', textAlign: 'center' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 100%,rgba(127,0,255,0.22),transparent 55%)', pointerEvents: 'none' }} />
+      <section style={{ background: darkBg, padding: '100px 0', position: 'relative', overflow: 'hidden', textAlign: 'center' }}>
+        {/* Background ⚽ */}
+        <div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', fontSize: 600, lineHeight: 1, opacity: 0.025, filter: 'blur(4px)', userSelect: 'none', pointerEvents: 'none', animation: 'spin-slow 120s linear infinite' }}>⚽</div>
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 100%,rgba(127,0,255,0.24),transparent 55%)', pointerEvents: 'none' }} />
         <div className="container relative" style={{ maxWidth: 620, margin: '0 auto', zIndex: 2 }}>
           <ScrollReveal>
-            <div style={{ fontSize: 64, marginBottom: 14, filter: 'drop-shadow(0 0 24px rgba(127,0,255,0.6))' }}>🇧🇷</div>
-            <h2 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 'clamp(56px,10vw,116px)', color: '#fff', lineHeight: 0.9, marginBottom: 18 }}>
+            <div style={{ fontSize: 68, marginBottom: 16, display: 'inline-block', animation: 'float-cta 3.5s ease-in-out infinite' }}>🇧🇷</div>
+            <h2 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 'clamp(56px,10vw,116px)', color: '#fff', lineHeight: 0.9, marginBottom: 20 }}>
               Bora{' '}
               <span style={{ background: 'linear-gradient(135deg,#FFDF00,#FF9500)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>torcer!</span>
             </h2>
-            <p style={{ color: 'rgba(255,255,255,0.52)', fontSize: 17, marginBottom: 8, lineHeight: 1.6, maxWidth: 480, margin: '0 auto 32px' }}>
+            <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 17, lineHeight: 1.65, maxWidth: 480, margin: '0 auto 36px' }}>
               Baixe o app, entre no bolão, vira figurinha e ganhe <strong style={{ color: '#FFDF00' }}>30% OFF</strong> durante todos os jogos do Brasil.
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center' }}>
               <a href="https://apps.apple.com/br/app/bib-car-brasil/id6444271115" target="_blank" rel="noopener"
-                style={{ display: 'inline-block', padding: '16px 32px', borderRadius: 999, background: 'linear-gradient(135deg,#FFDF00,#FFB800)', color: '#1a0f00', fontWeight: 900, fontSize: 15, textDecoration: 'none', boxShadow: '0 8px 32px rgba(255,223,0,0.38)' }}>
+                style={{ display: 'inline-block', padding: '17px 34px', borderRadius: 999, background: 'linear-gradient(135deg,#FFDF00,#FFB800)', color: '#1a0f00', fontWeight: 900, fontSize: 15, textDecoration: 'none', boxShadow: '0 8px 36px rgba(255,223,0,0.45)' }}>
                 Baixar para iOS
               </a>
               <a href="https://play.google.com/store/apps/details?id=br.com.bibcarbrasil.passenger.drivermachine" target="_blank" rel="noopener"
-                style={{ display: 'inline-block', padding: '16px 32px', borderRadius: 999, background: 'rgba(255,255,255,0.07)', color: '#fff', fontWeight: 700, fontSize: 15, textDecoration: 'none', border: '1px solid rgba(255,255,255,0.2)' }}>
+                style={{ display: 'inline-block', padding: '17px 34px', borderRadius: 999, background: 'rgba(127,0,255,0.14)', color: '#C13EFF', fontWeight: 700, fontSize: 15, textDecoration: 'none', border: '1px solid rgba(127,0,255,0.45)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}>
                 Baixar para Android
               </a>
             </div>
-            <div style={{ marginTop: 28 }}>
+            <div style={{ marginTop: 30 }}>
               <a href="https://wa.me/551151924005" target="_blank" rel="noopener"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.35)', textDecoration: 'none' }}>
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.3)', textDecoration: 'none' }}>
                 💬 Dúvidas? Fala com a gente no WhatsApp
               </a>
             </div>

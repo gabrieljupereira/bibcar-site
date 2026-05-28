@@ -227,6 +227,25 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes float-cta {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-22px); }
+}
+
+@keyframes pulse-border {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(127,0,255,0), 0 4px 32px rgba(0,0,0,0.3); }
+  50% { box-shadow: 0 0 48px rgba(127,0,255,0.22), 0 4px 32px rgba(0,0,0,0.3); }
+}
+
+@keyframes shimmer-btn {
+  0% { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
 @media (max-width: 767px) {
   .tag {
     letter-spacing: 0.8px;
