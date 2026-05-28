@@ -41,6 +41,22 @@ function resizeImage(file:File,maxSize=1024):Promise<string>{
     img.onerror=rej; img.src=url;
   });
 }
+// Crop to face area: top-center square of the image (removes body/background)
+function cropFaceArea(dataUrl:string):Promise<string>{
+  return new Promise((res,rej)=>{
+    const img=new window.Image();
+    img.onload=()=>{
+      // Take square from top-center — face is in top portion for most portrait/selfie photos
+      const side=Math.min(img.width,Math.round(img.height*0.75));
+      const x=Math.round((img.width-side)/2);
+      const c=document.createElement('canvas');
+      c.width=512; c.height=512;
+      c.getContext('2d')!.drawImage(img,x,0,side,side,0,0,512,512);
+      res(c.toDataURL('image/jpeg',0.92));
+    };
+    img.onerror=rej; img.src=dataUrl;
+  });
+}
 function loadImg(src:string):Promise<HTMLImageElement>{
   return new Promise((res,rej)=>{
     const img=new window.Image();
@@ -420,10 +436,11 @@ export default function PlayerTransformer(){
 
   const runTransform=async(t:Team)=>{
     setStage('loading');
-    // Prompt explicitly requests front-facing portrait to avoid "from behind" issue
-    const prompt=`professional male soccer player wearing ${t.jersey}, confident heroic pose, looking directly at camera, strong jaw, athletic build, head and shoulders portrait, blurred stadium crowd background with lights, FIFA World Cup 2026 official player card photo, cinematic sports photography, sharp focus, dramatic lighting, photorealistic, 8k quality`;
+    const prompt=`professional soccer player wearing ${t.jersey}, head and shoulders portrait, looking directly at camera, confident athletic expression, blurred stadium crowd with lights in background, FIFA World Cup 2026 official player card, cinematic sports photography, sharp face, photorealistic`;
     try{
-      const res=await fetch('/api/fal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({imageDataUrl:dataUrlRef.current,prompt})});
+      // Crop to face area before sending — removes background/clothing context that confuses AI
+      const faceCrop=await cropFaceArea(dataUrlRef.current);
+      const res=await fetch('/api/fal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({imageDataUrl:faceCrop,prompt})});
       const data=await res.json() as {imageUrl?:string;error?:string};
       if(!res.ok||!data.imageUrl) throw new Error(data.error??'Erro desconhecido');
       setResultUrl(data.imageUrl); setStage('result');

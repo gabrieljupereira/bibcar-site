@@ -18,59 +18,46 @@ export async function POST(req: NextRequest) {
 
     const b64 = imageDataUrl.replace(/^data:image\/\w+;base64,/, '');
     const mime = imageDataUrl.match(/^data:(image\/\w+);base64,/)?.[1] ?? 'image/jpeg';
+    // imageDataUrl is already a face crop (512x512, top-center of original photo)
     const faceUrl = await fal.storage.upload(new Blob([Buffer.from(b64, 'base64')], { type: mime }));
 
     let imageUrl: string | undefined;
 
-    // ── STRATEGY 1: flux text-to-image → inswapper (paste real face on footballer body) ──
-    let footballerBodyUrl: string | undefined;
+    // ── STRATEGY 1: PuLID — identity-preserving generation on Flux Dev ──
+    // Best face consistency model, generates a new image while keeping the face
     try {
-      const r = await (fal.subscribe as any)('fal-ai/flux/dev', {
+      const r = await (fal.subscribe as any)('fal-ai/pulid', {
         input: {
           prompt,
-          negative_prompt: 'ugly, blurry, distorted, cartoon, extra limbs, watermark, text',
-          num_inference_steps: 28,
+          reference_images: [{ image_url: faceUrl }],
+          negative_prompt: 'ugly, blurry, distorted face, cartoon, watermark, extra limbs, deformed',
+          num_inference_steps: 20,
           guidance_scale: 3.5,
+          true_cfg: 1.0,
+          id_scale: 1.0,
           num_images: 1,
-          image_size: 'portrait_4_3',
-          enable_safety_checker: true,
         },
         pollInterval: 3000,
       });
-      footballerBodyUrl = r?.data?.images?.[0]?.url ?? r?.images?.[0]?.url;
-      console.log('[flux-t2i]', footballerBodyUrl ? 'ok' : 'no image');
+      imageUrl = r?.data?.images?.[0]?.url ?? r?.images?.[0]?.url;
+      console.log('[pulid]', imageUrl ? 'ok' : 'no image');
     } catch (e) {
-      console.error('[flux-t2i] failed:', String(e).slice(0, 200));
+      console.error('[pulid] failed:', String(e).slice(0, 200));
     }
 
-    if (footballerBodyUrl) {
-      try {
-        const r = await (fal.subscribe as any)('fal-ai/inswapper', {
-          input: {
-            target_image_url: footballerBodyUrl,
-            source_image_url: faceUrl,
-          },
-          pollInterval: 3000,
-        });
-        imageUrl = r?.data?.image?.url ?? r?.data?.images?.[0]?.url ?? r?.image?.url ?? r?.images?.[0]?.url;
-        console.log('[inswapper]', imageUrl ? 'ok' : 'no image');
-      } catch (e) {
-        console.error('[inswapper] failed:', String(e).slice(0, 200));
-      }
-    }
-
-    // ── STRATEGY 2: InstantID with tuned params (less distortion) ──
+    // ── STRATEGY 2: InstantID — face identity via IP-Adapter + ControlNet ──
+    // Proven to return recognizable face; tuned for minimal distortion
     if (!imageUrl) {
       try {
         const r = await (fal.subscribe as any)('fal-ai/instant-id', {
           input: {
             face_image_url: faceUrl,
             prompt,
-            negative_prompt: 'ugly, blurry, cartoon, painting, distorted face, deformed, artifacts, low quality',
+            negative_prompt: 'ugly, blurry, cartoon, painting, distorted face, deformed, artifacts, bad anatomy, extra limbs',
             num_inference_steps: 50,
             guidance_scale: 3.5,
-            ip_adapter_scale: 0.9,
-            controlnet_conditioning_scale: 0.45,
+            ip_adapter_scale: 0.8,
+            controlnet_conditioning_scale: 0.4,
           },
           pollInterval: 3000,
         });
@@ -81,14 +68,14 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // ── STRATEGY 3: flux img2img moderate strength ──
+    // ── STRATEGY 3: flux img2img moderate strength on face crop ──
     if (!imageUrl) {
       try {
         const r = await (fal.subscribe as any)('fal-ai/flux/dev/image-to-image', {
           input: {
             image_url: faceUrl,
             prompt,
-            strength: 0.40,
+            strength: 0.45,
             num_inference_steps: 28,
             guidance_scale: 3.5,
             num_images: 1,
