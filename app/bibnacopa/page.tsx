@@ -10,10 +10,12 @@ const ease = [0.22, 1, 0.36, 1] as [number, number, number, number];
 const hi = { hidden: { opacity: 0, y: 28 }, show: { opacity: 1, y: 0, transition: { duration: 0.65, ease } } };
 
 /* ─── Data ───────────────────────────────────────────────── */
+// isoStart = kick-off em UTC. drawReleased = adversário confirmado pela FIFA.
+// Para abrir o bolão de um jogo: mude away + drawReleased: true
 const matches = [
-  { id: 'm1', away: 'A definir', date: '14 Jun 2026', time: '15:00 BRT', venue: 'Los Angeles, EUA' },
-  { id: 'm2', away: 'A definir', date: '19 Jun 2026', time: '21:00 BRT', venue: 'Dallas, EUA' },
-  { id: 'm3', away: 'A definir', date: '24 Jun 2026', time: '18:00 BRT', venue: 'San Francisco, EUA' },
+  { id: 'm1', away: 'A definir', date: '14 Jun 2026', time: '15:00 BRT', venue: 'Los Angeles, EUA', isoStart: '2026-06-14T18:00:00Z', drawReleased: false },
+  { id: 'm2', away: 'A definir', date: '19 Jun 2026', time: '21:00 BRT', venue: 'Dallas, EUA',        isoStart: '2026-06-20T00:00:00Z', drawReleased: false },
+  { id: 'm3', away: 'A definir', date: '24 Jun 2026', time: '18:00 BRT', venue: 'San Francisco, EUA', isoStart: '2026-06-24T21:00:00Z', drawReleased: false },
 ];
 
 const ecosystem = [
@@ -95,14 +97,26 @@ function BolaoSection() {
   const [code, setCode] = useState('');
   const [confirmedResult, setConfirmedResult] = useState<Resultado | null>(null);
   const [palpites, setPalpites] = useState<Palpite[]>([]);
-  const match = matches[0];
+  const [now, setNow] = useState(() => Date.now());
+
+  const match = matches[0]; // próximo jogo sempre é o primeiro
 
   useEffect(() => {
     try { setPalpites(JSON.parse(localStorage.getItem('bib_palpites') || '[]')); } catch { /* */ }
+    const id = setInterval(() => setNow(Date.now()), 10000);
+    return () => clearInterval(id);
   }, []);
 
   const celDigits = celular.replace(/\D/g, '');
-  const canSubmit = nome.trim().length >= 2 && celDigits.length >= 10 && !!result;
+  const gameStart  = new Date(match.isoStart).getTime();
+  const gameStarted = now >= gameStart;
+  const alreadyVoted = celDigits.length >= 10 && palpites.some(p => p.matchId === match.id && p.celular.replace(/\D/g, '') === celDigits);
+
+  // Status derivado — ordem de prioridade
+  type Status = 'waiting-draw' | 'closed' | 'already-voted' | 'open' | 'done';
+  const status: Status = done ? 'done' : !match.drawReleased ? 'waiting-draw' : gameStarted ? 'closed' : alreadyVoted ? 'already-voted' : 'open';
+
+  const canSubmit = status === 'open' && nome.trim().length >= 2 && celDigits.length >= 10 && !!result;
 
   const submit = () => {
     if (!canSubmit) return;
@@ -112,8 +126,6 @@ function BolaoSection() {
     localStorage.setItem('bib_palpites', JSON.stringify(upd));
     setPalpites(upd); setCode(c); setConfirmedResult(result); setDone(true);
   };
-
-  const reset = () => { setNome(''); setCelular(''); setResult(null); setScoreH(''); setScoreA(''); setDone(false); setCode(''); setConfirmedResult(null); };
 
   const card: React.CSSProperties = { background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 20, padding: '28px 24px' };
   const inp: React.CSSProperties = { width: 64, height: 58, borderRadius: 14, background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.18)', color: '#fff', fontSize: 28, fontWeight: 900, textAlign: 'center', outline: 'none' };
@@ -127,33 +139,61 @@ function BolaoSection() {
   return (
     <div style={{ maxWidth: 540, margin: '0 auto' }}>
       <AnimatePresence mode="wait">
-        {!done ? (
+
+        {/* ── Aguardando chave da Copa ── */}
+        {status === 'waiting-draw' && (
+          <motion.div key="waiting" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} style={{ ...card, textAlign: 'center' }}>
+            <div style={{ fontSize: 52, marginBottom: 14 }}>🔒</div>
+            <h3 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 30, color: '#fff', marginBottom: 8 }}>Bolão ainda fechado</h3>
+            <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 14, lineHeight: 1.65, maxWidth: 340, margin: '0 auto 20px' }}>
+              O bolão abre assim que a chave da Copa for sorteada e o adversário do Brasil for confirmado pela FIFA.
+            </p>
+            <div style={{ display: 'inline-block', padding: '10px 24px', borderRadius: 999, background: 'rgba(255,223,0,0.08)', border: '1px solid rgba(255,223,0,0.3)' }}>
+              <span style={{ color: '#FFDF00', fontWeight: 800, fontSize: 13 }}>⚽ {match.date} · {match.time}</span>
+            </div>
+          </motion.div>
+        )}
+
+        {/* ── Jogo em andamento — bolão fechado ── */}
+        {status === 'closed' && (
+          <motion.div key="closed" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} style={{ ...card, textAlign: 'center' }}>
+            <div style={{ fontSize: 52, marginBottom: 14 }}>⏱</div>
+            <h3 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 30, color: '#fff', marginBottom: 8 }}>Bolão Encerrado</h3>
+            <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 14, marginBottom: 6 }}>O jogo já começou — as apostas foram fechadas.</p>
+            <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: 12 }}>Fique de olho nos próximos jogos do Brasil! 🇧🇷</p>
+          </motion.div>
+        )}
+
+        {/* ── Celular já votou ── */}
+        {status === 'already-voted' && (
+          <motion.div key="voted" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} style={{ ...card, textAlign: 'center' }}>
+            <div style={{ fontSize: 52, marginBottom: 14 }}>✅</div>
+            <h3 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 30, color: '#fff', marginBottom: 8 }}>Palpite já registrado!</h3>
+            <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 14, marginBottom: 6 }}>Este celular já tem um palpite para este jogo.</p>
+            <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: 12 }}>Apenas um palpite por participante por jogo.</p>
+          </motion.div>
+        )}
+
+        {/* ── Formulário aberto ── */}
+        {status === 'open' && (
           <motion.div key="form" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
 
-            {/* ── Identificação ── */}
+            {/* Identificação */}
             <div style={{ ...card, marginBottom: 14 }}>
               <p style={{ fontSize: 10, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.35)', marginBottom: 14 }}>👤 Seus dados para participar</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <div>
                   <label style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em', textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>Nome completo *</label>
-                  <input
-                    type="text" placeholder="Seu nome" value={nome}
-                    onChange={e => setNome(e.target.value)} maxLength={50}
-                    style={textInp(nome.trim().length >= 2)}
-                  />
+                  <input type="text" placeholder="Seu nome" value={nome} onChange={e => setNome(e.target.value)} maxLength={50} style={textInp(nome.trim().length >= 2)} />
                 </div>
                 <div>
                   <label style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em', textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>Celular (WhatsApp) *</label>
-                  <input
-                    type="tel" placeholder="(11) 99999-9999" value={celular}
-                    onChange={e => setCelular(fmtCel(e.target.value))}
-                    style={textInp(celDigits.length >= 10)}
-                  />
+                  <input type="tel" placeholder="(11) 99999-9999" value={celular} onChange={e => setCelular(fmtCel(e.target.value))} style={textInp(celDigits.length >= 10)} />
                 </div>
               </div>
             </div>
 
-            {/* ── Jogo ── */}
+            {/* Jogo */}
             <div style={{ ...card, marginBottom: 14 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
                 <div style={{ textAlign: 'center', flex: 1 }}>
@@ -165,14 +205,14 @@ function BolaoSection() {
                   <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', fontWeight: 700 }}>{match.date}</div>
                 </div>
                 <div style={{ textAlign: 'center', flex: 1 }}>
-                  <div style={{ fontSize: 42 }}>❓</div>
-                  <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 22, color: '#fff', marginTop: 4 }}>A DEFINIR</div>
+                  <div style={{ fontSize: 38 }}>🌍</div>
+                  <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: match.away.length > 8 ? 16 : 22, color: '#fff', marginTop: 4 }}>{match.away.toUpperCase()}</div>
                 </div>
               </div>
               <div style={{ textAlign: 'center', fontSize: 11, color: 'rgba(255,255,255,0.3)', fontWeight: 600 }}>📍 {match.venue} · {match.time}</div>
             </div>
 
-            {/* ── Resultado ── */}
+            {/* Resultado */}
             <p style={{ fontSize: 10, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.35)', textAlign: 'center', marginBottom: 10 }}>Qual o resultado?</p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginBottom: 20 }}>
               {(['home', 'draw', 'away'] as Resultado[]).map(opt => (
@@ -188,7 +228,7 @@ function BolaoSection() {
               ))}
             </div>
 
-            {/* ── Placar ── */}
+            {/* Placar */}
             <p style={{ fontSize: 10, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.35)', textAlign: 'center', marginBottom: 10 }}>Placar exato — opcional (vale +250 pts!)</p>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, marginBottom: 24 }}>
               <input type="number" min={0} max={20} value={scoreH} onChange={e => setScoreH(e.target.value)} placeholder="0" style={inp} />
@@ -203,10 +243,13 @@ function BolaoSection() {
               color: canSubmit ? '#051505' : 'rgba(255,255,255,0.3)',
               boxShadow: canSubmit ? '0 8px 28px rgba(0,156,59,0.35)' : 'none',
             }}>
-              {!nome.trim() || !result ? 'Preencha nome, celular e resultado' : '⚽ Registrar Palpite'}
+              {canSubmit ? '⚽ Registrar Palpite' : 'Preencha nome, celular e resultado'}
             </button>
           </motion.div>
-        ) : (
+        )}
+
+        {/* ── Confirmação ── */}
+        {status === 'done' && (
           <motion.div key="ok" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} style={{ textAlign: 'center', ...card }}>
             <div style={{ fontSize: 56, marginBottom: 12 }}>✅</div>
             <h3 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 34, color: '#fff', marginBottom: 4 }}>Palpite Registrado!</h3>
@@ -216,13 +259,13 @@ function BolaoSection() {
               <p style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.15em', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', marginBottom: 4 }}>Código do Palpite</p>
               <p style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 38, color: '#FFDF00', letterSpacing: '0.08em' }}>#{code}</p>
             </div>
-            <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 12, marginBottom: 22 }}>Guarda este código — você vai precisar para resgatar seus pontos.</p>
-            <button onClick={reset} style={{ background: 'rgba(255,255,255,0.07)', color: '#fff', fontWeight: 700, padding: '11px 28px', borderRadius: 999, border: '1px solid rgba(255,255,255,0.15)', cursor: 'pointer', fontSize: 14 }}>+ Fazer outro palpite</button>
+            <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 12, marginBottom: 0 }}>Guarda este código — você vai precisar para resgatar seus pontos.</p>
           </motion.div>
         )}
+
       </AnimatePresence>
 
-      {palpites.length > 0 && (
+      {palpites.length > 0 && status !== 'done' && (
         <div style={{ marginTop: 20 }}>
           <p style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.25)', marginBottom: 8 }}>Seus palpites ({palpites.length})</p>
           {palpites.slice(0, 3).map(p => (
