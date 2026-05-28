@@ -22,34 +22,52 @@ export async function POST(req: NextRequest) {
 
     let imageUrl: string | undefined;
 
-    // Strategy 1: InstantID — single reference image, best face identity preservation
+    // ── STEP 1: Generate a perfect footballer portrait with flux text-to-image ──
+    let footballerBodyUrl: string | undefined;
     try {
-      const r = await (fal.subscribe as any)('fal-ai/instant-id', {
+      const r = await (fal.subscribe as any)('fal-ai/flux/dev', {
         input: {
-          face_image_url: faceUrl,
           prompt,
-          negative_prompt: 'ugly, blurry, cartoon, painting, distorted face, different person, low quality, extra limbs',
-          num_inference_steps: 30,
-          guidance_scale: 5,
-          ip_adapter_scale: 0.8,
-          controlnet_conditioning_scale: 0.8,
+          negative_prompt: 'ugly, blurry, distorted, cartoon, extra limbs, watermark, text, logo, deformed face',
+          num_inference_steps: 28,
+          guidance_scale: 3.5,
+          num_images: 1,
+          image_size: 'portrait_4_3',
+          enable_safety_checker: true,
         },
         pollInterval: 3000,
       });
-      imageUrl = r?.data?.images?.[0]?.url ?? r?.images?.[0]?.url;
-      console.log('[instant-id]', imageUrl ? 'ok' : 'no image');
+      footballerBodyUrl = r?.data?.images?.[0]?.url ?? r?.images?.[0]?.url;
+      console.log('[flux-t2i]', footballerBodyUrl ? 'ok' : 'no image');
     } catch (e) {
-      console.error('[instant-id] failed:', String(e).slice(0, 200));
+      console.error('[flux-t2i] failed:', String(e).slice(0, 200));
     }
 
-    // Strategy 2: flux img2img very low strength — keeps ~75% of original, preserves face
+    // ── STEP 2: Swap the user's real face onto the generated footballer body ──
+    if (footballerBodyUrl) {
+      try {
+        const r = await (fal.subscribe as any)('fal-ai/face-swap', {
+          input: {
+            base_image_url: footballerBodyUrl,
+            face_image_url: faceUrl,
+          },
+          pollInterval: 3000,
+        });
+        imageUrl = r?.data?.image?.url ?? r?.data?.images?.[0]?.url ?? r?.image?.url ?? r?.images?.[0]?.url;
+        console.log('[face-swap]', imageUrl ? 'ok' : 'no image');
+      } catch (e) {
+        console.error('[face-swap] failed:', String(e).slice(0, 200));
+      }
+    }
+
+    // ── FALLBACK: flux img2img at very low strength (keeps ~80% of original) ──
     if (!imageUrl) {
       try {
         const r = await (fal.subscribe as any)('fal-ai/flux/dev/image-to-image', {
           input: {
             image_url: faceUrl,
             prompt,
-            strength: 0.25,
+            strength: 0.20,
             num_inference_steps: 28,
             guidance_scale: 3.5,
             num_images: 1,
@@ -58,9 +76,9 @@ export async function POST(req: NextRequest) {
           pollInterval: 3000,
         });
         imageUrl = r?.data?.images?.[0]?.url ?? r?.images?.[0]?.url;
-        console.log('[flux-img2img]', imageUrl ? 'ok' : 'no image');
+        console.log('[flux-img2img-fallback]', imageUrl ? 'ok' : 'no image');
       } catch (e) {
-        console.error('[flux-img2img] failed:', String(e).slice(0, 200));
+        console.error('[flux-img2img-fallback] failed:', String(e).slice(0, 200));
       }
     }
 

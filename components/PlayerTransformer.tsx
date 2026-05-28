@@ -421,7 +421,7 @@ export default function PlayerTransformer(){
   const runTransform=async(t:Team)=>{
     setStage('loading');
     // Prompt explicitly requests front-facing portrait to avoid "from behind" issue
-    const prompt=`front-facing portrait headshot of a person wearing ${t.jersey}, looking directly at the camera, neutral or confident expression, stadium crowd in background, FIFA World Cup 2026, bright professional sports photography lighting, sharp face detail, photorealistic, head and shoulders shot`;
+    const prompt=`professional male soccer player wearing ${t.jersey}, confident heroic pose, looking directly at camera, strong jaw, athletic build, head and shoulders portrait, blurred stadium crowd background with lights, FIFA World Cup 2026 official player card photo, cinematic sports photography, sharp focus, dramatic lighting, photorealistic, 8k quality`;
     try{
       const res=await fetch('/api/fal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({imageDataUrl:dataUrlRef.current,prompt})});
       const data=await res.json() as {imageUrl?:string;error?:string};
