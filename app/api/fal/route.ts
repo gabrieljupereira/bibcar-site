@@ -22,33 +22,34 @@ export async function POST(req: NextRequest) {
 
     let imageUrl: string | undefined;
 
-    // Strategy 1: photomaker — preserves face identity best
+    // Try photomaker first (best face identity preservation)
     try {
       const r = await (fal.subscribe as any)('fal-ai/photomaker', {
         input: {
           image_archive_url: faceUrl,
-          prompt: `img ${prompt}, photorealistic, professional sports photography, sharp focus`,
+          // photomaker requires "img" trigger word in prompt
+          prompt: `img person ${prompt}`,
           style_name: 'Photographic (Default)',
           num_steps: 30,
-          style_strength_ratio: 20,
+          style_strength_ratio: 15,
           num_images: 1,
         },
         pollInterval: 3000,
       });
       imageUrl = r?.data?.images?.[0]?.url ?? r?.images?.[0]?.url;
-      console.log('[fal/photomaker] imageUrl:', imageUrl);
-    } catch (e1) {
-      console.error('[fal/photomaker] failed:', String(e1));
+      console.log('[photomaker]', imageUrl ? 'ok' : 'no image');
+    } catch (e) {
+      console.error('[photomaker] failed:', String(e).slice(0, 200));
     }
 
-    // Strategy 2: flux img2img at low strength (0.55 keeps face mostly intact)
+    // Fallback: flux img2img low strength preserves face better
     if (!imageUrl) {
       try {
         const r = await (fal.subscribe as any)('fal-ai/flux/dev/image-to-image', {
           input: {
             image_url: faceUrl,
-            prompt: `${prompt}, photorealistic, professional sports photography, sharp focus, same face`,
-            strength: 0.55,
+            prompt,
+            strength: 0.52,
             num_inference_steps: 28,
             guidance_scale: 3.5,
             num_images: 1,
@@ -57,9 +58,9 @@ export async function POST(req: NextRequest) {
           pollInterval: 3000,
         });
         imageUrl = r?.data?.images?.[0]?.url ?? r?.images?.[0]?.url;
-        console.log('[fal/flux-img2img] imageUrl:', imageUrl);
-      } catch (e2) {
-        console.error('[fal/flux-img2img] failed:', String(e2));
+        console.log('[flux-img2img]', imageUrl ? 'ok' : 'no image');
+      } catch (e) {
+        console.error('[flux-img2img] failed:', String(e).slice(0, 200));
       }
     }
 
