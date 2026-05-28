@@ -22,34 +22,34 @@ export async function POST(req: NextRequest) {
 
     let imageUrl: string | undefined;
 
-    // Try photomaker first (best face identity preservation)
+    // Strategy 1: InstantID — single reference image, best face identity preservation
     try {
-      const r = await (fal.subscribe as any)('fal-ai/photomaker', {
+      const r = await (fal.subscribe as any)('fal-ai/instant-id', {
         input: {
-          image_archive_url: faceUrl,
-          // photomaker requires "img" trigger word in prompt
-          prompt: `img person ${prompt}`,
-          style_name: 'Photographic (Default)',
-          num_steps: 30,
-          style_strength_ratio: 15,
-          num_images: 1,
+          face_image_url: faceUrl,
+          prompt,
+          negative_prompt: 'ugly, blurry, cartoon, painting, distorted face, different person, low quality, extra limbs',
+          num_inference_steps: 30,
+          guidance_scale: 5,
+          ip_adapter_scale: 0.8,
+          controlnet_conditioning_scale: 0.8,
         },
         pollInterval: 3000,
       });
       imageUrl = r?.data?.images?.[0]?.url ?? r?.images?.[0]?.url;
-      console.log('[photomaker]', imageUrl ? 'ok' : 'no image');
+      console.log('[instant-id]', imageUrl ? 'ok' : 'no image');
     } catch (e) {
-      console.error('[photomaker] failed:', String(e).slice(0, 200));
+      console.error('[instant-id] failed:', String(e).slice(0, 200));
     }
 
-    // Fallback: flux img2img low strength preserves face better
+    // Strategy 2: flux img2img very low strength — keeps ~75% of original, preserves face
     if (!imageUrl) {
       try {
         const r = await (fal.subscribe as any)('fal-ai/flux/dev/image-to-image', {
           input: {
             image_url: faceUrl,
             prompt,
-            strength: 0.52,
+            strength: 0.25,
             num_inference_steps: 28,
             guidance_scale: 3.5,
             num_images: 1,
