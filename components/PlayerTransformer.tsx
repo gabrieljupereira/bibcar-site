@@ -44,63 +44,9 @@ function resizeImage(file:File,maxSize=1024):Promise<string>{
 function loadImg(src:string):Promise<HTMLImageElement>{
   return new Promise((res,rej)=>{
     const img=new window.Image();
-    // dataUrls don't need crossOrigin (avoids taint issues)
     if(!src.startsWith('data:')) img.crossOrigin='anonymous';
     img.onload=()=>res(img); img.onerror=rej; img.src=src;
   });
-}
-// Blend user's real face (from original photo) onto the AI-generated footballer body
-async function blendFaceOnBody(bodyProxyUrl:string, userDataUrl:string):Promise<string|null>{
-  try{
-    const [bodyImg,userImg]=await Promise.all([loadImg(bodyProxyUrl),loadImg(userDataUrl)]);
-    const W=bodyImg.naturalWidth, H=bodyImg.naturalHeight;
-
-    // portrait_4_3 = 768×1024. Head centre ~22% from top.
-    const fx=W*0.50, fy=H*0.220;
-    // Face target: ~36% of body image width (≈276px on 768px canvas)
-    const faceW=W*0.36, faceH=faceW*1.22;
-    const rx=faceW/2, ry=faceH/2;
-
-    // Crop just the face from user selfie: top-centre, 48% height
-    // (captures forehead→chin, avoids torso/background at bottom)
-    const cropH=Math.round(userImg.naturalHeight*0.48);
-    const cropW=Math.min(userImg.naturalWidth, cropH);
-    const cropX=Math.round((userImg.naturalWidth-cropW)/2);
-
-    // ── Build face layer ──
-    const fc=document.createElement('canvas'); fc.width=W; fc.height=H;
-    const fCtx=fc.getContext('2d')!;
-    // Clip to oval slightly larger than target so we don't lose ear/hairline
-    fCtx.save();
-    fCtx.beginPath();
-    fCtx.ellipse(fx, fy, rx*1.12, ry*1.12, 0, 0, Math.PI*2);
-    fCtx.clip();
-    // Draw: align top of crop (forehead) with top of ellipse
-    fCtx.drawImage(
-      userImg, cropX, 0, cropW, cropH,
-      fx - rx*1.12, fy - ry*1.12, rx*2.24, ry*2.24
-    );
-    fCtx.restore();
-
-    // Feather: wide solid core, only the outer 25% fades
-    fCtx.globalCompositeOperation='destination-in';
-    const g=fCtx.createRadialGradient(fx, fy, rx*0.55, fx, fy, rx*1.10);
-    g.addColorStop(0,   'rgba(0,0,0,1)');
-    g.addColorStop(0.60,'rgba(0,0,0,1)');
-    g.addColorStop(0.80,'rgba(0,0,0,0.80)');
-    g.addColorStop(0.93,'rgba(0,0,0,0.30)');
-    g.addColorStop(1,   'rgba(0,0,0,0)');
-    fCtx.fillStyle=g; fCtx.fillRect(0,0,W,H);
-
-    // ── Composite: footballer body + blended face ──
-    const mc=document.createElement('canvas'); mc.width=W; mc.height=H;
-    const ctx=mc.getContext('2d')!;
-    ctx.drawImage(bodyImg,0,0,W,H);
-    ctx.drawImage(fc,0,0,W,H);
-    return mc.toDataURL('image/jpeg',0.93);
-  }catch(e){
-    console.warn('[blendFaceOnBody]',e); return null;
-  }
 }
 function rrect(ctx:CanvasRenderingContext2D,x:number,y:number,w:number,h:number,r:number){
   ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.arc(x+w-r,y+r,r,-Math.PI/2,0);
@@ -266,10 +212,7 @@ async function generateStoryBlob(
   canvas.width=W; canvas.height=H;
   const ctx=canvas.getContext('2d')!;
 
-  // blended results are dataUrls (no proxy needed); raw AI URLs need the proxy
-  const playerSrc=resultUrl.startsWith('data:')
-    ? resultUrl
-    : `/api/fal/proxy-image?url=${encodeURIComponent(resultUrl)}`;
+  const playerSrc=`/api/fal/proxy-image?url=${encodeURIComponent(resultUrl)}`;
   const [playerImg,logoImg]=await Promise.all([loadImg(playerSrc),loadImg('/logo.png')]);
 
   const [f1,f2,f3]=team.foil;
@@ -482,18 +425,17 @@ export default function PlayerTransformer(){
 
   const runTransform=async(t:Team)=>{
     setStage('loading');
-    // Prompt: explicit face position + frontal lighting helps the canvas face-blend look natural
-    const prompt=`head and shoulders portrait of a professional soccer player wearing ${t.jersey}, face centered in upper portion of frame, looking directly at camera, confident expression, soft frontal studio lighting on face, blurred stadium crowd bokeh background, FIFA World Cup 2026, photorealistic sports portrait, sharp focus, 8k`;
+    // PuLID generates the footballer WITH the user's real face — server-side, no canvas
+    const prompt=`head and shoulders portrait of a professional soccer player wearing ${t.jersey}, looking directly at camera, confident athletic expression, blurred stadium crowd bokeh background, FIFA World Cup 2026, photorealistic, sharp focus, 8k`;
     try{
-      // Server does pure text-to-image (flux/dev) — always works, no face reference needed
-      const res=await fetch('/api/fal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})});
+      const res=await fetch('/api/fal',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({ prompt, userImageDataUrl: dataUrlRef.current }),
+      });
       const data=await res.json() as {imageUrl?:string;error?:string};
       if(!res.ok||!data.imageUrl) throw new Error(data.error??'Erro desconhecido');
-
-      // Client-side: blend the user's real face onto the AI footballer body
-      const proxyBodyUrl=`/api/fal/proxy-image?url=${encodeURIComponent(data.imageUrl)}`;
-      const blended=await blendFaceOnBody(proxyBodyUrl,dataUrlRef.current);
-      setResultUrl(blended??data.imageUrl); // fallback: show raw AI footballer if blend fails
+      setResultUrl(data.imageUrl);
       setStage('result');
     }catch(e){ setErrorMsg(String(e)); setStage('error'); }
   };

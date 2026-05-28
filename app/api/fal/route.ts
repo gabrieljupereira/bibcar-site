@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { fal } from '@fal-ai/client';
 
 export const runtime = 'nodejs';
-export const maxDuration = 60;
+export const maxDuration = 120;
 
 export async function POST(req: NextRequest) {
   const FAL_KEY = process.env.FAL_KEY;
@@ -12,15 +12,48 @@ export async function POST(req: NextRequest) {
   fal.config({ credentials: FAL_KEY });
 
   try {
-    const body = await req.json() as { prompt?: string };
-    const { prompt } = body;
+    const body = await req.json() as { prompt?: string; userImageDataUrl?: string };
+    const { prompt, userImageDataUrl } = body;
     if (!prompt) return NextResponse.json({ error: 'Missing prompt' }, { status: 400 });
 
-    // Pure text-to-image: generates a perfect professional footballer, always works
+    // ── PuLID: face-consistent generation (user photo provided) ──
+    if (userImageDataUrl) {
+      // Convert base64 dataUrl to Blob and upload to fal.ai CDN
+      const base64 = userImageDataUrl.replace(/^data:image\/\w+;base64,/, '');
+      const mimeMatch = userImageDataUrl.match(/^data:(image\/\w+);base64,/);
+      const mimeType = (mimeMatch?.[1] ?? 'image/jpeg') as string;
+      const buffer = Buffer.from(base64, 'base64');
+      const blob = new Blob([buffer], { type: mimeType });
+
+      const faceUrl = await (fal.storage as any).upload(blob);
+      console.log('[pulid] face uploaded:', faceUrl);
+
+      const r = await (fal.subscribe as any)('fal-ai/flux-pulid', {
+        input: {
+          prompt,
+          reference_image_url: faceUrl,
+          image_size: 'portrait_4_3',
+          num_inference_steps: 28,
+          guidance_scale: 4,
+          id_weight: 1.2,
+          negative_prompt: 'ugly, blurry, distorted, cartoon, extra limbs, bad anatomy, watermark, text, low quality, different person, face change',
+          enable_safety_checker: true,
+        },
+        pollInterval: 3000,
+      });
+
+      const imageUrl: string | undefined = r?.data?.images?.[0]?.url ?? r?.images?.[0]?.url;
+      console.log('[pulid]', imageUrl ? 'ok' : 'no image');
+
+      if (!imageUrl) return NextResponse.json({ error: 'No image from flux-pulid' }, { status: 502 });
+      return NextResponse.json({ imageUrl });
+    }
+
+    // ── Fallback: pure text-to-image (no face reference) ──
     const r = await (fal.subscribe as any)('fal-ai/flux/dev', {
       input: {
         prompt,
-        negative_prompt: 'ugly, blurry, distorted, cartoon, extra limbs, bad anatomy, watermark, text, amateur, low quality',
+        negative_prompt: 'ugly, blurry, distorted, cartoon, extra limbs, bad anatomy, watermark, text, low quality',
         num_inference_steps: 28,
         guidance_scale: 3.5,
         num_images: 1,
