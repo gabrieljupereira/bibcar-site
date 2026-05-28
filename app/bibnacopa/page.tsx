@@ -4,10 +4,11 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ScrollReveal from '@/components/ScrollReveal';
 import FloatingOrbs from '@/components/FloatingOrbs';
+import PlayerTransformer from '@/components/PlayerTransformer';
 
 const heroItem = {
   hidden: { opacity: 0, y: 32 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] } },
 };
 
 /* ─── floating football SVGs ─────────────────────────── */
@@ -360,6 +361,14 @@ export default function BibNaCopa() {
               </ScrollReveal>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ══ IA JOGADOR ═══════════════════════════════════════════════════ */}
+      <section style={{ background: 'linear-gradient(150deg,#020d02 0%,#051505 60%,#020810 100%)', position: 'relative', overflow: 'hidden' }}>
+        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 60% 50%,rgba(0,156,59,0.15),transparent 60%),radial-gradient(ellipse at 20% 30%,rgba(255,223,0,0.08),transparent 50%)', pointerEvents: 'none' }} />
+        <div className="container relative" style={{ zIndex: 2 }}>
+          <PlayerTransformer />
         </div>
       </section>
 
