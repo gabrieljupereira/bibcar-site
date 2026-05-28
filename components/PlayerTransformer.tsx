@@ -41,13 +41,12 @@ function resizeImage(file:File,maxSize=1024):Promise<string>{
     img.onerror=rej; img.src=url;
   });
 }
-// Crop to face area: top-center square of the image (removes body/background)
+// Crop tight to face: top 50% of height, centered — just face and neck, no body/background
 function cropFaceArea(dataUrl:string):Promise<string>{
   return new Promise((res,rej)=>{
     const img=new window.Image();
     img.onload=()=>{
-      // Take square from top-center — face is in top portion for most portrait/selfie photos
-      const side=Math.min(img.width,Math.round(img.height*0.75));
+      const side=Math.min(img.width,Math.round(img.height*0.50));
       const x=Math.round((img.width-side)/2);
       const c=document.createElement('canvas');
       c.width=512; c.height=512;

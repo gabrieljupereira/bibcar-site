@@ -18,42 +18,42 @@ export async function POST(req: NextRequest) {
 
     const b64 = imageDataUrl.replace(/^data:image\/\w+;base64,/, '');
     const mime = imageDataUrl.match(/^data:(image\/\w+);base64,/)?.[1] ?? 'image/jpeg';
-    // imageDataUrl is already a face crop (512x512, top-center of original photo)
+    // Input is a 512x512 face-only crop (top-center of the original photo)
     const faceUrl = await fal.storage.upload(new Blob([Buffer.from(b64, 'base64')], { type: mime }));
 
     let imageUrl: string | undefined;
 
-    // ── STRATEGY 1: PuLID — identity-preserving generation on Flux Dev ──
-    // Best face consistency model, generates a new image while keeping the face
+    // ── STRATEGY 1: flux img2img at 0.70 on face crop ──
+    // At this strength the model replaces background/clothes with the football scene
+    // while keeping ~30% of the original face structure — enough to look like the person
     try {
-      const r = await (fal.subscribe as any)('fal-ai/pulid', {
+      const r = await (fal.subscribe as any)('fal-ai/flux/dev/image-to-image', {
         input: {
+          image_url: faceUrl,
           prompt,
-          reference_images: [{ image_url: faceUrl }],
-          negative_prompt: 'ugly, blurry, distorted face, cartoon, watermark, extra limbs, deformed',
-          num_inference_steps: 20,
-          guidance_scale: 3.5,
-          true_cfg: 1.0,
-          id_scale: 1.0,
+          negative_prompt: 'ugly, blurry, distorted, cartoon, extra limbs, bad anatomy, office, indoor, suit, blazer, tie, civilian clothes',
+          strength: 0.70,
+          num_inference_steps: 35,
+          guidance_scale: 4.0,
           num_images: 1,
+          enable_safety_checker: true,
         },
         pollInterval: 3000,
       });
       imageUrl = r?.data?.images?.[0]?.url ?? r?.images?.[0]?.url;
-      console.log('[pulid]', imageUrl ? 'ok' : 'no image');
+      console.log('[flux-0.70]', imageUrl ? 'ok' : 'no image');
     } catch (e) {
-      console.error('[pulid] failed:', String(e).slice(0, 200));
+      console.error('[flux-0.70] failed:', String(e).slice(0, 200));
     }
 
-    // ── STRATEGY 2: InstantID — face identity via IP-Adapter + ControlNet ──
-    // Proven to return recognizable face; tuned for minimal distortion
+    // ── STRATEGY 2: InstantID — face features via IP-Adapter, generates new scene ──
     if (!imageUrl) {
       try {
         const r = await (fal.subscribe as any)('fal-ai/instant-id', {
           input: {
             face_image_url: faceUrl,
             prompt,
-            negative_prompt: 'ugly, blurry, cartoon, painting, distorted face, deformed, artifacts, bad anatomy, extra limbs',
+            negative_prompt: 'ugly, blurry, cartoon, distorted face, deformed, artifacts, office, blazer, indoor',
             num_inference_steps: 50,
             guidance_scale: 3.5,
             ip_adapter_scale: 0.8,
@@ -68,14 +68,14 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // ── STRATEGY 3: flux img2img moderate strength on face crop ──
+    // ── STRATEGY 3: flux img2img 0.55 fallback ──
     if (!imageUrl) {
       try {
         const r = await (fal.subscribe as any)('fal-ai/flux/dev/image-to-image', {
           input: {
             image_url: faceUrl,
             prompt,
-            strength: 0.45,
+            strength: 0.55,
             num_inference_steps: 28,
             guidance_scale: 3.5,
             num_images: 1,
@@ -84,9 +84,9 @@ export async function POST(req: NextRequest) {
           pollInterval: 3000,
         });
         imageUrl = r?.data?.images?.[0]?.url ?? r?.images?.[0]?.url;
-        console.log('[flux-img2img]', imageUrl ? 'ok' : 'no image');
+        console.log('[flux-0.55]', imageUrl ? 'ok' : 'no image');
       } catch (e) {
-        console.error('[flux-img2img] failed:', String(e).slice(0, 200));
+        console.error('[flux-0.55] failed:', String(e).slice(0, 200));
       }
     }
 
