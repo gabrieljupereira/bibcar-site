@@ -143,7 +143,7 @@ function FigurinhaCard({imageUrl,team,name,posIdx,jerseyNum,bday,height,weight,o
           zIndex:2,
         }}>
           <Image src={imageUrl} alt="Player" fill unoptimized
-            style={{objectFit:'cover',objectPosition:'center 5%'}}
+            style={{objectFit:'cover',objectPosition:'center top'}}
           />
           {/* subtle bottom fade into white */}
           <div style={{
@@ -301,9 +301,11 @@ async function generateStoryBlob(
   ctx.font='bold 20px Arial'; ctx.fillStyle='rgba(255,255,255,0.75)';
   ctx.fillText(team.abbr,cX+cW-14,cY+68);
 
-  // player photo
+  // player photo — crop from top of image (shows face+upper body of full-body shot)
   const pY=cY+topH, pH=cH-topH-botH;
-  ctx.drawImage(playerImg,cX,pY,cW,pH);
+  const srcH=Math.round(playerImg.naturalHeight*(cW/playerImg.naturalWidth));
+  const srcCropH=Math.min(playerImg.naturalHeight,Math.round(playerImg.naturalHeight*(pH/srcH)));
+  ctx.drawImage(playerImg,0,0,playerImg.naturalWidth,srcCropH,cX,pY,cW,pH);
 
   // fade into white
   const fade=ctx.createLinearGradient(0,pY+pH-120,0,pY+pH);
@@ -435,7 +437,7 @@ export default function PlayerTransformer(){
 
   const runTransform=async(t:Team)=>{
     setStage('loading');
-    const prompt=`professional soccer player wearing ${t.jersey}, head and shoulders portrait, looking directly at camera, confident athletic expression, blurred stadium crowd with lights in background, FIFA World Cup 2026 official player card, cinematic sports photography, sharp face, photorealistic`;
+    const prompt=`full body professional soccer player wearing ${t.jersey}, dynamic action pose on green grass football pitch, FIFA World Cup 2026, stadium with crowd, dramatic sports photography, sharp focus, photorealistic, high quality, 8k`;
     try{
       // Crop to face area before sending — removes background/clothing context that confuses AI
       const faceCrop=await cropFaceArea(dataUrlRef.current);

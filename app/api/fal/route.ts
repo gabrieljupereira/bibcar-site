@@ -31,8 +31,8 @@ export async function POST(req: NextRequest) {
         input: {
           image_url: faceUrl,
           prompt,
-          negative_prompt: 'ugly, blurry, distorted, cartoon, extra limbs, bad anatomy, office, indoor, suit, blazer, tie, civilian clothes',
-          strength: 0.70,
+          negative_prompt: 'ugly, blurry, distorted, cartoon, bad anatomy, office, indoor, suit, blazer, civilian clothes, close-up, portrait only, cropped face',
+          strength: 0.72,
           num_inference_steps: 35,
           guidance_scale: 4.0,
           num_images: 1,
