@@ -5,11 +5,12 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
-const links = [
+const links: { href: string; label: string; copa?: boolean }[] = [
   { href: '/passageiro', label: 'Passageiro' },
   { href: '/motorista', label: 'Motorista' },
   { href: '/franqueado', label: 'Franqueado' },
   { href: '/#delas', label: 'Bib Delas' },
+  { href: '/bibnacopa', label: '⚽ BibNaCopa', copa: true },
 ];
 
 const accentColor: Record<string, string> = {
@@ -42,6 +43,26 @@ export default function Nav() {
         <div className="hidden md:flex items-center gap-8">
           {links.map((link) => {
             const isActive = pathname === link.href;
+            if (link.copa) {
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="transition-all duration-200 rounded-full px-4 py-1.5 font-black text-xs uppercase tracking-widest"
+                  style={{
+                    background: isActive
+                      ? 'linear-gradient(135deg,#009C3B,#FFDF00)'
+                      : 'linear-gradient(135deg,rgba(0,156,59,0.25),rgba(255,223,0,0.15))',
+                    border: '1.5px solid rgba(255,223,0,0.5)',
+                    color: isActive ? '#1a0f00' : '#FFDF00',
+                    letterSpacing: '0.06em',
+                    boxShadow: '0 2px 12px rgba(255,223,0,0.2)',
+                  }}
+                >
+                  {link.label}
+                </Link>
+              );
+            }
             return (
               <Link
                 key={link.href}

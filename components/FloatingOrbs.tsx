@@ -1,4 +1,4 @@
-export type OrbVariant = 'home' | 'passageiro' | 'motorista' | 'franqueado';
+export type OrbVariant = 'home' | 'passageiro' | 'motorista' | 'franqueado' | 'copa';
 
 interface OrbDef {
   color: string;
@@ -28,6 +28,12 @@ const ORBS: Record<OrbVariant, OrbDef[]> = {
     { color: '#FF9500', glow: 'rgba(255,149,0,0.45)', size: 340, x: 88, y: 72, duration: 9, delay: -3 },
     { color: '#FFB627', glow: 'rgba(255,182,39,0.35)', size: 220, x: 60, y: 12, duration: 8, delay: -5 },
     { color: '#FFD23F', glow: 'rgba(255,210,63,0.25)', size: 160, x: 70, y: 85, duration: 11, delay: -2 },
+  ],
+  copa: [
+    { color: '#009C3B', glow: 'rgba(0,156,59,0.65)', size: 560, x: 82, y: 26, duration: 7, delay: 0 },
+    { color: '#FFDF00', glow: 'rgba(255,223,0,0.55)', size: 380, x: 90, y: 74, duration: 9, delay: -3 },
+    { color: '#009C3B', glow: 'rgba(0,156,59,0.4)', size: 260, x: 60, y: 10, duration: 8, delay: -5 },
+    { color: '#002776', glow: 'rgba(0,39,118,0.45)', size: 200, x: 72, y: 88, duration: 11, delay: -2 },
   ],
   franqueado: [
     { color: '#FFD23F', glow: 'rgba(255,210,63,0.5)', size: 460, x: 76, y: 28, duration: 7, delay: 0 },
