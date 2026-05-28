@@ -55,15 +55,15 @@ async function blendFaceOnBody(bodyProxyUrl:string, userDataUrl:string):Promise<
     const [bodyImg,userImg]=await Promise.all([loadImg(bodyProxyUrl),loadImg(userDataUrl)]);
     const W=bodyImg.naturalWidth, H=bodyImg.naturalHeight;
 
-    // portrait_4_3 = 768×1024. Head centre is ~23% from top in a head-and-shoulders shot.
-    const fx=W*0.50, fy=H*0.235;
-    // Face target: ~34% of body image width (≈261px on 768px canvas)
-    const faceW=W*0.34, faceH=faceW*1.25; // face is taller than wide
-    const rx=faceW/2, ry=faceH/2;         // half-axes of the face oval
+    // portrait_4_3 = 768×1024. Head centre ~22% from top.
+    const fx=W*0.50, fy=H*0.220;
+    // Face target: ~36% of body image width (≈276px on 768px canvas)
+    const faceW=W*0.36, faceH=faceW*1.22;
+    const rx=faceW/2, ry=faceH/2;
 
-    // Crop just the face from the user selfie: top-centre square
-    // (covers forehead→chin without taking torso)
-    const cropH=Math.round(userImg.naturalHeight*0.56);
+    // Crop just the face from user selfie: top-centre, 48% height
+    // (captures forehead→chin, avoids torso/background at bottom)
+    const cropH=Math.round(userImg.naturalHeight*0.48);
     const cropW=Math.min(userImg.naturalWidth, cropH);
     const cropX=Math.round((userImg.naturalWidth-cropW)/2);
 
@@ -82,14 +82,14 @@ async function blendFaceOnBody(bodyProxyUrl:string, userDataUrl:string):Promise<
     );
     fCtx.restore();
 
-    // Feather edges: solid core, soft wide fade
+    // Feather: wide solid core, only the outer 25% fades
     fCtx.globalCompositeOperation='destination-in';
-    const g=fCtx.createRadialGradient(fx, fy, rx*0.30, fx, fy, rx*1.08);
-    g.addColorStop(0,  'rgba(0,0,0,1)');
-    g.addColorStop(0.42,'rgba(0,0,0,1)');
-    g.addColorStop(0.70,'rgba(0,0,0,0.85)');
-    g.addColorStop(0.90,'rgba(0,0,0,0.35)');
-    g.addColorStop(1,  'rgba(0,0,0,0)');
+    const g=fCtx.createRadialGradient(fx, fy, rx*0.55, fx, fy, rx*1.10);
+    g.addColorStop(0,   'rgba(0,0,0,1)');
+    g.addColorStop(0.60,'rgba(0,0,0,1)');
+    g.addColorStop(0.80,'rgba(0,0,0,0.80)');
+    g.addColorStop(0.93,'rgba(0,0,0,0.30)');
+    g.addColorStop(1,   'rgba(0,0,0,0)');
     fCtx.fillStyle=g; fCtx.fillRect(0,0,W,H);
 
     // ── Composite: footballer body + blended face ──
