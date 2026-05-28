@@ -22,41 +22,48 @@ export async function POST(req: NextRequest) {
 
     let imageUrl: string | undefined;
 
-    // Try ip-adapter-face-id first (best face preservation)
+    // Strategy 1: photomaker — preserves face identity best
     try {
-      const r = await (fal.subscribe as any)('fal-ai/ip-adapter-face-id', {
+      const r = await (fal.subscribe as any)('fal-ai/photomaker', {
         input: {
-          face_image_url: faceUrl,
-          prompt: `${prompt}, photorealistic, professional sports photography, sharp focus, 8k`,
-          negative_prompt: 'cartoon, anime, blurry, low quality, deformed, different person, changed face',
-          num_inference_steps: 30,
-          guidance_scale: 5,
-          ip_adapter_scale: 0.85,
+          image_archive_url: faceUrl,
+          prompt: `img ${prompt}, photorealistic, professional sports photography, sharp focus`,
+          style_name: 'Photographic (Default)',
+          num_steps: 30,
+          style_strength_ratio: 20,
           num_images: 1,
-          enable_safety_checker: true,
         },
         pollInterval: 3000,
       });
-      imageUrl = r?.data?.images?.[0]?.url;
-    } catch {
-      // Fallback: flux img2img at low strength keeps face more intact
-      const r2 = await (fal.subscribe as any)('fal-ai/flux/dev/image-to-image', {
-        input: {
-          image_url: faceUrl,
-          prompt: `${prompt}, photorealistic, professional sports photography, sharp focus, same person same face`,
-          negative_prompt: 'different face, cartoon, anime, blurry, low quality',
-          strength: 0.55,
-          num_inference_steps: 28,
-          guidance_scale: 3.5,
-          num_images: 1,
-          enable_safety_checker: true,
-        },
-        pollInterval: 3000,
-      });
-      imageUrl = r2?.data?.images?.[0]?.url;
+      imageUrl = r?.data?.images?.[0]?.url ?? r?.images?.[0]?.url;
+      console.log('[fal/photomaker] imageUrl:', imageUrl);
+    } catch (e1) {
+      console.error('[fal/photomaker] failed:', String(e1));
     }
 
-    if (!imageUrl) return NextResponse.json({ error: 'No image returned' }, { status: 502 });
+    // Strategy 2: flux img2img at low strength (0.55 keeps face mostly intact)
+    if (!imageUrl) {
+      try {
+        const r = await (fal.subscribe as any)('fal-ai/flux/dev/image-to-image', {
+          input: {
+            image_url: faceUrl,
+            prompt: `${prompt}, photorealistic, professional sports photography, sharp focus, same face`,
+            strength: 0.55,
+            num_inference_steps: 28,
+            guidance_scale: 3.5,
+            num_images: 1,
+            enable_safety_checker: true,
+          },
+          pollInterval: 3000,
+        });
+        imageUrl = r?.data?.images?.[0]?.url ?? r?.images?.[0]?.url;
+        console.log('[fal/flux-img2img] imageUrl:', imageUrl);
+      } catch (e2) {
+        console.error('[fal/flux-img2img] failed:', String(e2));
+      }
+    }
+
+    if (!imageUrl) return NextResponse.json({ error: 'No image returned from fal.ai' }, { status: 502 });
     return NextResponse.json({ imageUrl });
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : String(e);
