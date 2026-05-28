@@ -2,8 +2,14 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import ScrollReveal from '@/components/ScrollReveal';
 import FloatingOrbs from '@/components/FloatingOrbs';
+
+const heroItem = {
+  hidden: { opacity: 0, y: 28 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] } },
+};
 
 const steps = [
   { num: '01', icon: '📱', title: 'Baixe o app', desc: 'Disponível no iOS e Android. Grátis, rápido, sem complicação. Cadastre-se em menos de 2 minutos.' },
@@ -46,32 +52,38 @@ function FAQItem({ item, index }: { item: { q: string; a: string }; index: numbe
   return (
     <div style={{ borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
       <button
-        className="w-full flex items-center justify-between py-5 text-left gap-4 hover:text-purple-elec transition-colors"
+        className="w-full flex items-center justify-between py-5 text-left gap-4"
         onClick={() => setOpen(!open)}
         style={{ color: open ? '#C13EFF' : '#100D24' }}
       >
         <span className="font-semibold" style={{ fontSize: 16 }}>{item.q}</span>
-        <span
-          className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-lg font-bold transition-all"
+        <motion.span
+          animate={{ rotate: open ? 45 : 0 }}
+          transition={{ duration: 0.2 }}
+          className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-lg font-bold"
           style={{
             background: open ? 'rgba(193,62,255,0.15)' : 'rgba(0,0,0,0.05)',
             color: open ? '#C13EFF' : '#64748B',
-            transform: open ? 'rotate(45deg)' : 'none',
+            display: 'inline-flex',
           }}
         >
           +
-        </span>
+        </motion.span>
       </button>
-      <div
-        className="overflow-hidden"
-        style={{
-          maxHeight: open ? '300px' : '0',
-          opacity: open ? 1 : 0,
-          transition: 'max-height 0.3s ease, opacity 0.3s ease',
-        }}
-      >
-        <p className="text-silver pb-5 leading-relaxed" style={{ fontSize: 15 }}>{item.a}</p>
-      </div>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            key="answer"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.28, ease: 'easeInOut' }}
+            className="overflow-hidden"
+          >
+            <p className="text-silver pb-5 leading-relaxed" style={{ fontSize: 15 }}>{item.a}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
@@ -84,27 +96,27 @@ export default function Passageiro() {
         <FloatingOrbs variant="passageiro" className="absolute inset-0" style={{ zIndex: 0 }} />
         <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 25% 50%,rgba(241,235,255,0.85) 0%,transparent 70%)', zIndex: 1 }} />
         <div className="container relative py-28" style={{ zIndex: 2 }}>
-          <div className="max-w-2xl">
-            <div className="tag mb-8 inline-flex">
+          <motion.div className="max-w-2xl" variants={{ hidden: {}, show: { transition: { staggerChildren: 0.13 } } }} initial="hidden" animate="show">
+            <motion.div variants={heroItem} className="tag mb-8 inline-flex">
               <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#C13EFF', boxShadow: '0 0 10px #C13EFF', animation: 'blink 1.5s infinite' }} />
               Para quem quer chegar com segurança
-            </div>
-            <h1 className="bebas mb-6" style={{ fontSize: 'clamp(56px, 9vw, 110px)', lineHeight: 0.92 }}>
+            </motion.div>
+            <motion.h1 variants={heroItem} className="bebas mb-6" style={{ fontSize: 'clamp(56px, 9vw, 110px)', lineHeight: 0.92 }}>
               Sua corrida chega{' '}
               <span className="purple-text">em minutos.</span>
-            </h1>
-            <p className="text-silver mb-10" style={{ fontSize: 'clamp(16px, 1.6vw, 19px)', lineHeight: 1.65, maxWidth: 540 }}>
+            </motion.h1>
+            <motion.p variants={heroItem} className="text-silver mb-10" style={{ fontSize: 'clamp(16px, 1.6vw, 19px)', lineHeight: 1.65, maxWidth: 540 }}>
               Peça agora, acompanhe em tempo real, chegue tranquilo. Motoristas verificados, perto de você.
-            </p>
-            <div className="flex flex-wrap gap-4">
+            </motion.p>
+            <motion.div variants={heroItem} className="flex flex-wrap gap-4">
               <a href="https://apps.apple.com/br/app/bib-car-brasil/id6444271115" target="_blank" rel="noopener" className="btn-purple">
                 Baixar para iOS →
               </a>
               <a href="https://play.google.com/store/apps/details?id=br.com.bibcarbrasil.passenger.drivermachine" target="_blank" rel="noopener" className="btn-ghost">
                 Baixar para Android
               </a>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 

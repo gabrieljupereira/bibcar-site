@@ -1,8 +1,14 @@
 'use client';
 
+import { useState } from 'react';
+import { motion } from 'framer-motion';
 import ScrollReveal from '@/components/ScrollReveal';
 import FloatingOrbs from '@/components/FloatingOrbs';
-import { useState } from 'react';
+
+const heroItem = {
+  hidden: { opacity: 0, y: 28 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] } },
+};
 
 const pillars = [
   {
@@ -94,28 +100,28 @@ export default function Franqueado() {
         <FloatingOrbs variant="franqueado" className="absolute inset-0" style={{ zIndex: 0 }} />
         <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 25% 50%,rgba(241,235,255,0.85) 0%,transparent 70%)', zIndex: 1 }} />
         <div className="container relative py-28" style={{ zIndex: 2 }}>
-          <div className="max-w-2xl">
-            <div className="tag tag-gold mb-8 inline-flex">
+          <motion.div className="max-w-2xl" variants={{ hidden: {}, show: { transition: { staggerChildren: 0.13 } } }} initial="hidden" animate="show">
+            <motion.div variants={heroItem} className="tag tag-gold mb-8 inline-flex">
               <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#FFD23F', boxShadow: '0 0 10px #FFD23F', animation: 'blink 1.5s infinite' }} />
               Seja um franqueado BibCar
-            </div>
-            <h1 className="bebas mb-6" style={{ fontSize: 'clamp(52px, 8.5vw, 104px)', lineHeight: 0.92 }}>
+            </motion.div>
+            <motion.h1 variants={heroItem} className="bebas mb-6" style={{ fontSize: 'clamp(52px, 8.5vw, 104px)', lineHeight: 0.92 }}>
               Empreenda.{' '}
               <span className="gold-text">Expanda.</span>{' '}
               <span className="purple-text">Lidere.</span>
-            </h1>
-            <p className="text-silver mb-10" style={{ fontSize: 'clamp(16px, 1.6vw, 19px)', lineHeight: 1.65, maxWidth: 540 }}>
+            </motion.h1>
+            <motion.p variants={heroItem} className="text-silver mb-10" style={{ fontSize: 'clamp(16px, 1.6vw, 19px)', lineHeight: 1.65, maxWidth: 540 }}>
               Leve a BibCar pra sua cidade. Modelo de negócio validado, suporte completo, tecnologia de ponta — e uma marca que já chegou pra ficar.
-            </p>
-            <div className="flex flex-wrap gap-4">
+            </motion.p>
+            <motion.div variants={heroItem} className="flex flex-wrap gap-4">
               <a href="#contato" className="btn-gold">
                 Quero ser franqueado →
               </a>
               <a href="https://wa.me/551151924005" target="_blank" rel="noopener" className="btn-ghost">
                 Falar com a equipe
               </a>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 

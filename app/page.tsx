@@ -3,28 +3,55 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import ScrollReveal from '@/components/ScrollReveal';
 import FloatingOrbs from '@/components/FloatingOrbs';
 import ClientCarViewer from '@/components/ClientCarViewer';
 
+const heroVariants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.13 } },
+};
+const heroItem = {
+  hidden: { opacity: 0, y: 28 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] } },
+};
+
 function FaqItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div
-      className="rounded-2xl overflow-hidden transition-all duration-200 cursor-pointer"
+    <motion.div
+      layout
+      className="rounded-2xl overflow-hidden cursor-pointer"
       style={{ background: '#FFFFFF', border: `1.5px solid ${open ? 'rgba(193,62,255,0.35)' : 'rgba(0,0,0,0.08)'}` }}
       onClick={() => setOpen(!open)}
     >
       <div className="flex items-center justify-between px-7 py-5">
         <span className="font-bold text-sm md:text-base" style={{ color: '#111' }}>{question}</span>
-        <span className="ml-4 flex-shrink-0 transition-transform duration-200" style={{ transform: open ? 'rotate(45deg)' : 'none', color: '#C13EFF', fontSize: 22, fontWeight: 300 }}>+</span>
+        <motion.span
+          animate={{ rotate: open ? 45 : 0 }}
+          transition={{ duration: 0.2 }}
+          className="ml-4 flex-shrink-0"
+          style={{ color: '#C13EFF', fontSize: 22, fontWeight: 300, display: 'inline-block' }}
+        >+</motion.span>
       </div>
-      {open && (
-        <div className="px-7 pb-5 text-sm leading-relaxed" style={{ color: '#555', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
-          <p className="pt-4">{answer}</p>
-        </div>
-      )}
-    </div>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            key="answer"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.28, ease: 'easeInOut' }}
+            className="overflow-hidden"
+          >
+            <div className="px-7 pb-5 text-sm leading-relaxed" style={{ color: '#555', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+              <p className="pt-4">{answer}</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }
 
@@ -98,25 +125,25 @@ export default function Home() {
           }}
         />
         <div className="container relative grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center pt-20 pb-10 md:py-28" style={{ zIndex: 2 }}>
-          <div>
-            <div className="tag mb-6 inline-flex" style={{ fontSize: "clamp(8.5px, 2.5vw, 11px)", letterSpacing: "clamp(0.2px, 0.1vw, 2px)", padding: "clamp(5px, 1.5vw, 7px) clamp(10px, 4vw, 18px)" }}>
+          <motion.div variants={heroVariants} initial="hidden" animate="show">
+            <motion.div variants={heroItem} className="tag mb-6 inline-flex" style={{ fontSize: "clamp(8.5px, 2.5vw, 11px)", letterSpacing: "clamp(0.2px, 0.1vw, 2px)", padding: "clamp(5px, 1.5vw, 7px) clamp(10px, 4vw, 18px)" }}>
               <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#C13EFF', boxShadow: '0 0 10px #C13EFF', animation: 'blink 1.5s infinite', flexShrink: 0 }} />
               <span className="sm:hidden">Mobilidade Urbana</span>
               <span className="hidden sm:inline">Mobilidade Urbana · Brasil</span>
-            </div>
-            <h1 className="bebas mb-6" style={{ fontSize: 'clamp(64px, 10vw, 120px)', lineHeight: 0.92, letterSpacing: '-1px' }}>
+            </motion.div>
+            <motion.h1 variants={heroItem} className="bebas mb-6" style={{ fontSize: 'clamp(64px, 10vw, 120px)', lineHeight: 0.92, letterSpacing: '-1px' }}>
               Vai de{' '}
               <span className="purple-text">BibCar.</span>
-            </h1>
-            <p className="text-silver mb-10 max-w-lg" style={{ fontSize: 'clamp(16px, 1.6vw, 19px)', lineHeight: 1.6 }}>
+            </motion.h1>
+            <motion.p variants={heroItem} className="text-silver mb-10 max-w-lg" style={{ fontSize: 'clamp(16px, 1.6vw, 19px)', lineHeight: 1.6 }}>
               Motoristas verificados, da sua cidade, app rápido. Mais segurança pra quem anda. Mais ganho pra quem dirige. Mais oportunidade pra quem empreende.
-            </p>
-            <div className="flex flex-col md:flex-row md:flex-wrap gap-4">
+            </motion.p>
+            <motion.div variants={heroItem} className="flex flex-col md:flex-row md:flex-wrap gap-4">
               <Link href="/passageiro" className="btn-gold">Pedir uma corrida</Link>
               <Link href="/motorista" className="btn-purple">Sou motorista</Link>
               <Link href="/franqueado" className="btn-ghost">Quero ser franqueado</Link>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
           <div className="flex justify-center items-center relative h-[320px] md:h-[480px]">
             <ClientCarViewer

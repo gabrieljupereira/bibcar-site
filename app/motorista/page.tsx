@@ -1,8 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import ScrollReveal from '@/components/ScrollReveal';
 import FloatingOrbs from '@/components/FloatingOrbs';
+
+const heroItem = {
+  hidden: { opacity: 0, y: 28 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] } },
+};
 
 const differentials = [
   { icon: '💰', title: 'Ganho melhor', desc: 'Por corrida, você fica com mais. Nossa taxa é justa e transparente — sem surpresas no final do dia.' },
@@ -129,20 +135,20 @@ export default function Motorista() {
         <FloatingOrbs variant="motorista" className="absolute inset-0" style={{ zIndex: 0 }} />
         <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 25% 50%,rgba(241,235,255,0.85) 0%,transparent 70%)', zIndex: 1 }} />
         <div className="container relative py-28" style={{ zIndex: 2 }}>
-          <div className="max-w-2xl">
-            <div className="tag tag-gold mb-8 inline-flex">
+          <motion.div className="max-w-2xl" variants={{ hidden: {}, show: { transition: { staggerChildren: 0.13 } } }} initial="hidden" animate="show">
+            <motion.div variants={heroItem} className="tag tag-gold mb-8 inline-flex">
               <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#FFD23F', boxShadow: '0 0 10px #FFD23F', animation: 'blink 1.5s infinite' }} />
               Seja um parceiro BibCar
-            </div>
-            <h1 className="bebas mb-6" style={{ fontSize: 'clamp(56px, 9vw, 110px)', lineHeight: 0.92 }}>
+            </motion.div>
+            <motion.h1 variants={heroItem} className="bebas mb-6" style={{ fontSize: 'clamp(56px, 9vw, 110px)', lineHeight: 0.92 }}>
               Dirija.{' '}
               <span className="gold-text">Ganhe.</span>{' '}
               Cresça.
-            </h1>
-            <p className="text-silver mb-10" style={{ fontSize: 'clamp(16px, 1.6vw, 19px)', lineHeight: 1.65, maxWidth: 540 }}>
+            </motion.h1>
+            <motion.p variants={heroItem} className="text-silver mb-10" style={{ fontSize: 'clamp(16px, 1.6vw, 19px)', lineHeight: 1.65, maxWidth: 540 }}>
               Trabalhe no seu tempo, ganhe mais perto de casa. A BibCar é a plataforma que respeita quem dirige.
-            </p>
-            <div className="flex flex-wrap gap-4">
+            </motion.p>
+            <motion.div variants={heroItem} className="flex flex-wrap gap-4">
               <a
                 href="https://play.google.com/store/apps/details?id=br.com.bibcarbrasil.taxi.drivermachine"
                 target="_blank"
@@ -154,8 +160,8 @@ export default function Motorista() {
               <a href="https://wa.me/551151924005" target="_blank" rel="noopener" className="btn-ghost">
                 Falar com a equipe
               </a>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 

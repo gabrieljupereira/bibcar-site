@@ -1,8 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import ScrollReveal from '@/components/ScrollReveal';
 import FloatingOrbs from '@/components/FloatingOrbs';
+
+const heroItem = {
+  hidden: { opacity: 0, y: 32 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
+};
 
 /* ─── floating football SVGs ─────────────────────────── */
 const balls = [
@@ -122,15 +128,15 @@ export default function BibNaCopa() {
         <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 20% 50%,rgba(0,156,59,0.18) 0%,transparent 55%),radial-gradient(ellipse at 80% 30%,rgba(255,223,0,0.1) 0%,transparent 50%)', zIndex: 2 }} />
 
         <div className="container relative py-28" style={{ zIndex: 3 }}>
-          <div className="max-w-3xl">
+          <motion.div className="max-w-3xl" variants={{ hidden: {}, show: { transition: { staggerChildren: 0.15 } } }} initial="hidden" animate="show">
             {/* promo badge */}
-            <div className="inline-flex items-center gap-3 rounded-full mb-8 px-5 py-2.5"
+            <motion.div variants={heroItem} className="inline-flex items-center gap-3 rounded-full mb-8 px-5 py-2.5"
               style={{ background: 'rgba(0,156,59,0.2)', border: '1.5px solid rgba(0,156,59,0.5)' }}>
               <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#00FF44', boxShadow: '0 0 10px #00FF44', animation: 'blink 1s infinite', display: 'inline-block' }} />
               <span className="text-xs font-black uppercase tracking-widest" style={{ color: '#4dff88' }}>⚽ Promoção Copa 2026 · Ativa</span>
-            </div>
+            </motion.div>
 
-            <h1 className="bebas mb-3" style={{ fontSize: 'clamp(72px, 13vw, 160px)', lineHeight: 0.88 }}>
+            <motion.h1 variants={heroItem} className="bebas mb-3" style={{ fontSize: 'clamp(72px, 13vw, 160px)', lineHeight: 0.88 }}>
               <span style={{ background: 'linear-gradient(135deg,#009C3B 0%,#00c94a 40%,#FFDF00 80%,#FFB800 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                 Bib
               </span>
@@ -138,10 +144,10 @@ export default function BibNaCopa() {
               <span style={{ color: '#ffffff' }}>
                 na Copa
               </span>
-            </h1>
+            </motion.h1>
 
             {/* scoreboard 30% */}
-            <div className="inline-flex flex-col items-start mb-8">
+            <motion.div variants={heroItem} className="inline-flex flex-col items-start mb-8">
               <div
                 className="rounded-2xl px-8 py-5 flex items-center gap-5"
                 style={{ background: 'linear-gradient(135deg,rgba(255,223,0,0.12),rgba(0,156,59,0.08))', border: '2px solid rgba(255,223,0,0.4)', backdropFilter: 'blur(10px)' }}
@@ -153,13 +159,13 @@ export default function BibNaCopa() {
                   <div className="font-bold" style={{ fontSize: 'clamp(11px, 1.3vw, 13px)', color: '#4dff88', marginTop: 2 }}>⚡ na hora do jogo do Brasil</div>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
-            <p style={{ fontSize: 'clamp(16px, 1.8vw, 20px)', color: 'rgba(255,255,255,0.7)', lineHeight: 1.65, maxWidth: 520, marginBottom: 40 }}>
+            <motion.p variants={heroItem} style={{ fontSize: 'clamp(16px, 1.8vw, 20px)', color: 'rgba(255,255,255,0.7)', lineHeight: 1.65, maxWidth: 520, marginBottom: 40 }}>
               Vai na torcida sem preocupação. A BibCar te leva, te traz e ainda te dá 30% de desconto enquanto o Brasil joga.
-            </p>
+            </motion.p>
 
-            <div className="flex flex-wrap gap-4">
+            <motion.div variants={heroItem} className="flex flex-wrap gap-4">
               <a
                 href="https://apps.apple.com/br/app/bib-car-brasil/id6444271115"
                 target="_blank"
@@ -178,8 +184,8 @@ export default function BibNaCopa() {
               >
                 Baixar para Android
               </a>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
 
         {/* bottom fade */}
