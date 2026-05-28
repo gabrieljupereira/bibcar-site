@@ -19,33 +19,9 @@ const matches = [
 ];
 
 const ecosystem = [
-  { icon: '🚗', title: 'Corrida Copa',   desc: '30% OFF automático durante todos os jogos do Brasil. Abre o app e pede.', tag: 'ATIVO',    color: '#00e054' },
-  { icon: '🎰', title: 'Bolão BibCar',   desc: 'Chuta o placar, acumule Copa Points e concorra a corridas grátis.', tag: 'NOVO',     color: '#FFDF00' },
-  { icon: '🃏', title: 'Figurinha IA',   desc: 'IA te transforma em craque Panini 2026. Compartilha no story.', tag: 'IA',       color: '#00c9ff' },
-  { icon: '🏆', title: 'Copa Rewards',   desc: 'Pontos em cada corrida e palpite. Sobe no ranking, ganha prêmios.', tag: 'EM BREVE', color: '#ff9500' },
-];
-
-const prizesTiers = [
-  { pts: 500,  prize: '1 corrida grátis',         icon: '🎟' },
-  { pts: 1000, prize: '3 corridas grátis',         icon: '🎁' },
-  { pts: 2000, prize: 'Mês inteiro com 50% OFF',  icon: '⭐' },
-  { pts: 5000, prize: 'Experiência VIP Copa 2026', icon: '🏆' },
-];
-
-const pointsTable = [
-  { action: '🚗 Corrida durante jogo do Brasil',   pts: '+50'  },
-  { action: '🎰 Palpite correto (resultado)',       pts: '+100' },
-  { action: '⚽ Palpite correto (placar exato)',    pts: '+250' },
-  { action: '🃏 Compartilhar figurinha IA',         pts: '+30'  },
-  { action: '👥 Indicar amigo que faz corrida',    pts: '+80'  },
-];
-
-const mockRanking = [
-  { name: 'Thales M.', pts: 1420, rides: 18, correct: 9,  medal: '🥇' },
-  { name: 'Ana C.',    pts: 1280, rides: 15, correct: 8,  medal: '🥈' },
-  { name: 'Bruno K.',  pts: 1100, rides: 12, correct: 7,  medal: '🥉' },
-  { name: 'Carol S.',  pts: 890,  rides: 10, correct: 5,  medal: '4' },
-  { name: 'Diego P.',  pts: 750,  rides: 9,  correct: 4,  medal: '5' },
+  { icon: '🚗', title: 'Corrida Copa',   desc: '30% OFF automático durante todos os jogos do Brasil. Abre o app e pede.', tag: 'ATIVO', color: '#00e054' },
+  { icon: '🎰', title: 'Bolão BibCar',   desc: 'Chuta o placar dos jogos do Brasil e concorra a corridas grátis.', tag: 'NOVO',  color: '#FFDF00' },
+  { icon: '🃏', title: 'Figurinha IA',   desc: 'IA te transforma em craque Panini 2026. Compartilha no story.', tag: 'IA',    color: '#00c9ff' },
 ];
 
 /* ─── Countdown ──────────────────────────────────────────── */
@@ -359,7 +335,7 @@ export default function BibNaCopa() {
           <ScrollReveal className="text-center" style={{ marginBottom: 52 }}>
             <div style={{ display: 'inline-block', padding: '4px 16px', borderRadius: 999, border: '1px solid rgba(255,223,0,0.3)', background: 'rgba(255,223,0,0.07)', color: '#FFDF00', fontSize: 10, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 14 }}>O Ecossistema</div>
             <h2 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 'clamp(40px,6vw,78px)', color: '#fff', lineHeight: 1, marginBottom: 10 }}>
-              Quatro produtos.{' '}
+              Três produtos.{' '}
               <span style={{ background: 'linear-gradient(135deg,#009C3B,#FFDF00)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Um app.</span>
             </h2>
             <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 15, maxWidth: 440, margin: '0 auto' }}>Tudo pensado juntos para o maior evento do planeta em 2026.</p>
@@ -393,7 +369,7 @@ export default function BibNaCopa() {
               Chuta o{' '}
               <span style={{ background: 'linear-gradient(135deg,#FFDF00,#FFB800)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>resultado.</span>
             </h2>
-            <p style={{ color: 'rgba(255,255,255,0.42)', fontSize: 15, maxWidth: 440, margin: '0 auto' }}>Acumule Copa Points com cada palpite certo e concorra a corridas grátis e prêmios exclusivos.</p>
+            <p style={{ color: 'rgba(255,255,255,0.42)', fontSize: 15, maxWidth: 440, margin: '0 auto' }}>Chuta o placar dos jogos do Brasil e concorra a corridas grátis.</p>
           </ScrollReveal>
           <ScrollReveal delay={0.12}><BolaoSection /></ScrollReveal>
         </div>
@@ -445,77 +421,6 @@ export default function BibNaCopa() {
               </ScrollReveal>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* ════ COPA REWARDS ════ */}
-      <section style={{ background: 'linear-gradient(150deg,#0a0600 0%,#160d00 50%,#0a0600 100%)', padding: '96px 0', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 50%,rgba(255,149,0,0.07),transparent 50%)', pointerEvents: 'none' }} />
-        <div className="container relative" style={{ zIndex: 2 }}>
-          <ScrollReveal className="text-center" style={{ marginBottom: 52 }}>
-            <div style={{ display: 'inline-block', padding: '4px 16px', borderRadius: 999, border: '1px solid rgba(255,149,0,0.4)', background: 'rgba(255,149,0,0.08)', color: '#ff9500', fontSize: 10, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 14 }}>🏆 Copa Rewards · Em Breve</div>
-            <h2 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 'clamp(40px,6vw,74px)', color: '#fff', marginBottom: 10 }}>
-              Cada corrida,{' '}
-              <span style={{ background: 'linear-gradient(135deg,#ff9500,#FFDF00)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>mais pontos.</span>
-            </h2>
-            <p style={{ color: 'rgba(255,255,255,0.38)', fontSize: 15, maxWidth: 440, margin: '0 auto' }}>Use BibCar durante a Copa, acerte palpites e suba no ranking para ganhar corridas grátis e prêmios.</p>
-          </ScrollReveal>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 10, maxWidth: 860, margin: '0 auto 44px' }}>
-            {pointsTable.map((r, i) => (
-              <ScrollReveal key={i} delay={i * 0.07}>
-                <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,149,0,0.14)', borderRadius: 14, padding: '16px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
-                  <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: 12, lineHeight: 1.45 }}>{r.action}</span>
-                  <span style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 26, color: '#ff9500', flexShrink: 0 }}>{r.pts}</span>
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
-
-          <ScrollReveal>
-            <div style={{ maxWidth: 560, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {prizesTiers.map((t, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 14, padding: '16px 20px' }}>
-                  <span style={{ fontSize: 24 }}>{t.icon}</span>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 800, color: '#fff', fontSize: 14 }}>{t.prize}</div>
-                  </div>
-                  <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 22, color: '#ff9500' }}>{t.pts.toLocaleString()} pts</div>
-                </div>
-              ))}
-            </div>
-          </ScrollReveal>
-        </div>
-      </section>
-
-      {/* ════ RANKING ════ */}
-      <section style={{ background: '#020A02', padding: '88px 0' }}>
-        <div className="container" style={{ maxWidth: 580, margin: '0 auto' }}>
-          <ScrollReveal className="text-center" style={{ marginBottom: 36 }}>
-            <div style={{ display: 'inline-block', padding: '4px 16px', borderRadius: 999, border: '1px solid rgba(201,162,39,0.4)', background: 'rgba(201,162,39,0.08)', color: '#C9A227', fontSize: 10, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 14 }}>🏅 Ranking dos Craques</div>
-            <h2 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 'clamp(36px,5vw,64px)', color: '#fff', marginBottom: 6 }}>Quem acerta mais?</h2>
-            <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 12 }}>Preview — ranking oficial abre no primeiro jogo do Brasil</p>
-          </ScrollReveal>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {mockRanking.map((u, i) => (
-              <ScrollReveal key={u.name} delay={i * 0.07}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 14, background: i === 0 ? 'rgba(201,162,39,0.07)' : 'rgba(255,255,255,0.03)', border: `1px solid ${i === 0 ? 'rgba(201,162,39,0.3)' : 'rgba(255,255,255,0.07)'}`, borderRadius: 14, padding: '14px 18px' }}>
-                  <span style={{ fontSize: i < 3 ? 22 : 15, width: 30, textAlign: 'center', fontFamily: 'Bebas Neue,sans-serif', color: 'rgba(255,255,255,0.4)' }}>{u.medal}</span>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 800, color: '#fff', fontSize: 14 }}>{u.name}</div>
-                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)' }}>{u.rides} corridas · {u.correct} palpites certos</div>
-                  </div>
-                  <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 26, color: i === 0 ? '#C9A227' : 'rgba(255,255,255,0.45)' }}>{u.pts.toLocaleString()}</div>
-                  <div style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.2)' }}>pts</div>
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
-
-          <ScrollReveal delay={0.4} style={{ textAlign: 'center', marginTop: 22 }}>
-            <p style={{ color: 'rgba(255,255,255,0.22)', fontSize: 12 }}>Você entra no ranking hoje mesmo — baixe o app e comece a usar a BibCar.</p>
-          </ScrollReveal>
         </div>
       </section>
 
