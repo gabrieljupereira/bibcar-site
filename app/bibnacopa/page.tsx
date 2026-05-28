@@ -75,11 +75,19 @@ function CountdownTimer({ target }: { target: Date }) {
 
 /* ─── Bolão ──────────────────────────────────────────────── */
 type Resultado = 'home' | 'draw' | 'away';
-interface Palpite { matchId: string; result: Resultado; scoreH: number; scoreA: number; code: string; }
+interface Palpite { matchId: string; nome: string; celular: string; result: Resultado; scoreH: number; scoreA: number; code: string; }
 const genCode = () => 'BIB-' + Math.random().toString(36).toUpperCase().slice(2, 7);
 const LABEL: Record<Resultado, string> = { home: '🇧🇷 Brasil vence', draw: '➖ Empate', away: '🌍 Adversário vence' };
+const fmtCel = (v: string) => {
+  const d = v.replace(/\D/g, '').slice(0, 11);
+  if (d.length <= 2) return d;
+  if (d.length <= 7) return `(${d.slice(0,2)}) ${d.slice(2)}`;
+  return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`;
+};
 
 function BolaoSection() {
+  const [nome, setNome] = useState('');
+  const [celular, setCelular] = useState('');
   const [result, setResult] = useState<Resultado | null>(null);
   const [scoreH, setScoreH] = useState('');
   const [scoreA, setScoreA] = useState('');
@@ -93,26 +101,59 @@ function BolaoSection() {
     try { setPalpites(JSON.parse(localStorage.getItem('bib_palpites') || '[]')); } catch { /* */ }
   }, []);
 
+  const celDigits = celular.replace(/\D/g, '');
+  const canSubmit = nome.trim().length >= 2 && celDigits.length >= 10 && !!result;
+
   const submit = () => {
-    if (!result) return;
+    if (!canSubmit) return;
     const c = genCode();
-    const p: Palpite = { matchId: match.id, result, scoreH: Number(scoreH) || 0, scoreA: Number(scoreA) || 0, code: c };
+    const p: Palpite = { matchId: match.id, nome: nome.trim(), celular, result: result!, scoreH: Number(scoreH) || 0, scoreA: Number(scoreA) || 0, code: c };
     const upd = [p, ...palpites];
     localStorage.setItem('bib_palpites', JSON.stringify(upd));
     setPalpites(upd); setCode(c); setConfirmedResult(result); setDone(true);
   };
 
-  const reset = () => { setResult(null); setScoreH(''); setScoreA(''); setDone(false); setCode(''); setConfirmedResult(null); };
+  const reset = () => { setNome(''); setCelular(''); setResult(null); setScoreH(''); setScoreA(''); setDone(false); setCode(''); setConfirmedResult(null); };
 
   const card: React.CSSProperties = { background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 20, padding: '28px 24px' };
   const inp: React.CSSProperties = { width: 64, height: 58, borderRadius: 14, background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.18)', color: '#fff', fontSize: 28, fontWeight: 900, textAlign: 'center', outline: 'none' };
+  const textInp = (ok: boolean): React.CSSProperties => ({
+    width: '100%', padding: '13px 16px', borderRadius: 14, outline: 'none',
+    background: 'rgba(255,255,255,0.06)', color: '#fff', fontSize: 15, fontWeight: 600,
+    border: `1.5px solid ${ok ? 'rgba(0,224,84,0.5)' : 'rgba(255,255,255,0.14)'}`,
+    transition: 'border-color 0.2s',
+  });
 
   return (
     <div style={{ maxWidth: 540, margin: '0 auto' }}>
       <AnimatePresence mode="wait">
         {!done ? (
           <motion.div key="form" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-            {/* Match header */}
+
+            {/* ── Identificação ── */}
+            <div style={{ ...card, marginBottom: 14 }}>
+              <p style={{ fontSize: 10, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.35)', marginBottom: 14 }}>👤 Seus dados para participar</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <div>
+                  <label style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em', textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>Nome completo *</label>
+                  <input
+                    type="text" placeholder="Seu nome" value={nome}
+                    onChange={e => setNome(e.target.value)} maxLength={50}
+                    style={textInp(nome.trim().length >= 2)}
+                  />
+                </div>
+                <div>
+                  <label style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em', textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>Celular (WhatsApp) *</label>
+                  <input
+                    type="tel" placeholder="(11) 99999-9999" value={celular}
+                    onChange={e => setCelular(fmtCel(e.target.value))}
+                    style={textInp(celDigits.length >= 10)}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* ── Jogo ── */}
             <div style={{ ...card, marginBottom: 14 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
                 <div style={{ textAlign: 'center', flex: 1 }}>
@@ -131,7 +172,7 @@ function BolaoSection() {
               <div style={{ textAlign: 'center', fontSize: 11, color: 'rgba(255,255,255,0.3)', fontWeight: 600 }}>📍 {match.venue} · {match.time}</div>
             </div>
 
-            {/* Result */}
+            {/* ── Resultado ── */}
             <p style={{ fontSize: 10, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.35)', textAlign: 'center', marginBottom: 10 }}>Qual o resultado?</p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginBottom: 20 }}>
               {(['home', 'draw', 'away'] as Resultado[]).map(opt => (
@@ -147,7 +188,7 @@ function BolaoSection() {
               ))}
             </div>
 
-            {/* Score */}
+            {/* ── Placar ── */}
             <p style={{ fontSize: 10, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.35)', textAlign: 'center', marginBottom: 10 }}>Placar exato — opcional (vale +250 pts!)</p>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, marginBottom: 24 }}>
               <input type="number" min={0} max={20} value={scoreH} onChange={e => setScoreH(e.target.value)} placeholder="0" style={inp} />
@@ -155,19 +196,21 @@ function BolaoSection() {
               <input type="number" min={0} max={20} value={scoreA} onChange={e => setScoreA(e.target.value)} placeholder="0" style={inp} />
             </div>
 
-            <button onClick={submit} disabled={!result} style={{
-              width: '100%', padding: '16px', borderRadius: 999, border: 'none', fontSize: 16, fontWeight: 900, cursor: result ? 'pointer' : 'not-allowed', transition: 'all 0.2s',
-              background: result ? 'linear-gradient(135deg,#009C3B,#FFDF00)' : 'rgba(255,255,255,0.08)',
-              color: result ? '#051505' : 'rgba(255,255,255,0.3)',
-              boxShadow: result ? '0 8px 28px rgba(0,156,59,0.35)' : 'none',
+            <button onClick={submit} disabled={!canSubmit} style={{
+              width: '100%', padding: '16px', borderRadius: 999, border: 'none', fontSize: 16, fontWeight: 900,
+              cursor: canSubmit ? 'pointer' : 'not-allowed', transition: 'all 0.2s',
+              background: canSubmit ? 'linear-gradient(135deg,#009C3B,#FFDF00)' : 'rgba(255,255,255,0.08)',
+              color: canSubmit ? '#051505' : 'rgba(255,255,255,0.3)',
+              boxShadow: canSubmit ? '0 8px 28px rgba(0,156,59,0.35)' : 'none',
             }}>
-              {result ? '⚽ Registrar Palpite' : 'Escolha um resultado'}
+              {!nome.trim() || !result ? 'Preencha nome, celular e resultado' : '⚽ Registrar Palpite'}
             </button>
           </motion.div>
         ) : (
           <motion.div key="ok" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} style={{ textAlign: 'center', ...card }}>
             <div style={{ fontSize: 56, marginBottom: 12 }}>✅</div>
-            <h3 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 34, color: '#fff', marginBottom: 6 }}>Palpite Registrado!</h3>
+            <h3 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 34, color: '#fff', marginBottom: 4 }}>Palpite Registrado!</h3>
+            <p style={{ color: '#4dff88', fontWeight: 700, fontSize: 15, marginBottom: 4 }}>{nome}</p>
             <p style={{ color: 'rgba(255,255,255,0.5)', marginBottom: 24, fontSize: 14 }}>{confirmedResult ? LABEL[confirmedResult] : ''}</p>
             <div style={{ display: 'inline-block', background: 'rgba(255,223,0,0.1)', border: '2px solid rgba(255,223,0,0.35)', borderRadius: 16, padding: '14px 36px', marginBottom: 20 }}>
               <p style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.15em', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', marginBottom: 4 }}>Código do Palpite</p>
@@ -184,7 +227,10 @@ function BolaoSection() {
           <p style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.25)', marginBottom: 8 }}>Seus palpites ({palpites.length})</p>
           {palpites.slice(0, 3).map(p => (
             <div key={p.code} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', background: 'rgba(255,255,255,0.03)', borderRadius: 10, marginBottom: 6, border: '1px solid rgba(255,255,255,0.06)' }}>
-              <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12 }}>{LABEL[p.result]}</span>
+              <div>
+                <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 12, fontWeight: 700 }}>{p.nome}</div>
+                <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11 }}>{LABEL[p.result]}</div>
+              </div>
               <span style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 13, color: 'rgba(255,223,0,0.65)' }}>#{p.code}</span>
             </div>
           ))}

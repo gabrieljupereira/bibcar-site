@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
           image_size: 'portrait_4_3',
           num_inference_steps: 28,
           guidance_scale: 4,
-          id_weight: 1.2,
+          id_weight: 1.0,
           negative_prompt: 'ugly, blurry, distorted, cartoon, extra limbs, bad anatomy, watermark, text, low quality, different person, face change',
           enable_safety_checker: true,
         },
