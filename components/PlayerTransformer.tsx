@@ -56,9 +56,9 @@ function rrect(ctx:CanvasRenderingContext2D,x:number,y:number,w:number,h:number,
 }
 
 /* ─── Panini Card HTML (preview) ─────────────────────────── */
-function FigurinhaCard({imageUrl,team,name,posIdx,jerseyNum,bday,height,weight,size=300}:{
+function FigurinhaCard({imageUrl,team,name,posIdx,jerseyNum,bday,height,weight,ovr,size=300}:{
   imageUrl:string;team:Team;name:string;posIdx:number;jerseyNum:number;
-  bday:string;height:string;weight:string;size?:number;
+  bday:string;height:string;weight:string;ovr:number;size?:number;
 }){
   const s=size/300;
   const H=Math.round(420*s);
@@ -135,6 +135,15 @@ function FigurinhaCard({imageUrl,team,name,posIdx,jerseyNum,bday,height,weight,s
             position:'absolute',bottom:0,left:0,right:0,height:60*s,
             background:'linear-gradient(to top,rgba(255,255,255,0.8),transparent)',
           }}/>
+          {/* OVR badge */}
+          <div style={{
+            position:'absolute',top:10*s,left:10*s,
+            background:'rgba(0,0,0,0.72)',borderRadius:8*s,
+            padding:`${6*s}px ${10*s}px`,textAlign:'center',minWidth:42*s,
+          }}>
+            <div style={{color:team.text,fontWeight:900,fontSize:28*s,lineHeight:1,fontStyle:'italic'}}>{ovr}</div>
+            <div style={{color:'rgba(255,255,255,0.5)',fontWeight:700,fontSize:8*s,letterSpacing:'0.12em'}}>OVR</div>
+          </div>
         </div>
 
         {/* ── WHITE BOTTOM BAR ── */}
@@ -196,7 +205,7 @@ function FigurinhaCard({imageUrl,team,name,posIdx,jerseyNum,bday,height,weight,s
 /* ─── Canvas Story 1080×1920 ─────────────────────────────── */
 async function generateStoryBlob(
   resultUrl:string, team:Team, name:string, posIdx:number,
-  jerseyNum:number, bday:string, height:string, weight:string, cardNum:number
+  jerseyNum:number, bday:string, height:string, weight:string, cardNum:number, ovr:number
 ):Promise<Blob>{
   const W=1080, H=1920;
   const canvas=document.createElement('canvas');
@@ -230,7 +239,6 @@ async function generateStoryBlob(
   // ── Card ──
   const cW=620, cH=868, cX=(W-cW)/2, cY=300, cR=18;
   const topH=80, botH=210;
-  const ovr=rnd(93,99);
 
   // border glow
   ctx.save();
@@ -392,6 +400,7 @@ export default function PlayerTransformer(){
   const [height]=useState(()=>`1,${rnd(72,90)}`);
   const [weight]=useState(()=>String(rnd(66,84)));
   const [cardNum]=useState(()=>rnd(50,249));
+  const [ovr]=useState(()=>rnd(93,99));
   const [resultUrl,setResultUrl]=useState<string|null>(null);
   const [errorMsg,setErrorMsg]=useState('');
   const [fullscreen,setFullscreen]=useState(false);
@@ -425,7 +434,7 @@ export default function PlayerTransformer(){
     if(!resultUrl||!team) return;
     setStage('sharing');
     try{
-      const blob=cachedBlob??await generateStoryBlob(resultUrl,team,playerName||'JOGADOR',posIdx,jerseyNum,bday,height,weight,cardNum);
+      const blob=cachedBlob??await generateStoryBlob(resultUrl,team,playerName||'JOGADOR',posIdx,jerseyNum,bday,height,weight,cardNum,ovr);
       setCachedBlob(blob);
       const file=new File([blob],'figurinha-copa2026.png',{type:'image/png'});
       if(mode==='share'&&navigator.canShare?.({files:[file]})){
@@ -529,7 +538,7 @@ export default function PlayerTransformer(){
 
               <div style={{display:'flex',justifyContent:'center',marginBottom:28}}>
                 <motion.div animate={{y:[0,-6,0]}} transition={{repeat:Infinity,duration:3.5,ease:'easeInOut'}}>
-                  <FigurinhaCard imageUrl={resultUrl} team={team} name={playerName||'JOGADOR'} posIdx={posIdx} jerseyNum={jerseyNum} bday={bday} height={height} weight={weight} size={290}/>
+                  <FigurinhaCard imageUrl={resultUrl} team={team} name={playerName||'JOGADOR'} posIdx={posIdx} jerseyNum={jerseyNum} bday={bday} height={height} weight={weight} ovr={ovr} size={290}/>
                 </motion.div>
               </div>
 
@@ -574,7 +583,7 @@ export default function PlayerTransformer(){
             style={{position:'fixed',inset:0,zIndex:9999,background:'rgba(0,0,0,0.97)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:24,cursor:'pointer'}}>
             <p style={{color:'rgba(255,255,255,0.35)',fontSize:13,marginBottom:20,textAlign:'center'}}>📱 Pressione e segure para salvar · Toque fora para fechar</p>
             <div onClick={e=>e.stopPropagation()}>
-              <FigurinhaCard imageUrl={resultUrl} team={team} name={playerName||'JOGADOR'} posIdx={posIdx} jerseyNum={jerseyNum} bday={bday} height={height} weight={weight} size={Math.min(300,typeof window!=='undefined'?window.innerWidth-48:280)}/>
+              <FigurinhaCard imageUrl={resultUrl} team={team} name={playerName||'JOGADOR'} posIdx={posIdx} jerseyNum={jerseyNum} bday={bday} height={height} weight={weight} ovr={ovr} size={Math.min(300,typeof window!=='undefined'?window.innerWidth-48:280)}/>
             </div>
             <div style={{display:'flex',gap:10,marginTop:20}} onClick={e=>e.stopPropagation()}>
               <button onClick={()=>buildAndShare('share')} style={{background:team.c1,color:'#fff',fontWeight:800,padding:'11px 24px',borderRadius:999,border:`1px solid ${team.foil[1]}55`,fontSize:'0.88rem',cursor:'pointer'}}>📲 Compartilhar</button>
