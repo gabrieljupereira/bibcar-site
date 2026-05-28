@@ -217,17 +217,56 @@ async function generateStoryBlob(
 
   const [f1,f2,f3]=team.foil;
 
-  // ── Page background ──
-  const bg=ctx.createLinearGradient(0,0,W,H);
-  bg.addColorStop(0,'#111'); bg.addColorStop(0.5,'#1a1a1a'); bg.addColorStop(1,'#0d0d0d');
+  // ── Background: premium dark + stadium spotlights ──
+  const bg=ctx.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,'#060606'); bg.addColorStop(0.5,team.c1+'14'); bg.addColorStop(1,'#040404');
   ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
-  ctx.strokeStyle=team.c1+'30'; ctx.lineWidth=4;
-  for(let i=-H;i<W+H;i+=50){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i+H,H);ctx.stroke();}
 
-  // top radial glow
-  const tg=ctx.createRadialGradient(W/2,0,0,W/2,0,700);
-  tg.addColorStop(0,team.c1+'44'); tg.addColorStop(1,'transparent');
-  ctx.fillStyle=tg; ctx.fillRect(0,0,W,H);
+  // Stadium spotlights (left, right, bottom)
+  const spots:[number,number,number,string][]=[
+    [W*0.18,0,620,team.c1+'38'],[W*0.82,0,500,team.c2+'28'],[W*0.5,H,700,team.c1+'22'],
+  ];
+  spots.forEach(([sx,sy,sr,sc])=>{
+    const sg=ctx.createRadialGradient(sx,sy,0,sx,sy,sr);
+    sg.addColorStop(0,sc); sg.addColorStop(1,'transparent');
+    ctx.fillStyle=sg; ctx.fillRect(0,0,W,H);
+  });
+
+  // Dot grid texture
+  ctx.fillStyle='rgba(255,255,255,0.035)';
+  for(let gx=40;gx<W;gx+=68) for(let gy=40;gy<H;gy+=68){
+    ctx.beginPath(); ctx.arc(gx,gy,1.8,0,Math.PI*2); ctx.fill();
+  }
+
+  // Audio visualizer bars — BOTTOM (rising up, sine-wave heights)
+  const barN=54, barW=Math.floor(W/barN), barGap=4;
+  const barFn=(i:number,freq1:number,freq2:number,freq3:number,base:number,amp1:number,amp2:number,amp3:number)=>{
+    const t=i/(barN-1);
+    return Math.max(10, base + Math.sin(t*Math.PI*freq1)*amp1 + Math.sin(t*Math.PI*freq2+0.6)*amp2 + Math.sin(t*Math.PI*freq3+1.3)*amp3);
+  };
+  for(let i=0;i<barN;i++){
+    const bH=barFn(i,4,9,16,80,90,55,28);
+    const bX=i*barW+barGap/2;
+    const grad=ctx.createLinearGradient(0,H-bH,0,H);
+    grad.addColorStop(0,team.c1+'ee'); grad.addColorStop(0.6,team.c1+'66'); grad.addColorStop(1,team.c1+'11');
+    ctx.fillStyle=grad;
+    rrect(ctx,bX,H-bH,barW-barGap,bH,3); ctx.fill();
+  }
+
+  // Audio visualizer bars — TOP (hanging down, different wave)
+  for(let i=0;i<barN;i++){
+    const bH=barFn(i,5,11,18,50,65,38,20)*0.65;
+    const bX=i*barW+barGap/2;
+    const grad=ctx.createLinearGradient(0,0,0,bH);
+    grad.addColorStop(0,team.c1+'cc'); grad.addColorStop(0.6,team.c1+'44'); grad.addColorStop(1,team.c1+'00');
+    ctx.fillStyle=grad;
+    rrect(ctx,bX,0,barW-barGap,bH,3); ctx.fill();
+  }
+
+  // Centre vignette — keeps card area readable
+  const vig=ctx.createRadialGradient(W/2,H/2,300,W/2,H/2,900);
+  vig.addColorStop(0,'transparent'); vig.addColorStop(1,'rgba(0,0,0,0.55)');
+  ctx.fillStyle=vig; ctx.fillRect(0,0,W,H);
 
   // ── Top headline ──
   ctx.textAlign='center';
