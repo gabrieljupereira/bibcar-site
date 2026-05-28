@@ -425,8 +425,8 @@ export default function PlayerTransformer(){
 
   const runTransform=async(t:Team)=>{
     setStage('loading');
-    // PuLID generates the footballer WITH the user's real face — server-side, no canvas
-    const prompt=`head and shoulders portrait of a professional soccer player wearing ${t.jersey}, looking directly at camera, confident athletic expression, blurred stadium crowd bokeh background, FIFA World Cup 2026, photorealistic, sharp focus, 8k`;
+    // PuLID: generates a complete footballer portrait preserving the user's face identity
+    const prompt=`close-up portrait of a professional soccer player wearing ${t.jersey}, slight confident smile, looking directly at camera, cinematic stadium lights bokeh background, FIFA World Cup 2026, ultra-sharp face detail, photorealistic, professional sports photography, Nikon D6, 8k`;
     try{
       const res=await fetch('/api/fal',{
         method:'POST',
