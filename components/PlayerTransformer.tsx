@@ -222,9 +222,10 @@ async function generateStoryBlob(
   bg.addColorStop(0,'#060606'); bg.addColorStop(0.5,team.c1+'14'); bg.addColorStop(1,'#040404');
   ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
 
-  // Stadium spotlights (left, right, bottom)
+  // Stadium spotlights — team colors + BibCar purple accent
   const spots:[number,number,number,string][]=[
-    [W*0.18,0,620,team.c1+'38'],[W*0.82,0,500,team.c2+'28'],[W*0.5,H,700,team.c1+'22'],
+    [W*0.18,0,620,team.c1+'38'],[W*0.82,0,500,team.c2+'28'],
+    [W*0.5,H,700,team.c1+'22'],[W*0.5,H*0.5,400,'#7F00FF22'],
   ];
   spots.forEach(([sx,sy,sr,sc])=>{
     const sg=ctx.createRadialGradient(sx,sy,0,sx,sy,sr);
@@ -267,6 +268,15 @@ async function generateStoryBlob(
   const vig=ctx.createRadialGradient(W/2,H/2,300,W/2,H/2,900);
   vig.addColorStop(0,'transparent'); vig.addColorStop(1,'rgba(0,0,0,0.55)');
   ctx.fillStyle=vig; ctx.fillRect(0,0,W,H);
+
+  // BibCar watermark top-right
+  ctx.save();
+  ctx.globalAlpha=0.55;
+  ctx.drawImage(logoImg,W-88,28,52,52);
+  ctx.globalAlpha=1;
+  ctx.font='bold 18px Arial'; ctx.fillStyle='#C13EFF'; ctx.textAlign='right';
+  ctx.fillText('BibCar',W-18,94);
+  ctx.restore();
 
   // ── Top headline ──
   ctx.textAlign='center';
@@ -391,13 +401,34 @@ async function generateStoryBlob(
 
   ctx.restore();
 
-  // ── Bottom ──
-  const bY=cY+cH+70;
-  ctx.font='bold 40px Arial'; ctx.fillStyle='rgba(255,255,255,0.7)';
-  ctx.textAlign='center'; ctx.fillText('#Copa2026  #BibCar  #FigurinhaIA',W/2,bY);
-  ctx.font='28px Arial'; ctx.fillStyle='rgba(255,255,255,0.3)';
-  ctx.fillText('bibcarbrasil.com.br',W/2,bY+46);
-  ctx.drawImage(logoImg,W/2-30,bY+60,60,60);
+  // ── Bottom branding block ──
+  const bY=cY+cH+48;
+
+  // Purple pill background behind logo + name
+  const pillW=360, pillH=72, pillX=(W-pillW)/2;
+  const pillGrad=ctx.createLinearGradient(pillX,bY,pillX+pillW,bY);
+  pillGrad.addColorStop(0,'#7F00FF'); pillGrad.addColorStop(1,'#C13EFF');
+  ctx.fillStyle=pillGrad;
+  rrect(ctx,pillX,bY,pillW,pillH,36); ctx.fill();
+
+  // Logo inside pill
+  ctx.drawImage(logoImg,pillX+18,bY+14,44,44);
+
+  // BIBCAR bold inside pill
+  ctx.font='bold 38px Arial'; ctx.fillStyle='#fff'; ctx.textAlign='left';
+  ctx.fillText('BibCar',pillX+72,bY+49);
+
+  // "o app de corridas da Copa" tagline
+  ctx.font='bold italic 24px Arial'; ctx.fillStyle='rgba(255,255,255,0.55)';
+  ctx.textAlign='right'; ctx.fillText('o app de corridas da Copa',pillX+pillW-16,bY+49);
+
+  // URL
+  ctx.font='26px Arial'; ctx.fillStyle='rgba(255,255,255,0.28)';
+  ctx.textAlign='center'; ctx.fillText('bibcarbrasil.com.br',W/2,bY+pillH+36);
+
+  // Hashtags
+  ctx.font='bold 36px Arial'; ctx.fillStyle='rgba(255,255,255,0.65)';
+  ctx.fillText('#Copa2026  #BibCar  #FigurinhaIA',W/2,bY+pillH+80);
 
   return new Promise(res=>canvas.toBlob(b=>res(b!),'image/png'));
 }
