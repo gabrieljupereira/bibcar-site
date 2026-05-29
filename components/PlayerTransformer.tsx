@@ -367,7 +367,7 @@ export default function PlayerTransformer(){
 
   const handleFile=useCallback(async(file:File)=>{
     if(!file.type.startsWith('image/')) return;
-    const d=await resizeImage(file);
+    const d=await resizeImage(file,1536);
     dataUrlRef.current=d; setPreviewUrl(d); setStage('preview');
   },[]);
 
@@ -379,7 +379,7 @@ export default function PlayerTransformer(){
 
   const runTransform=async(t:Team)=>{
     setStage('loading');
-    const prompt=`close-up portrait of a professional soccer player wearing ${t.jersey}, slight confident smile, looking directly at camera, cinematic stadium lights bokeh background, FIFA World Cup 2026, ultra-sharp face detail, photorealistic, professional sports photography, Nikon D6, 8k`;
+    const prompt=`portrait of a soccer player wearing ${t.jersey}, looking directly at camera, slight confident smile, stadium crowd and lights background, FIFA World Cup 2026, photorealistic, professional sports photography, sharp facial features, natural skin texture`;
     try{
       const res=await fetch('/api/fal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt,userImageDataUrl:dataUrlRef.current})});
       const data=await res.json() as {imageUrl?:string;error?:string};
@@ -466,10 +466,10 @@ export default function PlayerTransformer(){
 
                 <p style={{color:'#fff',fontWeight:700,fontSize:'1.1rem',marginBottom:6}}>Manda sua foto de frente</p>
                 <p style={{color:'rgba(255,255,255,0.38)',fontSize:'0.83rem',marginBottom:4}}>Selfie olhando para a câmera funciona melhor</p>
-                <p style={{color:'rgba(255,255,255,0.25)',fontSize:'0.76rem',marginBottom:28}}>rosto bem iluminado · sem óculos escuros</p>
-                <span style={{display:'inline-block',background:'linear-gradient(135deg,#7F00FF,#A930F0)',color:'#fff',fontWeight:800,padding:'12px 32px',borderRadius:999,fontSize:'0.93rem',boxShadow:'0 6px 24px rgba(127,0,255,0.4)'}}>Escolher Foto</span>
+                <p style={{color:'rgba(255,255,255,0.25)',fontSize:'0.76rem',marginBottom:28}}>rosto bem iluminado · sem óculos escuros · câmera ou galeria</p>
+                <span style={{display:'inline-block',background:'linear-gradient(135deg,#7F00FF,#A930F0)',color:'#fff',fontWeight:800,padding:'12px 32px',borderRadius:999,fontSize:'0.93rem',boxShadow:'0 6px 24px rgba(127,0,255,0.4)'}}>📷 Câmera &nbsp;·&nbsp; 🖼️ Galeria</span>
               </div>
-              <input ref={fileRef} type="file" accept="image/*" capture="user" onChange={onInput} style={{display:'none'}}/>
+              <input ref={fileRef} type="file" accept="image/*" onChange={onInput} style={{display:'none'}}/>
             </motion.div>
           )}
 
