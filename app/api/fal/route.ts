@@ -38,7 +38,6 @@ export async function POST(req: NextRequest) {
           guidance_scale: 3.5,
           image_size: 'portrait_4_3',
           enable_safety_checker: true,
-          negative_prompt: 'ugly, blurry, distorted, extra limbs, bad anatomy, watermark, text, low quality',
         },
         pollInterval: 2000,
       });
@@ -70,7 +69,6 @@ export async function POST(req: NextRequest) {
     const r = await (fal.subscribe as any)('fal-ai/flux/dev', {
       input: {
         prompt,
-        negative_prompt: 'ugly, blurry, distorted, cartoon, extra limbs, bad anatomy, watermark, text, low quality',
         num_inference_steps: 28,
         guidance_scale: 3.5,
         num_images: 1,
