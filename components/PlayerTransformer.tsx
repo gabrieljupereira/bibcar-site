@@ -28,17 +28,51 @@ function rnd(a:number,b:number){ return Math.floor(Math.random()*(b-a+1))+a; }
 function pick<T>(arr:T[]):T{ return arr[Math.floor(Math.random()*arr.length)]; }
 
 /* ─── Image utils ────────────────────────────────────────── */
-function resizeImage(file:File,maxSize=1024):Promise<string>{
-  return new Promise((res,rej)=>{
+// Crop tightly around the detected face (or fall back to a smart heuristic crop),
+// then resize to maxSize. PuLID works much better when the reference is a tight
+// face crop rather than a full-body or scene photo.
+async function prepareReferenceImage(file:File,maxSize=1024):Promise<{dataUrl:string;hint:string}>{
+  return new Promise((resolve,reject)=>{
     const img=new window.Image(), url=URL.createObjectURL(file);
-    img.onload=()=>{
-      const s=Math.min(1,maxSize/Math.max(img.width,img.height));
+    img.onload=async()=>{
+      URL.revokeObjectURL(url);
+      let cropX=0,cropY=0,cropW=img.width,cropH=img.height,hint='Crop automático ⚡';
+
+      // Native FaceDetector — available in Chrome 70+, Android Chrome
+      if('FaceDetector' in window){
+        try{
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const fd=new (window as any).FaceDetector({maxDetectedFaces:1});
+          const faces=await (fd.detect(img) as Promise<Array<{boundingBox:DOMRectReadOnly}>>);
+          if(faces.length>0){
+            const bb=faces[0].boundingBox;
+            const pad=Math.max(bb.width,bb.height)*0.55;
+            cropX=Math.max(0,bb.left-pad);
+            cropY=Math.max(0,bb.top-pad);
+            cropW=Math.min(img.width-cropX,bb.width+pad*2);
+            cropH=Math.min(img.height-cropY,bb.height+pad*2);
+            hint='Rosto detectado ✓';
+          }
+        }catch{ /* FaceDetector unavailable */ }
+      }
+
+      // Fallback heuristic: portrait → top portion; landscape → center-top square
+      if(hint!=='Rosto detectado ✓'){
+        if(img.height>=img.width){
+          cropX=0; cropY=0; cropW=img.width; cropH=Math.min(img.height,Math.round(img.width*1.25));
+        }else{
+          const sz=Math.round(img.height*0.9);
+          cropX=Math.round((img.width-sz)/2); cropY=0; cropW=sz; cropH=sz;
+        }
+      }
+
+      const s=Math.min(1,maxSize/Math.max(cropW,cropH));
       const c=document.createElement('canvas');
-      c.width=Math.round(img.width*s); c.height=Math.round(img.height*s);
-      c.getContext('2d')!.drawImage(img,0,0,c.width,c.height);
-      URL.revokeObjectURL(url); res(c.toDataURL('image/jpeg',0.92));
+      c.width=Math.round(cropW*s); c.height=Math.round(cropH*s);
+      c.getContext('2d')!.drawImage(img,cropX,cropY,cropW,cropH,0,0,c.width,c.height);
+      resolve({dataUrl:c.toDataURL('image/jpeg',0.92),hint});
     };
-    img.onerror=rej; img.src=url;
+    img.onerror=reject; img.src=url;
   });
 }
 function loadImg(src:string):Promise<HTMLImageElement>{
@@ -362,13 +396,14 @@ export default function PlayerTransformer(){
   const [errorMsg,setErrorMsg]=useState('');
   const [fullscreen,setFullscreen]=useState(false);
   const [cachedBlob,setCachedBlob]=useState<Blob|null>(null);
+  const [faceHint,setFaceHint]=useState('');
   const fileRef=useRef<HTMLInputElement>(null);
   const dataUrlRef=useRef<string>('');
 
   const handleFile=useCallback(async(file:File)=>{
     if(!file.type.startsWith('image/')) return;
-    const d=await resizeImage(file,1536);
-    dataUrlRef.current=d; setPreviewUrl(d); setStage('preview');
+    const {dataUrl,hint}=await prepareReferenceImage(file,1024);
+    dataUrlRef.current=dataUrl; setPreviewUrl(dataUrl); setFaceHint(hint); setStage('preview');
   },[]);
 
   const onInput=(e:React.ChangeEvent<HTMLInputElement>)=>{ const f=e.target.files?.[0]; if(f) handleFile(f); };
@@ -406,7 +441,7 @@ export default function PlayerTransformer(){
     finally{ setStage('result'); }
   };
 
-  const reset=()=>{ setStage('idle');setPreviewUrl(null);setResultUrl(null);setErrorMsg('');setFullscreen(false);setCachedBlob(null);dataUrlRef.current='';if(fileRef.current)fileRef.current.value=''; };
+  const reset=()=>{ setStage('idle');setPreviewUrl(null);setResultUrl(null);setErrorMsg('');setFullscreen(false);setCachedBlob(null);setFaceHint('');dataUrlRef.current='';if(fileRef.current)fileRef.current.value=''; };
   const ease=[0.22,1,0.36,1] as [number,number,number,number];
 
   return(
@@ -465,8 +500,8 @@ export default function PlayerTransformer(){
                 </div>
 
                 <p style={{color:'#fff',fontWeight:700,fontSize:'1.1rem',marginBottom:6}}>Manda sua foto de frente</p>
-                <p style={{color:'rgba(255,255,255,0.38)',fontSize:'0.83rem',marginBottom:4}}>Selfie olhando para a câmera funciona melhor</p>
-                <p style={{color:'rgba(255,255,255,0.25)',fontSize:'0.76rem',marginBottom:28}}>rosto bem iluminado · sem óculos escuros · câmera ou galeria</p>
+                <p style={{color:'rgba(255,255,255,0.38)',fontSize:'0.83rem',marginBottom:4}}>Selfie de frente, rosto bem iluminado = melhor resultado</p>
+                <p style={{color:'rgba(255,255,255,0.25)',fontSize:'0.76rem',marginBottom:28}}>sem óculos escuros · sem filtros · câmera ou galeria</p>
                 <span style={{display:'inline-block',background:'linear-gradient(135deg,#7F00FF,#A930F0)',color:'#fff',fontWeight:800,padding:'12px 32px',borderRadius:999,fontSize:'0.93rem',boxShadow:'0 6px 24px rgba(127,0,255,0.4)'}}>📷 Câmera &nbsp;·&nbsp; 🖼️ Galeria</span>
               </div>
               <input ref={fileRef} type="file" accept="image/*" onChange={onInput} style={{display:'none'}}/>
@@ -490,6 +525,16 @@ export default function PlayerTransformer(){
                   style={{position:'absolute',bottom:-8,right:-8,width:36,height:36,borderRadius:'50%',background:'linear-gradient(135deg,#7F00FF,#C13EFF)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:16,boxShadow:'0 0 16px rgba(127,0,255,0.6)'}}>✓</motion.div>
               </div>
 
+              {faceHint&&(
+                <div style={{display:'flex',alignItems:'center',justifyContent:'center',marginBottom:14}}>
+                  <span style={{
+                    background:faceHint.includes('✓')?'rgba(74,222,128,0.1)':'rgba(255,223,0,0.08)',
+                    border:`1px solid ${faceHint.includes('✓')?'rgba(74,222,128,0.35)':'rgba(255,223,0,0.28)'}`,
+                    color:faceHint.includes('✓')?'#4ade80':'#FFDF00',
+                    borderRadius:999,padding:'4px 14px',fontSize:11,fontWeight:700,letterSpacing:'0.05em'
+                  }}>{faceHint}</span>
+                </div>
+              )}
               <p style={{color:'rgba(255,255,255,0.6)',marginBottom:12,fontSize:'0.93rem'}}>Qual nome vai na figurinha?</p>
               <input type="text" maxLength={14} placeholder="SEU NOME (opcional)" value={playerName}
                 onChange={e=>setPlayerName(e.target.value.toUpperCase())}
