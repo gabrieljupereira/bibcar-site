@@ -6,23 +6,31 @@ import Image from 'next/image';
 
 /* ─── Teams ──────────────────────────────────────────────── */
 const TEAMS = [
-  { name: 'Brasil',     flag: '🇧🇷', abbr: 'BRA', c1: '#00843D', c2: '#FFCD00', foil: ['#00843D','#005c2b','#009940'], text: '#FFCD00', jersey: 'yellow and green Brazil Seleção Brasileira soccer jersey' },
-  { name: 'Argentina',  flag: '🇦🇷', abbr: 'ARG', c1: '#6CACE4', c2: '#FFFFFF', foil: ['#b8860b','#daa520','#ffd700'], text: '#003087', jersey: 'light blue and white Argentina Albiceleste stripes soccer jersey' },
-  { name: 'França',     flag: '🇫🇷', abbr: 'FRA', c1: '#002395', c2: '#FFFFFF', foil: ['#b8860b','#daa520','#ffd700'], text: '#002395', jersey: 'dark blue France Les Bleus soccer jersey' },
-  { name: 'Alemanha',   flag: '🇩🇪', abbr: 'GER', c1: '#2a2a2a', c2: '#FFFFFF', foil: ['#888','#aaa','#ccc'], text: '#ffffff', jersey: 'white Germany national team soccer jersey' },
-  { name: 'Portugal',   flag: '🇵🇹', abbr: 'POR', c1: '#C8102E', c2: '#FFFFFF', foil: ['#b8860b','#daa520','#ffd700'], text: '#C8102E', jersey: 'red Portugal national team soccer jersey' },
-  { name: 'Espanha',    flag: '🇪🇸', abbr: 'ESP', c1: '#AA151B', c2: '#FFFFFF', foil: ['#AA151B','#c0392b','#e74c3c'], text: '#AA151B', jersey: 'red Spain La Roja soccer jersey' },
-  { name: 'Holanda',    flag: '🇳🇱', abbr: 'NED', c1: '#FF4F00', c2: '#FFFFFF', foil: ['#b8860b','#daa520','#ffd700'], text: '#FF4F00', jersey: 'orange Netherlands Oranje soccer jersey' },
-  { name: 'Itália',     flag: '🇮🇹', abbr: 'ITA', c1: '#0066CC', c2: '#FFFFFF', foil: ['#0066CC','#0047a0','#003d8a'], text: '#0066CC', jersey: 'blue Italy Azzurri soccer jersey' },
-  { name: 'Inglaterra', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', abbr: 'ENG', c1: '#CF091D', c2: '#FFFFFF', foil: ['#b8860b','#daa520','#ffd700'], text: '#CF091D', jersey: 'white England Three Lions soccer jersey' },
-  { name: 'Marrocos',   flag: '🇲🇦', abbr: 'MAR', c1: '#C1272D', c2: '#FFFFFF', foil: ['#b8860b','#daa520','#ffd700'], text: '#C1272D', jersey: 'red Morocco national team soccer jersey' },
-  { name: 'Japão',      flag: '🇯🇵', abbr: 'JPN', c1: '#003087', c2: '#FFFFFF', foil: ['#003087','#001a4d','#002470'], text: '#003087', jersey: 'dark blue Japan Samurai Blue soccer jersey' },
-  { name: 'Uruguai',    flag: '🇺🇾', abbr: 'URU', c1: '#4B9CD3', c2: '#FFFFFF', foil: ['#b8860b','#daa520','#ffd700'], text: '#003087', jersey: 'light blue Uruguay Celeste soccer jersey' },
+  { name: 'Brasil',        flag: '🇧🇷', abbr: 'BRA', c1: '#00843D', c2: '#FFCD00', foil: ['#00843D','#005c2b','#009940'], text: '#FFCD00', jersey: 'yellow and green Brazil Seleção Brasileira soccer jersey' },
+  { name: 'Argentina',     flag: '🇦🇷', abbr: 'ARG', c1: '#6CACE4', c2: '#FFFFFF', foil: ['#b8860b','#daa520','#ffd700'], text: '#003087', jersey: 'light blue and white Argentina Albiceleste stripes soccer jersey' },
+  { name: 'França',        flag: '🇫🇷', abbr: 'FRA', c1: '#002395', c2: '#FFFFFF', foil: ['#b8860b','#daa520','#ffd700'], text: '#FFFFFF', jersey: 'dark blue France Les Bleus soccer jersey' },
+  { name: 'Alemanha',      flag: '🇩🇪', abbr: 'GER', c1: '#2a2a2a', c2: '#FFFFFF', foil: ['#888','#aaa','#ccc'],          text: '#ffffff', jersey: 'white Germany national team soccer jersey' },
+  { name: 'Portugal',      flag: '🇵🇹', abbr: 'POR', c1: '#C8102E', c2: '#006600', foil: ['#b8860b','#daa520','#ffd700'], text: '#FFFFFF', jersey: 'red Portugal national team soccer jersey' },
+  { name: 'Espanha',       flag: '🇪🇸', abbr: 'ESP', c1: '#AA151B', c2: '#F1BF00', foil: ['#AA151B','#c0392b','#e74c3c'], text: '#F1BF00', jersey: 'red Spain La Roja soccer jersey' },
+  { name: 'Holanda',       flag: '🇳🇱', abbr: 'NED', c1: '#FF4F00', c2: '#FFFFFF', foil: ['#b8860b','#daa520','#ffd700'], text: '#FF4F00', jersey: 'orange Netherlands Oranje soccer jersey' },
+  { name: 'Itália',        flag: '🇮🇹', abbr: 'ITA', c1: '#0066CC', c2: '#FFFFFF', foil: ['#0066CC','#0047a0','#003d8a'], text: '#FFFFFF', jersey: 'blue Italy Azzurri soccer jersey' },
+  { name: 'Inglaterra',    flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', abbr: 'ENG', c1: '#CF091D', c2: '#FFFFFF', foil: ['#b8860b','#daa520','#ffd700'], text: '#FFFFFF', jersey: 'white England Three Lions soccer jersey' },
+  { name: 'Marrocos',      flag: '🇲🇦', abbr: 'MAR', c1: '#C1272D', c2: '#006233', foil: ['#b8860b','#daa520','#ffd700'], text: '#FFFFFF', jersey: 'red Morocco national team soccer jersey' },
+  { name: 'Japão',         flag: '🇯🇵', abbr: 'JPN', c1: '#003087', c2: '#FFFFFF', foil: ['#003087','#001a4d','#002470'], text: '#FFFFFF', jersey: 'dark blue Japan Samurai Blue soccer jersey' },
+  { name: 'Uruguai',       flag: '🇺🇾', abbr: 'URU', c1: '#4B9CD3', c2: '#FFFFFF', foil: ['#b8860b','#daa520','#ffd700'], text: '#FFFFFF', jersey: 'light blue Uruguay Celeste soccer jersey' },
+  { name: 'EUA',           flag: '🇺🇸', abbr: 'USA', c1: '#B22234', c2: '#3C3B6E', foil: ['#B22234','#3C3B6E','#fff'],    text: '#FFFFFF', jersey: 'white USA national team soccer jersey with red and blue stripes' },
+  { name: 'Colômbia',      flag: '🇨🇴', abbr: 'COL', c1: '#FCD116', c2: '#003087', foil: ['#b8860b','#e6bc00','#FCD116'], text: '#003087', jersey: 'yellow Colombia national team soccer jersey' },
+  { name: 'México',        flag: '🇲🇽', abbr: 'MEX', c1: '#006847', c2: '#FFFFFF', foil: ['#006847','#004f36','#009060'], text: '#FFFFFF', jersey: 'green Mexico national team soccer jersey' },
+  { name: 'Senegal',       flag: '🇸🇳', abbr: 'SEN', c1: '#00853F', c2: '#FDEF42', foil: ['#b8860b','#daa520','#ffd700'], text: '#FFFFFF', jersey: 'white Senegal national team soccer jersey' },
+  { name: 'Croácia',       flag: '🇭🇷', abbr: 'CRO', c1: '#FF0000', c2: '#FFFFFF', foil: ['#FF0000','#cc0000','#ff4444'], text: '#FFFFFF', jersey: 'red and white checkered Croatia national team soccer jersey' },
+  { name: 'Bélgica',       flag: '🇧🇪', abbr: 'BEL', c1: '#EF3340', c2: '#000000', foil: ['#EF3340','#d42d38','#ff5566'], text: '#FFCD00', jersey: 'red Belgium Red Devils soccer jersey' },
+  { name: 'Austrália',     flag: '🇦🇺', abbr: 'AUS', c1: '#005c8a', c2: '#FFD700', foil: ['#005c8a','#004a70','#0072aa'], text: '#FFD700', jersey: 'yellow Australia Socceroos soccer jersey' },
+  { name: 'Coreia do Sul', flag: '🇰🇷', abbr: 'KOR', c1: '#CD2E3A', c2: '#FFFFFF', foil: ['#CD2E3A','#b02535','#e03c49'], text: '#FFFFFF', jersey: 'red South Korea national team soccer jersey' },
 ];
 type Team = typeof TEAMS[0];
 
-const POSITIONS_FULL = ['Atacante','Meia-Atacante','Ponta Direita','Centroavante','Meia'];
-const POS_ABBR       = ['ATK',     'CAM',          'PNT',         'CA',          'MEI'];
+const POSITIONS_FULL = ['Atacante','Meia-Atacante','Ponta Direita','Centroavante','Meia','Goleiro','Zagueiro','Lateral Direito','Lateral Esquerdo','Volante'];
+const POS_ABBR       = ['ATK',     'CAM',          'PNT',         'CA',          'MEI', 'GL',     'ZAG',     'LD',             'LE',             'VOL'];
 
 function rnd(a:number,b:number){ return Math.floor(Math.random()*(b-a+1))+a; }
 function pick<T>(arr:T[]):T{ return arr[Math.floor(Math.random()*arr.length)]; }
@@ -90,15 +98,16 @@ function rrect(ctx:CanvasRenderingContext2D,x:number,y:number,w:number,h:number,
 }
 
 /* ─── Panini Card HTML (preview) ─────────────────────────── */
-function FigurinhaCard({imageUrl,team,name,posIdx,jerseyNum,bday,height,weight,ovr,size=300}:{
+function FigurinhaCard({imageUrl,team,name,posIdx,jerseyNum,bday,height,weight,ovr,stats,size=300}:{
   imageUrl:string;team:Team;name:string;posIdx:number;jerseyNum:number;
-  bday:string;height:string;weight:string;ovr:number;size?:number;
+  bday:string;height:string;weight:string;ovr:number;stats:number[];size?:number;
 }){
   const s=size/300;
-  const H=Math.round(420*s);
+  const H=Math.round(450*s);
   const topH=44*s;
-  const botH=112*s;
+  const botH=140*s;
   const [f1,f2,f3]=team.foil;
+  const accent=team.c1==='#2a2a2a'?'#555':['#FCD116','#FFCD00','#FFD700'].includes(team.c1)?'#9a7300':team.c1;
   return(
     <div style={{display:'inline-block',borderRadius:14*s,padding:3*s,background:`linear-gradient(135deg,${f1},${f2},${f3},${f2},${f1})`,boxShadow:`0 0 30px ${team.c1}66, 0 20px 60px rgba(0,0,0,0.7)`}}>
       <div style={{position:'relative',width:size,height:H,borderRadius:12*s,overflow:'hidden',background:`linear-gradient(145deg,${f1} 0%,${f2} 25%,${f3} 50%,${f2} 75%,${f1} 100%)`}}>
@@ -124,27 +133,34 @@ function FigurinhaCard({imageUrl,team,name,posIdx,jerseyNum,bday,height,weight,o
             <div style={{color:'rgba(255,255,255,0.5)',fontWeight:700,fontSize:8*s,letterSpacing:'0.12em'}}>OVR</div>
           </div>
         </div>
-        <div style={{position:'absolute',bottom:0,left:0,right:0,height:botH,background:'#ffffff',zIndex:6,padding:`${8*s}px ${10*s}px ${6*s}px`,display:'flex',flexDirection:'column',justifyContent:'space-between'}}>
+        <div style={{position:'absolute',bottom:0,left:0,right:0,height:botH,background:'#ffffff',zIndex:6,padding:`${6*s}px ${10*s}px ${5*s}px`,display:'flex',flexDirection:'column',justifyContent:'space-between'}}>
           <div>
-            <div style={{fontSize:(name.length>12?14:17)*s,fontWeight:800,color:'#111',letterSpacing:'0.01em',lineHeight:1.1,textTransform:'uppercase'}}>
+            <div style={{fontSize:(name.length>12?13:16)*s,fontWeight:800,color:'#111',letterSpacing:'0.01em',lineHeight:1.1,textTransform:'uppercase'}}>
               {name.includes(' ')
                 ? <>{name.split(' ').slice(0,-1).join(' ')}{' '}<strong>{name.split(' ').slice(-1)[0]}</strong></>
                 : <strong>{name}</strong>}
             </div>
-            <div style={{fontSize:8*s,color:'#666',marginTop:2*s,letterSpacing:'0.03em'}}>{bday}&nbsp;&nbsp;|&nbsp;&nbsp;{height} m&nbsp;&nbsp;|&nbsp;&nbsp;{weight} kg</div>
+            <div style={{fontSize:7*s,color:'#777',marginTop:1*s,letterSpacing:'0.02em'}}>{bday}&nbsp;|&nbsp;{height} m&nbsp;|&nbsp;{weight} kg</div>
           </div>
-          <div style={{background:team.c1,borderRadius:4*s,padding:`${3*s}px ${8*s}px`,display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-            <span style={{color:'#fff',fontSize:9*s,fontWeight:700,letterSpacing:'0.05em'}}>BibCar FC&nbsp;·&nbsp;{POSITIONS_FULL[posIdx]}</span>
-            <div style={{display:'flex',alignItems:'center',gap:4*s}}>
-              <div style={{width:18*s,height:18*s,borderRadius:3*s,overflow:'hidden',flexShrink:0,background:'#fff'}}>
-                <Image src="/logo.png" alt="BibCar" width={18} height={18} style={{objectFit:'contain',width:'100%',height:'100%'}}/>
+          {/* Mini stats row */}
+          <div style={{display:'flex',borderTop:`1px solid rgba(0,0,0,0.07)`,paddingTop:3*s}}>
+            {['VEL','FIN','PAC','DRI','DEF','FIS'].map((lbl,i)=>(
+              <div key={lbl} style={{flex:1,textAlign:'center'}}>
+                <div style={{fontSize:11*s,fontWeight:900,color:accent,lineHeight:1}}>{stats[i]}</div>
+                <div style={{fontSize:5.5*s,color:'#aaa',letterSpacing:'0.04em',lineHeight:1.2}}>{lbl}</div>
               </div>
-              <span style={{color:team.text,fontSize:9*s,fontWeight:900,letterSpacing:'0.1em'}}>BIBCAR</span>
+            ))}
+          </div>
+          {/* Position bar — logo icon only, sem texto BIBCAR duplicado */}
+          <div style={{background:team.c1,borderRadius:4*s,padding:`${3*s}px ${8*s}px`,display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+            <span style={{color:'#fff',fontSize:8.5*s,fontWeight:700,letterSpacing:'0.04em'}}>BibCar FC&nbsp;·&nbsp;{POSITIONS_FULL[posIdx]}</span>
+            <div style={{width:20*s,height:20*s,borderRadius:3*s,overflow:'hidden',flexShrink:0,background:'#fff'}}>
+              <Image src="/logo.png" alt="BibCar" width={20} height={20} style={{objectFit:'contain',width:'100%',height:'100%'}}/>
             </div>
           </div>
           <div style={{display:'flex',justifyContent:'flex-end',alignItems:'center',gap:4*s}}>
-            <span style={{fontSize:12*s}}>{team.flag}</span>
-            <span style={{color:'#999',fontSize:7*s,letterSpacing:'0.1em'}}>{team.abbr}</span>
+            <span style={{fontSize:11*s}}>{team.flag}</span>
+            <span style={{color:'#bbb',fontSize:6.5*s,letterSpacing:'0.1em'}}>{team.abbr}</span>
           </div>
         </div>
       </div>
@@ -153,7 +169,7 @@ function FigurinhaCard({imageUrl,team,name,posIdx,jerseyNum,bday,height,weight,o
 }
 
 /* ─── Canvas Story 1080×1920 ─────────────────────────────── */
-async function generateStoryBlob(resultUrl:string,team:Team,name:string,posIdx:number,jerseyNum:number,bday:string,height:string,weight:string,cardNum:number,ovr:number):Promise<Blob>{
+async function generateStoryBlob(resultUrl:string,team:Team,name:string,posIdx:number,jerseyNum:number,bday:string,height:string,weight:string,cardNum:number,ovr:number,stats:number[]):Promise<Blob>{
   const W=1080,H=1920;
   const canvas=document.createElement('canvas');
   canvas.width=W; canvas.height=H;
@@ -161,135 +177,153 @@ async function generateStoryBlob(resultUrl:string,team:Team,name:string,posIdx:n
   const playerSrc=`/api/fal/proxy-image?url=${encodeURIComponent(resultUrl)}`;
   const [playerImg,logoImg]=await Promise.all([loadImg(playerSrc),loadImg('/logo.png')]);
   const [f1,f2,f3]=team.foil;
+  const accent=team.c1==='#2a2a2a'?'#666':team.c1;
+
+  /* ── Background ── */
   const bg=ctx.createLinearGradient(0,0,0,H);
-  bg.addColorStop(0,'#060606'); bg.addColorStop(0.5,team.c1+'14'); bg.addColorStop(1,'#040404');
+  bg.addColorStop(0,'#050505'); bg.addColorStop(0.45,accent+'18'); bg.addColorStop(1,'#030303');
   ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
-  const spots:[number,number,number,string][]=[
-    [W*0.18,0,620,team.c1+'38'],[W*0.82,0,500,team.c2+'28'],
-    [W*0.5,H,700,team.c1+'22'],[W*0.5,H*0.5,400,'#7F00FF22'],
-  ];
-  spots.forEach(([sx,sy,sr,sc])=>{
+  ([[W*.18,0,660,accent+'3c'],[W*.82,0,540,team.c2+'28'],[W*.5,H,820,accent+'20']] as [number,number,number,string][]).forEach(([sx,sy,sr,sc])=>{
     const sg=ctx.createRadialGradient(sx,sy,0,sx,sy,sr);
     sg.addColorStop(0,sc); sg.addColorStop(1,'transparent');
     ctx.fillStyle=sg; ctx.fillRect(0,0,W,H);
   });
-  ctx.fillStyle='rgba(255,255,255,0.035)';
+  ctx.fillStyle='rgba(255,255,255,0.028)';
   for(let gx=40;gx<W;gx+=68) for(let gy=40;gy<H;gy+=68){ ctx.beginPath(); ctx.arc(gx,gy,1.8,0,Math.PI*2); ctx.fill(); }
+
+  /* ── Equalizer bars (taller — fill bottom third) ── */
   const barN=54,barW=Math.floor(W/barN),barGap=4;
-  const barFn=(i:number,f1:number,f2:number,f3:number,base:number,a1:number,a2:number,a3:number)=>{
-    const t=i/(barN-1);
-    return Math.max(10,base+Math.sin(t*Math.PI*f1)*a1+Math.sin(t*Math.PI*f2+0.6)*a2+Math.sin(t*Math.PI*f3+1.3)*a3);
-  };
+  const barFn=(i:number)=>{ const t=i/(barN-1); return Math.max(14,118+Math.sin(t*Math.PI*4)*118+Math.sin(t*Math.PI*9+.6)*64+Math.sin(t*Math.PI*16+1.3)*32); };
   for(let i=0;i<barN;i++){
-    const bH=barFn(i,4,9,16,80,90,55,28);
-    const bX=i*barW+barGap/2;
-    const grad=ctx.createLinearGradient(0,H-bH,0,H);
-    grad.addColorStop(0,team.c1+'ee'); grad.addColorStop(0.6,team.c1+'66'); grad.addColorStop(1,team.c1+'11');
-    ctx.fillStyle=grad; rrect(ctx,bX,H-bH,barW-barGap,bH,3); ctx.fill();
+    const bH=barFn(i),bX=i*barW+barGap/2;
+    const g=ctx.createLinearGradient(0,H-bH,0,H); g.addColorStop(0,accent+'ee'); g.addColorStop(0.6,accent+'55'); g.addColorStop(1,accent+'0a');
+    ctx.fillStyle=g; rrect(ctx,bX,H-bH,barW-barGap,bH,3); ctx.fill();
   }
   for(let i=0;i<barN;i++){
-    const bH=barFn(i,5,11,18,50,65,38,20)*0.65;
-    const bX=i*barW+barGap/2;
-    const grad=ctx.createLinearGradient(0,0,0,bH);
-    grad.addColorStop(0,team.c1+'cc'); grad.addColorStop(0.6,team.c1+'44'); grad.addColorStop(1,team.c1+'00');
-    ctx.fillStyle=grad; rrect(ctx,bX,0,barW-barGap,bH,3); ctx.fill();
+    const bH=barFn(i)*.5,bX=i*barW+barGap/2;
+    const g=ctx.createLinearGradient(0,0,0,bH); g.addColorStop(0,accent+'bb'); g.addColorStop(1,accent+'00');
+    ctx.fillStyle=g; rrect(ctx,bX,0,barW-barGap,bH,3); ctx.fill();
   }
-  const vig=ctx.createRadialGradient(W/2,H/2,300,W/2,H/2,900);
-  vig.addColorStop(0,'transparent'); vig.addColorStop(1,'rgba(0,0,0,0.55)');
+  const vig=ctx.createRadialGradient(W/2,H/2,280,W/2,H/2,980);
+  vig.addColorStop(0,'transparent'); vig.addColorStop(1,'rgba(0,0,0,0.62)');
   ctx.fillStyle=vig; ctx.fillRect(0,0,W,H);
-  ctx.save();
-  ctx.globalAlpha=0.55; ctx.drawImage(logoImg,W-88,28,52,52); ctx.globalAlpha=1;
-  ctx.font='bold 18px Arial'; ctx.fillStyle='#C13EFF'; ctx.textAlign='right';
-  ctx.fillText('BibCar',W-18,94);
-  ctx.restore();
+
+  /* ── BibCar branding ── */
+  ctx.save(); ctx.globalAlpha=0.6; ctx.drawImage(logoImg,W-90,22,56,56); ctx.globalAlpha=1;
+  ctx.font='bold 18px Arial'; ctx.fillStyle='#C13EFF'; ctx.textAlign='right'; ctx.fillText('BibCar',W-18,100); ctx.restore();
+
+  /* ── Header: "FUI CONVOCADO!" ── */
   ctx.textAlign='center';
-  ctx.font='bold 80px Arial'; ctx.fillStyle='#ffffff';
-  ctx.fillText('FUI CONVOCADO!',W/2,180);
-  ctx.font='42px Arial'; ctx.fillStyle='rgba(255,255,255,0.55)';
-  ctx.fillText(`${team.flag}  Seleção de ${team.name}  ·  Copa 2026`,W/2,246);
-  const cW=620,cH=868,cX=(W-cW)/2,cY=300,cR=18;
-  const topH=80,botH=210;
-  ctx.save();
-  rrect(ctx,cX-4,cY-4,cW+8,cH+8,cR+4);
+  ctx.font='bold 92px Arial'; ctx.fillStyle='#ffffff'; ctx.fillText('FUI CONVOCADO!',W/2,178);
+
+  /* ── Subtitle: colored abbr badge + team name (sem emoji — canvas não renderiza flag emoji) ── */
+  const subText=`Seleção de ${team.name}  ·  Copa 2026`;
+  ctx.font='36px Arial';
+  const subW=ctx.measureText(subText).width;
+  const bdX=W/2-subW/2-36, bdY=228;
+  rrect(ctx,bdX-24,bdY,52,24,5); ctx.fillStyle=accent; ctx.fill();
+  ctx.font='bold 13px Arial'; ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.fillText(team.abbr,bdX+2,bdY+17);
+  ctx.font='36px Arial'; ctx.fillStyle='rgba(255,255,255,0.55)'; ctx.textAlign='center';
+  ctx.fillText(subText,W/2+14,bdY+18);
+
+  /* ── Panini Card ── */
+  const cW=660,cH=860,cX=(W-cW)/2,cY=268;
+  const topH=82,botH=148;
+
+  /* Border glow */
+  ctx.save(); rrect(ctx,cX-5,cY-5,cW+10,cH+10,22);
   const border=ctx.createLinearGradient(cX,cY,cX+cW,cY+cH);
   [f1,f2,f3,f2,f1].forEach((c,i,a)=>border.addColorStop(i/(a.length-1),c));
-  ctx.strokeStyle=border; ctx.lineWidth=7; ctx.stroke();
-  ctx.restore();
-  ctx.save();
-  rrect(ctx,cX,cY,cW,cH,cR); ctx.clip();
+  ctx.strokeStyle=border; ctx.lineWidth=8; ctx.stroke(); ctx.restore();
+
+  /* Card body */
+  ctx.save(); rrect(ctx,cX,cY,cW,cH,18); ctx.clip();
   const foil=ctx.createLinearGradient(cX,cY,cX+cW,cY+cH);
   [f1,f2,f3,f2,f1].forEach((c,i,a)=>foil.addColorStop(i/(a.length-1),c));
   ctx.fillStyle=foil; ctx.fillRect(cX,cY,cW,cH);
-  ctx.save();
   for(let i=-cH;i<cW+cH;i+=12){ ctx.strokeStyle='rgba(255,255,255,0.07)'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(cX+i,cY); ctx.lineTo(cX+i+cH,cY+cH); ctx.stroke(); }
-  ctx.restore();
-  ctx.save();
   ctx.globalAlpha=0.18; ctx.fillStyle=team.c1;
-  ctx.font='bold italic 400px Arial'; ctx.textAlign='right';
-  ctx.fillText(String(jerseyNum),cX+cW-10,cY+topH+cH*0.7);
-  ctx.globalAlpha=1; ctx.restore();
+  ctx.font='bold italic 430px Arial'; ctx.textAlign='right'; ctx.fillText(String(jerseyNum),cX+cW-10,cY+topH+cH*.72); ctx.globalAlpha=1;
+
+  /* Card header bar */
   ctx.fillStyle=team.c1; ctx.fillRect(cX,cY,cW,topH);
-  ctx.font='bold italic 32px Arial'; ctx.fillStyle='#fff'; ctx.textAlign='left';
-  ctx.fillText('FIFA',cX+20,cY+32);
-  ctx.font='9px Arial'; ctx.fillStyle='rgba(255,255,255,0.6)';
-  ctx.fillText('WORLD CUP',cX+20,cY+52);
-  ctx.font='bold 26px Arial'; ctx.fillStyle=team.text; ctx.textAlign='center';
-  ctx.fillText('COPA MUNDO 2026',cX+cW/2,cY+48);
-  ctx.font='52px Arial'; ctx.textAlign='right';
-  ctx.fillText(team.flag,cX+cW-46,cY+58);
-  ctx.font='bold 20px Arial'; ctx.fillStyle='rgba(255,255,255,0.75)';
-  ctx.fillText(team.abbr,cX+cW-14,cY+68);
+  ctx.font='bold italic 34px Arial'; ctx.fillStyle='#fff'; ctx.textAlign='left'; ctx.fillText('FIFA',cX+22,cY+36);
+  ctx.font='9px Arial'; ctx.fillStyle='rgba(255,255,255,0.6)'; ctx.fillText('WORLD CUP',cX+22,cY+56);
+  ctx.font='bold 28px Arial'; ctx.fillStyle=team.text; ctx.textAlign='center'; ctx.fillText('COPA MUNDO 2026',cX+cW/2,cY+50);
+  /* Team abbr badge (no emoji — canvas compat) */
+  rrect(ctx,cX+cW-66,cY+12,60,58,10); ctx.fillStyle='rgba(0,0,0,0.3)'; ctx.fill();
+  ctx.font='bold 23px Arial'; ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.fillText(team.abbr,cX+cW-36,cY+46);
+  ctx.font='bold 12px Arial'; ctx.fillStyle='rgba(255,255,255,0.6)'; ctx.fillText('2026',cX+cW-36,cY+64);
+
+  /* OVR badge */
+  ctx.fillStyle='rgba(0,0,0,0.72)'; rrect(ctx,cX+14,cY+topH+14,86,102,12); ctx.fill();
+  ctx.font='bold 58px Arial'; ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.fillText(String(ovr),cX+57,cY+topH+74);
+  ctx.font='bold 18px Arial'; ctx.fillStyle='rgba(255,255,255,0.5)'; ctx.fillText('OVR',cX+57,cY+topH+94);
+
+  /* Player photo */
   const pY=cY+topH,pH=cH-topH-botH;
-  const scale=Math.max(cW/playerImg.naturalWidth,pH/playerImg.naturalHeight);
-  const dw=playerImg.naturalWidth*scale,dh=playerImg.naturalHeight*scale;
-  const dx=cX+(cW-dw)/2,dy=pY;
+  const sc2=Math.max(cW/playerImg.naturalWidth,pH/playerImg.naturalHeight);
+  const dw=playerImg.naturalWidth*sc2,dh=playerImg.naturalHeight*sc2;
   ctx.save(); rrect(ctx,cX,pY,cW,pH,0); ctx.clip();
-  ctx.drawImage(playerImg,dx,dy,dw,dh);
-  ctx.restore();
-  const fade=ctx.createLinearGradient(0,pY+pH-120,0,pY+pH);
-  fade.addColorStop(0,'transparent'); fade.addColorStop(1,'rgba(255,255,255,0.9)');
-  ctx.fillStyle=fade; ctx.fillRect(cX,pY+pH-120,cW,120);
-  ctx.fillStyle='#ffffff'; ctx.fillRect(cX,cY+cH-botH,cW,botH);
-  const nName=name.toUpperCase();
-  const parts=nName.split(' ');
-  const firstName=parts.slice(0,-1).join(' ');
-  const lastName=parts.slice(-1)[0]||nName;
-  const nY=cY+cH-botH+48;
+  ctx.drawImage(playerImg,cX+(cW-dw)/2,pY,dw,dh); ctx.restore();
+  const fade=ctx.createLinearGradient(0,pY+pH-110,0,pY+pH);
+  fade.addColorStop(0,'transparent'); fade.addColorStop(1,'rgba(255,255,255,0.92)');
+  ctx.fillStyle=fade; ctx.fillRect(cX,pY+pH-110,cW,110);
+
+  /* White bottom section */
+  const wY=cY+cH-botH;
+  ctx.fillStyle='#fff'; ctx.fillRect(cX,wY,cW,botH);
+  const nName=name.toUpperCase(), parts2=nName.split(' ');
+  const first2=parts2.slice(0,-1).join(' '), last2=parts2.slice(-1)[0]||nName;
+  const nY=wY+44;
   ctx.fillStyle='#111';
-  if(firstName){ ctx.font=`500 ${nName.length>12?38:46}px Arial`; ctx.textAlign='left'; ctx.fillText(firstName+' ',cX+18,nY); const fw=ctx.measureText(firstName+' ').width; ctx.font=`bold ${nName.length>12?38:46}px Arial`; ctx.fillText(lastName,cX+18+fw,nY); }
-  else { ctx.font=`bold ${nName.length>12?38:46}px Arial`; ctx.textAlign='left'; ctx.fillText(lastName,cX+18,nY); }
-  ctx.font='22px Arial'; ctx.fillStyle='#777'; ctx.textAlign='left';
-  ctx.fillText(`${bday}  |  ${height} m  |  ${weight} kg`,cX+18,nY+34);
-  ctx.fillStyle=team.c1; rrect(ctx,cX+12,cY+cH-botH+90,cW-24,52,8); ctx.fill();
-  ctx.font='bold 24px Arial'; ctx.fillStyle='#fff'; ctx.textAlign='left';
-  ctx.fillText(`BibCar FC · ${POSITIONS_FULL[posIdx]}`,cX+24,cY+cH-botH+122);
-  ctx.drawImage(logoImg,cX+cW-80,cY+cH-botH+95,44,44);
-  ctx.font='bold 20px Arial'; ctx.fillStyle=team.text; ctx.textAlign='right';
-  ctx.fillText('BIBCAR',cX+cW-84,cY+cH-botH+120);
-  ctx.font='32px Arial'; ctx.textAlign='right';
-  ctx.fillText(team.flag,cX+cW-12,cY+cH-12);
-  ctx.font='bold 16px Arial'; ctx.fillStyle='#999';
-  ctx.fillText(`#${cardNum}`,cX+20,cY+cH-14);
-  ctx.fillStyle='rgba(0,0,0,0.72)'; rrect(ctx,cX+14,cY+topH+14,80,96,12); ctx.fill();
-  ctx.font='bold 54px Arial'; ctx.fillStyle=team.text; ctx.textAlign='center';
-  ctx.fillText(String(ovr),cX+54,cY+topH+68);
-  ctx.font='bold 18px Arial'; ctx.fillStyle='rgba(255,255,255,0.5)';
-  ctx.fillText('OVR',cX+54,cY+topH+88);
+  if(first2){ ctx.font=`500 ${nName.length>12?38:46}px Arial`; ctx.textAlign='left'; ctx.fillText(first2+' ',cX+18,nY); ctx.font=`bold ${nName.length>12?38:46}px Arial`; ctx.fillText(last2,cX+18+ctx.measureText(first2+' ').width,nY); }
+  else{ ctx.font=`bold ${nName.length>12?38:46}px Arial`; ctx.textAlign='left'; ctx.fillText(last2,cX+18,nY); }
+  ctx.font='20px Arial'; ctx.fillStyle='#999'; ctx.fillText(`${bday}  |  ${height} m  |  ${weight} kg`,cX+18,nY+30);
+
+  /* Position bar — logo icon only, sem texto BIBCAR duplicado */
+  const barY=wY+52;
+  ctx.fillStyle=team.c1; rrect(ctx,cX+12,barY,cW-24,50,8); ctx.fill();
+  ctx.font='bold 23px Arial'; ctx.fillStyle='#fff'; ctx.textAlign='left'; ctx.fillText(`BibCar FC · ${POSITIONS_FULL[posIdx]}`,cX+24,barY+33);
+  ctx.drawImage(logoImg,cX+cW-56,barY+5,40,40);
+
+  /* Card number + abbr badge (sem emoji) */
+  ctx.font='bold 18px Arial'; ctx.fillStyle='#ccc'; ctx.textAlign='left'; ctx.fillText(`#${cardNum}`,cX+20,cY+cH-10);
+  rrect(ctx,cX+cW-60,cY+cH-30,54,20,5); ctx.fillStyle=accent; ctx.fill();
+  ctx.font='bold 13px Arial'; ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.fillText(team.abbr,cX+cW-33,cY+cH-16);
   ctx.restore();
-  const bY=cY+cH+48;
-  const pillW=360,pillH=72,pillX=(W-pillW)/2;
-  const pillGrad=ctx.createLinearGradient(pillX,bY,pillX+pillW,bY);
-  pillGrad.addColorStop(0,'#7F00FF'); pillGrad.addColorStop(1,'#C13EFF');
-  ctx.fillStyle=pillGrad; rrect(ctx,pillX,bY,pillW,pillH,36); ctx.fill();
-  ctx.drawImage(logoImg,pillX+18,bY+14,44,44);
-  ctx.font='bold 38px Arial'; ctx.fillStyle='#fff'; ctx.textAlign='left';
-  ctx.fillText('BibCar',pillX+72,bY+49);
-  ctx.font='bold italic 24px Arial'; ctx.fillStyle='rgba(255,255,255,0.55)';
-  ctx.textAlign='right'; ctx.fillText('o app de corridas da Copa',pillX+pillW-16,bY+49);
-  ctx.font='26px Arial'; ctx.fillStyle='rgba(255,255,255,0.28)';
-  ctx.textAlign='center'; ctx.fillText('bibcarbrasil.com.br',W/2,bY+pillH+36);
-  ctx.font='bold 36px Arial'; ctx.fillStyle='rgba(255,255,255,0.65)';
-  ctx.fillText('#Copa2026  #BibCar  #FigurinhaIA',W/2,bY+pillH+80);
+
+  /* ── Stats showcase row ── */
+  const stY=cY+cH+22;
+  const stH=114;
+  const stBg=ctx.createLinearGradient(0,stY,0,stY+stH);
+  stBg.addColorStop(0,'rgba(255,255,255,0.08)'); stBg.addColorStop(1,'rgba(255,255,255,0.02)');
+  ctx.fillStyle=stBg; rrect(ctx,cX,stY,cW,stH,14); ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,0.1)'; ctx.lineWidth=1.5; rrect(ctx,cX,stY,cW,stH,14); ctx.stroke();
+  const STAT_L=['VEL','FIN','PAC','DRI','DEF','FIS'];
+  STAT_L.forEach((lbl,i)=>{
+    const sx=cX+i*(cW/6)+cW/12, val=stats[i];
+    ctx.font='bold 44px Arial';
+    ctx.fillStyle=val>=92?'#FFDF00':val>=85?accent:'rgba(255,255,255,0.82)';
+    ctx.textAlign='center'; ctx.fillText(String(val),sx,stY+64);
+    ctx.font='bold 17px Arial'; ctx.fillStyle='rgba(255,255,255,0.38)'; ctx.fillText(lbl,sx,stY+88);
+    if(i<5){ ctx.strokeStyle='rgba(255,255,255,0.08)'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(cX+(i+1)*(cW/6),stY+18); ctx.lineTo(cX+(i+1)*(cW/6),stY+stH-18); ctx.stroke(); }
+  });
+
+  /* ── BibCar pill (layout 2 linhas — sem overlap) ── */
+  const pillY=stY+stH+24;
+  const pillW=420,pillH=82,pillX=(W-pillW)/2;
+  const pg=ctx.createLinearGradient(pillX,pillY,pillX+pillW,pillY);
+  pg.addColorStop(0,'#7F00FF'); pg.addColorStop(1,'#C13EFF');
+  ctx.fillStyle=pg; rrect(ctx,pillX,pillY,pillW,pillH,41); ctx.fill();
+  ctx.drawImage(logoImg,pillX+18,pillY+17,48,48);
+  ctx.font='bold 36px Arial'; ctx.fillStyle='#fff'; ctx.textAlign='left'; ctx.fillText('BibCar',pillX+76,pillY+40);
+  ctx.font='italic 20px Arial'; ctx.fillStyle='rgba(255,255,255,0.62)'; ctx.fillText('corridas da Copa',pillX+76,pillY+64);
+
+  /* Website + hashtags */
+  ctx.font='24px Arial'; ctx.fillStyle='rgba(255,255,255,0.22)'; ctx.textAlign='center'; ctx.fillText('bibcarbrasil.com.br',W/2,pillY+pillH+34);
+  ctx.font='bold 34px Arial'; ctx.fillStyle='rgba(255,255,255,0.58)'; ctx.fillText('#Copa2026  #BibCar  #FigurinhaIA',W/2,pillY+pillH+78);
+
   return new Promise(res=>canvas.toBlob(b=>res(b!),'image/png'));
 }
 
@@ -392,6 +426,7 @@ export default function PlayerTransformer(){
   const [weight]=useState(()=>String(rnd(66,84)));
   const [cardNum]=useState(()=>rnd(50,249));
   const [ovr]=useState(()=>rnd(93,99));
+  const [stats]=useState(()=>Array.from({length:6},()=>rnd(78,99)));
   const [resultUrl,setResultUrl]=useState<string|null>(null);
   const [errorMsg,setErrorMsg]=useState('');
   const [fullscreen,setFullscreen]=useState(false);
@@ -427,7 +462,7 @@ export default function PlayerTransformer(){
     if(!resultUrl||!team) return;
     setStage('sharing');
     try{
-      const blob=cachedBlob??await generateStoryBlob(resultUrl,team,playerName||'JOGADOR',posIdx,jerseyNum,bday,height,weight,cardNum,ovr);
+      const blob=cachedBlob??await generateStoryBlob(resultUrl,team,playerName||'JOGADOR',posIdx,jerseyNum,bday,height,weight,cardNum,ovr,stats);
       setCachedBlob(blob);
       const file=new File([blob],'figurinha-copa2026.png',{type:'image/png'});
       if(mode==='share'&&navigator.canShare?.({files:[file]})){
@@ -599,7 +634,7 @@ export default function PlayerTransformer(){
 
               <div style={{display:'flex',justifyContent:'center',marginBottom:28}}>
                 <motion.div animate={{y:[0,-6,0]}} transition={{repeat:Infinity,duration:3.5,ease:'easeInOut'}}>
-                  <FigurinhaCard imageUrl={resultUrl} team={team} name={playerName||'JOGADOR'} posIdx={posIdx} jerseyNum={jerseyNum} bday={bday} height={height} weight={weight} ovr={ovr} size={290}/>
+                  <FigurinhaCard imageUrl={resultUrl} team={team} name={playerName||'JOGADOR'} posIdx={posIdx} jerseyNum={jerseyNum} bday={bday} height={height} weight={weight} ovr={ovr} stats={stats} size={290}/>
                 </motion.div>
               </div>
 
@@ -646,7 +681,7 @@ export default function PlayerTransformer(){
             style={{position:'fixed',inset:0,zIndex:9999,background:'rgba(0,0,0,0.97)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:24,cursor:'pointer'}}>
             <p style={{color:'rgba(255,255,255,0.35)',fontSize:13,marginBottom:20,textAlign:'center'}}>📱 Pressione e segure para salvar · Toque fora para fechar</p>
             <div onClick={e=>e.stopPropagation()}>
-              <FigurinhaCard imageUrl={resultUrl} team={team} name={playerName||'JOGADOR'} posIdx={posIdx} jerseyNum={jerseyNum} bday={bday} height={height} weight={weight} ovr={ovr} size={Math.min(300,typeof window!=='undefined'?window.innerWidth-48:280)}/>
+              <FigurinhaCard imageUrl={resultUrl} team={team} name={playerName||'JOGADOR'} posIdx={posIdx} jerseyNum={jerseyNum} bday={bday} height={height} weight={weight} ovr={ovr} stats={stats} size={Math.min(300,typeof window!=='undefined'?window.innerWidth-48:280)}/>
             </div>
             <div style={{display:'flex',gap:10,marginTop:20}} onClick={e=>e.stopPropagation()}>
               <button onClick={()=>buildAndShare('share')} style={{background:team.c1,color:'#fff',fontWeight:800,padding:'11px 24px',borderRadius:999,border:`1px solid ${team.foil[1]}55`,fontSize:'0.88rem',cursor:'pointer'}}>📲 Compartilhar</button>
