@@ -572,7 +572,7 @@ export default function PlayerTransformer(){
               </div>
               <motion.div animate={{rotate:360}} transition={{repeat:Infinity,duration:1.4,ease:'linear'}} style={{fontSize:58,display:'inline-block',marginBottom:24}}>⚽</motion.div>
               <p style={{color:'#fff',fontWeight:700,fontSize:'1.15rem',marginBottom:8}}>Criando sua figurinha…</p>
-              <p style={{color:'rgba(255,255,255,0.4)',fontSize:'0.85rem'}}>Preservando seu rosto · pode demorar ~1 min</p>
+              <p style={{color:'rgba(255,255,255,0.4)',fontSize:'0.85rem'}}>Gerando jogador · copiando seu rosto · ~40s</p>
               <div style={{display:'flex',gap:8,justifyContent:'center',marginTop:24}}>
                 {[0,1,2].map(i=><motion.div key={i} animate={{opacity:[0.3,1,0.3]}} transition={{repeat:Infinity,duration:1.4,delay:i*0.46}} style={{width:9,height:9,borderRadius:'50%',background:'#C13EFF'}}/>)}
               </div>

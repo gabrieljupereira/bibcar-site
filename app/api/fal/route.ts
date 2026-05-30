@@ -16,9 +16,11 @@ export async function POST(req: NextRequest) {
     const { prompt, userImageDataUrl } = body;
     if (!prompt) return NextResponse.json({ error: 'Missing prompt' }, { status: 400 });
 
-    // ── PuLID: face-consistent generation (user photo provided) ──
+    // ── Two-step: flux/dev generates footballer → face-swap places real face ──
+    // PuLID is probabilistic and has a ceiling on identity fidelity.
+    // face-swap copies the face pixel-for-pixel, guaranteeing likeness.
     if (userImageDataUrl) {
-      // Convert base64 dataUrl to Blob and upload to fal.ai CDN
+      // Upload user face crop to fal CDN
       const base64 = userImageDataUrl.replace(/^data:image\/\w+;base64,/, '');
       const mimeMatch = userImageDataUrl.match(/^data:(image\/\w+);base64,/);
       const mimeType = (mimeMatch?.[1] ?? 'image/jpeg') as string;
@@ -26,28 +28,41 @@ export async function POST(req: NextRequest) {
       const blob = new Blob([buffer], { type: mimeType });
 
       const faceUrl = await (fal.storage as any).upload(blob);
-      console.log('[pulid] face uploaded:', faceUrl);
+      console.log('[step1] face uploaded:', faceUrl);
 
-      const r = await (fal.subscribe as any)('fal-ai/flux-pulid', {
+      // Step 1: generate a perfect footballer with text-to-image (always high quality)
+      const t2iRes = await (fal.subscribe as any)('fal-ai/flux/dev', {
         input: {
           prompt,
-          reference_image_url: faceUrl,
+          num_inference_steps: 28,
+          guidance_scale: 3.5,
           image_size: 'portrait_4_3',
-          num_inference_steps: 50,
-          guidance_scale: 7,
-          id_weight: 1.0,
-          true_cfg: 1.5,
-          start_step: 0,
-          negative_prompt: 'ugly, blurry, distorted, extra limbs, bad anatomy, watermark, text, low quality, deformed face, unnatural skin, drawing, painting, illustration, 3d render, cartoon, anime, different person, wrong face, face swap artifact',
           enable_safety_checker: true,
+          negative_prompt: 'ugly, blurry, distorted, extra limbs, bad anatomy, watermark, text, low quality',
         },
-        pollInterval: 3000,
+        pollInterval: 2000,
       });
 
-      const imageUrl: string | undefined = r?.data?.images?.[0]?.url ?? r?.images?.[0]?.url;
-      console.log('[pulid]', imageUrl ? 'ok' : 'no image');
+      const footballerUrl: string | undefined = t2iRes?.data?.images?.[0]?.url ?? t2iRes?.images?.[0]?.url;
+      console.log('[step1] footballer:', footballerUrl ? 'ok' : 'no image');
+      if (!footballerUrl) return NextResponse.json({ error: 'No footballer image from flux' }, { status: 502 });
 
-      if (!imageUrl) return NextResponse.json({ error: 'No image from flux-pulid' }, { status: 502 });
+      // Step 2: swap the user's real face onto the generated footballer
+      const swapRes = await (fal.subscribe as any)('fal-ai/face-swap', {
+        input: {
+          source_image_url: faceUrl,       // user face (to extract from)
+          target_image_url: footballerUrl, // footballer body (where to put it)
+        },
+        pollInterval: 2000,
+      });
+
+      const imageUrl: string | undefined =
+        swapRes?.data?.image?.url ??
+        swapRes?.data?.images?.[0]?.url ??
+        swapRes?.image?.url;
+      console.log('[step2] face-swap:', imageUrl ? 'ok' : 'no image');
+
+      if (!imageUrl) return NextResponse.json({ error: 'No image from face-swap' }, { status: 502 });
       return NextResponse.json({ imageUrl });
     }
 
