@@ -10,7 +10,6 @@ const links: { href: string; label: string; copa?: boolean }[] = [
   { href: '/motorista', label: 'Motorista' },
   { href: '/franqueado', label: 'Franqueado' },
   { href: '/#delas', label: 'Bib Delas' },
-  { href: '/bibnacopa', label: '⚽ BibNaCopa', copa: true },
 ];
 
 const accentColor: Record<string, string> = {

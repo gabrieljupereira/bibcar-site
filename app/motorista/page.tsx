@@ -157,7 +157,7 @@ export default function Motorista() {
               >
                 Quero ser motorista →
               </a>
-              <a href="https://wa.me/551151924005" target="_blank" rel="noopener" className="btn-ghost">
+              <a href="https://wa.me/5531999673773" target="_blank" rel="noopener" className="btn-ghost">
                 Falar com a equipe
               </a>
             </motion.div>
@@ -365,7 +365,7 @@ export default function Motorista() {
               >
                 Baixar app motorista (Android)
               </a>
-              <a href="https://wa.me/551151924005" target="_blank" rel="noopener" className="btn-ghost">
+              <a href="https://wa.me/5531999673773" target="_blank" rel="noopener" className="btn-ghost">
                 Dúvidas? WhatsApp
               </a>
             </div>

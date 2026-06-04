@@ -48,7 +48,7 @@ export default function Footer() {
           <div>
             <h4 className="text-xs font-black uppercase tracking-widest mb-4" style={{ color: "#9B27D8" }}>Contato</h4>
             <div className="flex flex-col gap-2.5">
-              <a href="https://wa.me/551151924005" target="_blank" rel="noopener" className="text-silver text-sm hover:text-gold transition-colors">
+              <a href="https://wa.me/5531999673773" target="_blank" rel="noopener" className="text-silver text-sm hover:text-gold transition-colors">
                 WhatsApp Suporte
               </a>
               <a href="mailto:contato@bibcarbrasil.com.br" className="text-silver text-sm hover:text-gold transition-colors">
@@ -68,7 +68,7 @@ export default function Footer() {
 
       {/* WhatsApp Float */}
       <a
-        href="https://wa.me/551151924005"
+        href="https://wa.me/5531999673773"
         target="_blank"
         rel="noopener"
         className="fixed right-5 bottom-5 z-50 flex items-center justify-center rounded-full text-white hover:scale-110 transition-transform"

@@ -299,7 +299,7 @@ export default function Passageiro() {
 
           <ScrollReveal delay={0.2} className="text-center mt-10">
             <p className="text-silver mb-4">Ainda tem dúvida?</p>
-            <a href="https://wa.me/551151924005" target="_blank" rel="noopener" className="btn-purple">
+            <a href="https://wa.me/5531999673773" target="_blank" rel="noopener" className="btn-purple">
               Falar no WhatsApp
             </a>
           </ScrollReveal>

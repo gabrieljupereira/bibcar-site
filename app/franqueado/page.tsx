@@ -89,7 +89,7 @@ export default function Franqueado() {
     const msg = encodeURIComponent(
       `Olá! Tenho interesse em ser franqueado da BibCar.\n\nNome: ${form.nome}\nCidade: ${form.cidade}\nTelefone: ${form.telefone}`
     );
-    window.open(`https://wa.me/551151924005?text=${msg}`, '_blank');
+    window.open(`https://wa.me/5531999673773?text=${msg}`, '_blank');
     setSent(true);
   };
 
@@ -117,7 +117,7 @@ export default function Franqueado() {
               <a href="#contato" className="btn-gold">
                 Quero ser franqueado →
               </a>
-              <a href="https://wa.me/551151924005" target="_blank" rel="noopener" className="btn-ghost">
+              <a href="https://wa.me/5531999673773" target="_blank" rel="noopener" className="btn-ghost">
                 Falar com a equipe
               </a>
             </motion.div>
@@ -321,7 +321,7 @@ export default function Franqueado() {
               <p className="text-silver mb-8" style={{ fontSize: 17, lineHeight: 1.7 }}>
                 Preencha o formulário ou fale diretamente com nossa equipe. Sem compromisso — só uma conversa sobre oportunidade.
               </p>
-              <a href="https://wa.me/551151924005" target="_blank" rel="noopener" className="btn-gold">
+              <a href="https://wa.me/5531999673773" target="_blank" rel="noopener" className="btn-gold">
                 Falar no WhatsApp agora →
               </a>
             </ScrollReveal>
