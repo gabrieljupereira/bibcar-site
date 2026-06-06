@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Motorista — Ganhe mais perto de casa',
   description: 'Rode com a BibCar e ganhe mais perto de casa. Cadastro simples, ganho melhor por corrida, flexibilidade total e suporte de verdade.',
+  alternates: { canonical: '/motorista' },
   openGraph: {
     title: 'BibCar Motorista — Mais ganho, mais perto de casa',
     description: 'Cadastro simples e rápido, ganho melhor por corrida e flexibilidade total. Seja um motorista BibCar.',

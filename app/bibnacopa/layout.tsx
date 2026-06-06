@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'BibNaCopa — 30% OFF na hora do jogo',
   description: '30% de desconto em todas as corridas durante os jogos do Brasil na Copa do Mundo 2026. Vai na torcida, a BibCar te leva.',
+  alternates: { canonical: '/bibnacopa' },
   openGraph: {
     title: 'BibNaCopa ⚽ — 30% OFF na hora do jogo do Brasil',
     description: '30% de desconto automático em todas as corridas durante os jogos do Brasil. Baixe o app e aproveite.',

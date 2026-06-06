@@ -70,6 +70,33 @@ const onboardingSteps = [
   },
 ];
 
+const faqs = [
+  {
+    q: 'Quanto preciso investir para abrir uma franquia da BibCar?',
+    a: 'O investimento varia conforme o tamanho da praça e o pacote escolhido. A BibCar trabalha com um modelo enxuto e de baixo custo de estrutura, já que toda a tecnologia está inclusa. Fale com nossa equipe pelo formulário para receber os valores atualizados para a sua cidade.',
+  },
+  {
+    q: 'O que está incluído na franquia de mobilidade urbana da BibCar?',
+    a: 'Você recebe a plataforma tecnológica completa (app de passageiro, app de motorista e painel de gestão), treinamento completo, material de marketing, suporte operacional contínuo da matriz e exclusividade de praça na sua região.',
+  },
+  {
+    q: 'Preciso ter experiência com transporte ou tecnologia?',
+    a: 'Não. O modelo da BibCar foi desenhado para quem está começando do zero. Você recebe treinamento completo, manual de operação e suporte contínuo da matriz para operar com segurança desde o primeiro dia.',
+  },
+  {
+    q: 'Quanto tempo leva para lançar a BibCar na minha cidade?',
+    a: 'Após a análise de praça e a assinatura do contrato, o onboarding e o treinamento começam rapidamente. O prazo até o lançamento depende da preparação da operação local, e a matriz acompanha cada etapa até a sua cidade entrar no mapa.',
+  },
+  {
+    q: 'A franquia tem exclusividade de praça?',
+    a: 'Sim. Cada franqueado opera com exclusividade na sua região, sem concorrência de outro franqueado BibCar na mesma praça.',
+  },
+  {
+    q: 'Como funciona o suporte da matriz BibCar?',
+    a: 'Você conta com suporte operacional contínuo, acesso ao grupo de franqueados, participação em campanhas nacionais e apoio de marketing e tecnologia durante toda a operação.',
+  },
+];
+
 interface FormState {
   nome: string;
   cidade: string;
@@ -79,6 +106,7 @@ interface FormState {
 export default function Franqueado() {
   const [form, setForm] = useState<FormState>({ nome: '', cidade: '', telefone: '' });
   const [sent, setSent] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -106,12 +134,18 @@ export default function Franqueado() {
               Seja um franqueado BibCar
             </motion.div>
             <motion.h1 variants={heroItem} className="bebas mb-6" style={{ fontSize: 'clamp(52px, 8.5vw, 104px)', lineHeight: 0.92 }}>
+              <span
+                className="block"
+                style={{ fontSize: 'clamp(15px, 1.8vw, 22px)', letterSpacing: '0.08em', opacity: 0.7, marginBottom: 10 }}
+              >
+                Franquia de mobilidade urbana
+              </span>
               Empreenda.{' '}
               <span className="gold-text">Expanda.</span>{' '}
               <span className="purple-text">Lidere.</span>
             </motion.h1>
             <motion.p variants={heroItem} className="text-silver mb-10" style={{ fontSize: 'clamp(16px, 1.6vw, 19px)', lineHeight: 1.65, maxWidth: 540 }}>
-              Leve a BibCar pra sua cidade. Modelo de negócio validado, suporte completo, tecnologia de ponta — e uma marca que já chegou pra ficar.
+              Abra uma franquia de mobilidade urbana na sua cidade com a BibCar. Modelo de negócio validado, suporte completo, tecnologia de ponta — e uma marca que já chegou pra ficar.
             </motion.p>
             <motion.div variants={heroItem} className="flex flex-wrap gap-4">
               <a href="#contato" className="btn-gold">
@@ -301,6 +335,69 @@ export default function Franqueado() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="section" style={{ background: '#ffffff' }}>
+        <div className="container max-w-3xl mx-auto">
+          <ScrollReveal className="text-center mb-12">
+            <div className="tag tag-gold mb-5 inline-flex">Dúvidas frequentes</div>
+            <h2 className="bebas mb-4" style={{ fontSize: 'clamp(36px, 5vw, 64px)' }}>
+              Tudo sobre a{' '}
+              <span className="gradient-text">franquia BibCar.</span>
+            </h2>
+            <p className="text-silver" style={{ fontSize: 17 }}>
+              As perguntas que mais recebem quem quer abrir uma franquia de mobilidade urbana.
+            </p>
+          </ScrollReveal>
+
+          <ScrollReveal>
+            <div className="flex flex-col gap-3">
+              {faqs.map((faq, i) => {
+                const open = openFaq === i;
+                return (
+                  <div
+                    key={faq.q}
+                    className="rounded-2xl overflow-hidden"
+                    style={{
+                      border: open ? '1px solid rgba(255,210,63,0.4)' : '1px solid rgba(0,0,0,0.09)',
+                      background: open ? 'rgba(255,210,63,0.05)' : '#ffffff',
+                      boxShadow: '0 1px 8px rgba(0,0,0,0.04)',
+                      transition: 'all 0.25s ease',
+                    }}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setOpenFaq(open ? null : i)}
+                      aria-expanded={open}
+                      className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left"
+                    >
+                      <h3 className="font-semibold text-base" style={{ color: '#100D24' }}>
+                        {faq.q}
+                      </h3>
+                      <span
+                        className="flex-shrink-0 text-xl font-black"
+                        style={{ color: '#FF9500', transform: open ? 'rotate(45deg)' : 'none', transition: 'transform 0.25s ease' }}
+                      >
+                        +
+                      </span>
+                    </button>
+                    <div
+                      style={{
+                        maxHeight: open ? 320 : 0,
+                        opacity: open ? 1 : 0,
+                        overflow: 'hidden',
+                        transition: 'max-height 0.3s ease, opacity 0.3s ease',
+                      }}
+                    >
+                      <p className="text-silver text-sm leading-relaxed px-6 pb-5">{faq.a}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
