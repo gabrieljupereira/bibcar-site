@@ -42,13 +42,13 @@ function CountdownTimer({ target }: { target: Date }) {
         <div key={l} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <div style={{ textAlign: 'center', minWidth: 70 }}>
             <div style={{
-              fontFamily: 'Bebas Neue,sans-serif', fontSize: 'clamp(52px,9vw,88px)', lineHeight: 1,
+              fontFamily: 'Montserrat,sans-serif', fontWeight: 800, fontSize: 'clamp(52px,9vw,88px)', lineHeight: 1,
               color: '#FFDF00',
               textShadow: '0 0 40px rgba(255,223,0,0.8), 0 0 80px rgba(255,223,0,0.3)',
             }}>{pad(v)}</div>
             <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.18em', color: 'rgba(255,255,255,0.28)', marginTop: 6 }}>{l}</div>
           </div>
-          {i < 3 && <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 52, color: 'rgba(255,223,0,0.3)', marginBottom: 22, lineHeight: 1 }}>:</div>}
+          {i < 3 && <div style={{ fontFamily: 'Montserrat,sans-serif', fontWeight: 800, fontSize: 52, color: 'rgba(255,223,0,0.3)', marginBottom: 22, lineHeight: 1 }}>:</div>}
         </div>
       ))}
     </div>
@@ -131,7 +131,7 @@ function BolaoSection() {
           <motion.div key="waiting" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
             style={{ ...card, textAlign: 'center', animation: 'pulse-border 3s ease-in-out infinite' }}>
             <div style={{ fontSize: 56, marginBottom: 16 }}>🔒</div>
-            <h3 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 32, color: '#fff', marginBottom: 8 }}>Bolão ainda fechado</h3>
+            <h3 style={{ fontFamily: 'Montserrat,sans-serif', fontWeight: 800, fontSize: 32, color: '#fff', marginBottom: 8 }}>Bolão ainda fechado</h3>
             <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 14, lineHeight: 1.65, maxWidth: 340, margin: '0 auto 20px' }}>
               O bolão abre assim que a chave da Copa for sorteada e o adversário do Brasil for confirmado pela FIFA.
             </p>
@@ -144,7 +144,7 @@ function BolaoSection() {
         {status === 'closed' && (
           <motion.div key="closed" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} style={{ ...card, textAlign: 'center' }}>
             <div style={{ fontSize: 52, marginBottom: 14 }}>⏱</div>
-            <h3 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 30, color: '#fff', marginBottom: 8 }}>Bolão Encerrado</h3>
+            <h3 style={{ fontFamily: 'Montserrat,sans-serif', fontWeight: 800, fontSize: 30, color: '#fff', marginBottom: 8 }}>Bolão Encerrado</h3>
             <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 14, marginBottom: 6 }}>O jogo já começou — as apostas foram fechadas.</p>
             <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: 12 }}>Fique de olho nos próximos jogos do Brasil! 🇧🇷</p>
           </motion.div>
@@ -153,7 +153,7 @@ function BolaoSection() {
         {status === 'already-voted' && (
           <motion.div key="voted" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} style={{ ...card, textAlign: 'center' }}>
             <div style={{ fontSize: 52, marginBottom: 14 }}>✅</div>
-            <h3 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 30, color: '#fff', marginBottom: 8 }}>Palpite já registrado!</h3>
+            <h3 style={{ fontFamily: 'Montserrat,sans-serif', fontWeight: 800, fontSize: 30, color: '#fff', marginBottom: 8 }}>Palpite já registrado!</h3>
             <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 14, marginBottom: 6 }}>Este celular já tem um palpite para este jogo.</p>
             <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: 12 }}>Apenas um palpite por participante por jogo.</p>
           </motion.div>
@@ -180,15 +180,15 @@ function BolaoSection() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
                 <div style={{ textAlign: 'center', flex: 1 }}>
                   <div style={{ fontSize: 44 }}>🇧🇷</div>
-                  <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 22, color: '#fff', marginTop: 4 }}>BRASIL</div>
+                  <div style={{ fontFamily: 'Montserrat,sans-serif', fontWeight: 800, fontSize: 22, color: '#fff', marginTop: 4 }}>BRASIL</div>
                 </div>
                 <div style={{ textAlign: 'center', flex: 1 }}>
-                  <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 36, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.05em' }}>VS</div>
+                  <div style={{ fontFamily: 'Montserrat,sans-serif', fontWeight: 800, fontSize: 36, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.05em' }}>VS</div>
                   <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', fontWeight: 700 }}>{match.date}</div>
                 </div>
                 <div style={{ textAlign: 'center', flex: 1 }}>
                   <div style={{ fontSize: 40 }}>🌍</div>
-                  <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: match.away.length > 8 ? 16 : 22, color: '#fff', marginTop: 4 }}>{match.away.toUpperCase()}</div>
+                  <div style={{ fontFamily: 'Montserrat,sans-serif', fontWeight: 800, fontSize: match.away.length > 8 ? 16 : 22, color: '#fff', marginTop: 4 }}>{match.away.toUpperCase()}</div>
                 </div>
               </div>
               <div style={{ textAlign: 'center', fontSize: 11, color: 'rgba(255,255,255,0.28)', fontWeight: 600 }}>📍 {match.venue} · {match.time}</div>
@@ -238,12 +238,12 @@ function BolaoSection() {
             <motion.div
               initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 300, damping: 18, delay: 0.1 }}
               style={{ fontSize: 60, marginBottom: 14 }}>✅</motion.div>
-            <h3 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 36, color: '#fff', marginBottom: 4 }}>Palpite Registrado!</h3>
+            <h3 style={{ fontFamily: 'Montserrat,sans-serif', fontWeight: 800, fontSize: 36, color: '#fff', marginBottom: 4 }}>Palpite Registrado!</h3>
             <p style={{ color: '#C13EFF', fontWeight: 700, fontSize: 15, marginBottom: 4, textShadow: '0 0 20px rgba(193,62,255,0.5)' }}>{nome}</p>
             <p style={{ color: 'rgba(255,255,255,0.5)', marginBottom: 24, fontSize: 14 }}>{confirmedResult ? LABEL[confirmedResult] : ''}</p>
             <div style={{ display: 'inline-block', background: 'rgba(255,223,0,0.08)', border: '2px solid rgba(255,223,0,0.4)', borderRadius: 18, padding: '16px 40px', marginBottom: 20, boxShadow: '0 0 32px rgba(255,223,0,0.12)' }}>
               <p style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.18em', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', marginBottom: 4 }}>Código do Palpite</p>
-              <p style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 40, color: '#FFDF00', letterSpacing: '0.08em', textShadow: '0 0 24px rgba(255,223,0,0.5)' }}>#{code}</p>
+              <p style={{ fontFamily: 'Montserrat,sans-serif', fontWeight: 800, fontSize: 40, color: '#FFDF00', letterSpacing: '0.08em', textShadow: '0 0 24px rgba(255,223,0,0.5)' }}>#{code}</p>
             </div>
             <p style={{ color: 'rgba(255,255,255,0.28)', fontSize: 12, marginBottom: 0 }}>Guarda este código — você vai precisar para resgatar seus prêmios.</p>
           </motion.div>
@@ -260,7 +260,7 @@ function BolaoSection() {
                 <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 12, fontWeight: 700 }}>{p.nome}</div>
                 <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11 }}>{LABEL[p.result]}</div>
               </div>
-              <span style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 13, color: 'rgba(255,223,0,0.65)' }}>#{p.code}</span>
+              <span style={{ fontFamily: 'Montserrat,sans-serif', fontWeight: 800, fontSize: 13, color: 'rgba(255,223,0,0.65)' }}>#{p.code}</span>
             </div>
           ))}
         </div>
@@ -360,7 +360,7 @@ export default function BibNaCopa() {
               <span style={{ fontSize: 10, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.13em', color: '#C13EFF' }}>⚽ Copa 2026 · Ecossistema BibCar</span>
             </motion.div>
 
-            <motion.h1 variants={hi} style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 'clamp(80px,14vw,176px)', lineHeight: 0.86, marginBottom: 10 }}>
+            <motion.h1 variants={hi} style={{ fontFamily: 'Montserrat,sans-serif', fontWeight: 800, fontSize: 'clamp(80px,14vw,176px)', lineHeight: 0.86, marginBottom: 10 }}>
               <span style={{ background: 'linear-gradient(135deg,#7F00FF 0%,#C13EFF 45%,#FFDF00 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(0 0 40px rgba(127,0,255,0.4))' }}>Bib</span><br />
               <span style={{ color: '#ffffff', textShadow: '0 0 60px rgba(255,255,255,0.08)' }}>na Copa</span>
             </motion.h1>
@@ -420,7 +420,7 @@ export default function BibNaCopa() {
         <div className="container">
           <ScrollReveal className="text-center" style={{ marginBottom: 56 }}>
             <div style={{ display: 'inline-block', padding: '4px 16px', borderRadius: 999, border: '1px solid rgba(255,223,0,0.3)', background: 'rgba(255,223,0,0.07)', color: '#FFDF00', fontSize: 10, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 14 }}>O Ecossistema</div>
-            <h2 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 'clamp(40px,6vw,78px)', color: '#fff', lineHeight: 1, marginBottom: 10 }}>
+            <h2 style={{ fontFamily: 'Montserrat,sans-serif', fontWeight: 800, fontSize: 'clamp(40px,6vw,78px)', color: '#fff', lineHeight: 1, marginBottom: 10 }}>
               Três produtos.{' '}
               <span style={{ background: 'linear-gradient(135deg,#7F00FF,#FFDF00)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Um app.</span>
             </h2>
@@ -438,7 +438,7 @@ export default function BibNaCopa() {
                   <div style={{ position: 'absolute', top: -50, right: -50, width: 180, height: 180, borderRadius: '50%', background: `${f.color}12`, pointerEvents: 'none', filter: 'blur(20px)' }} />
                   <div style={{ display: 'inline-block', padding: '3px 10px', borderRadius: 999, border: `1px solid ${f.color}50`, background: `${f.color}16`, color: f.color, fontSize: 10, fontWeight: 900, letterSpacing: '0.1em', marginBottom: 20 }}>{f.tag}</div>
                   <div style={{ fontSize: 40, marginBottom: 12 }}>{f.icon}</div>
-                  <h3 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 30, color: '#fff', marginBottom: 8 }}>{f.title}</h3>
+                  <h3 style={{ fontFamily: 'Montserrat,sans-serif', fontWeight: 800, fontSize: 30, color: '#fff', marginBottom: 8 }}>{f.title}</h3>
                   <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13, lineHeight: 1.65 }}>{f.desc}</p>
                 </div>
               </ScrollReveal>
@@ -455,7 +455,7 @@ export default function BibNaCopa() {
         <div className="container relative" style={{ zIndex: 2 }}>
           <ScrollReveal className="text-center" style={{ marginBottom: 52 }}>
             <div style={{ display: 'inline-block', padding: '4px 16px', borderRadius: 999, border: '1px solid rgba(255,223,0,0.35)', background: 'rgba(255,223,0,0.08)', color: '#FFDF00', fontSize: 10, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 14 }}>🎰 Bolão BibCar</div>
-            <h2 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 'clamp(40px,6vw,76px)', color: '#fff', marginBottom: 10 }}>
+            <h2 style={{ fontFamily: 'Montserrat,sans-serif', fontWeight: 800, fontSize: 'clamp(40px,6vw,76px)', color: '#fff', marginBottom: 10 }}>
               Chuta o{' '}
               <span style={{ background: 'linear-gradient(135deg,#FFDF00,#FFB800)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>resultado.</span>
             </h2>
@@ -478,7 +478,7 @@ export default function BibNaCopa() {
         <div className="container" style={{ maxWidth: 700, margin: '0 auto' }}>
           <ScrollReveal className="text-center" style={{ marginBottom: 48 }}>
             <div style={{ display: 'inline-block', padding: '4px 16px', borderRadius: 999, border: '1px solid rgba(127,0,255,0.4)', background: 'rgba(127,0,255,0.08)', color: '#C13EFF', fontSize: 10, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 14 }}>🇧🇷 Jogos do Brasil · Copa 2026</div>
-            <h2 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 'clamp(40px,6vw,74px)', color: '#fff', marginBottom: 10 }}>
+            <h2 style={{ fontFamily: 'Montserrat,sans-serif', fontWeight: 800, fontSize: 'clamp(40px,6vw,74px)', color: '#fff', marginBottom: 10 }}>
               30% OFF em{' '}
               <span style={{ background: 'linear-gradient(135deg,#7F00FF,#FFDF00)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>todos os jogos.</span>
             </h2>
@@ -493,17 +493,17 @@ export default function BibNaCopa() {
                     <div style={{ width: 46, height: 46, borderRadius: 12, background: 'rgba(127,0,255,0.18)', border: '1px solid rgba(127,0,255,0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 }}>🇧🇷</div>
                     <div>
                       <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.28)', marginBottom: 3 }}>Fase de Grupos · Jogo {i + 1}</div>
-                      <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 20, color: '#fff' }}>Brasil vs. {m.away}</div>
+                      <div style={{ fontFamily: 'Montserrat,sans-serif', fontWeight: 800, fontSize: 20, color: '#fff' }}>Brasil vs. {m.away}</div>
                       <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.28)', marginTop: 2 }}>📍 {m.venue}</div>
                     </div>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 20, color: '#FFDF00' }}>{m.date}</div>
+                      <div style={{ fontFamily: 'Montserrat,sans-serif', fontWeight: 800, fontSize: 20, color: '#FFDF00' }}>{m.date}</div>
                       <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>{m.time}</div>
                     </div>
                     <div style={{ padding: '10px 16px', borderRadius: 12, background: 'rgba(127,0,255,0.18)', border: '1px solid rgba(127,0,255,0.45)', textAlign: 'center', minWidth: 64, boxShadow: '0 0 20px rgba(127,0,255,0.25)' }}>
-                      <div style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 28, color: '#C13EFF', lineHeight: 1, textShadow: '0 0 16px rgba(193,62,255,0.5)' }}>30%</div>
+                      <div style={{ fontFamily: 'Montserrat,sans-serif', fontWeight: 800, fontSize: 28, color: '#C13EFF', lineHeight: 1, textShadow: '0 0 16px rgba(193,62,255,0.5)' }}>30%</div>
                       <div style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.35)' }}>OFF</div>
                     </div>
                   </div>
@@ -522,7 +522,7 @@ export default function BibNaCopa() {
         <div className="container relative" style={{ maxWidth: 620, margin: '0 auto', zIndex: 2 }}>
           <ScrollReveal>
             <div style={{ fontSize: 68, marginBottom: 16, display: 'inline-block', animation: 'float-cta 3.5s ease-in-out infinite' }}>🇧🇷</div>
-            <h2 style={{ fontFamily: 'Bebas Neue,sans-serif', fontSize: 'clamp(56px,10vw,116px)', color: '#fff', lineHeight: 0.9, marginBottom: 20 }}>
+            <h2 style={{ fontFamily: 'Montserrat,sans-serif', fontWeight: 800, fontSize: 'clamp(56px,10vw,116px)', color: '#fff', lineHeight: 0.9, marginBottom: 20 }}>
               Bora{' '}
               <span style={{ background: 'linear-gradient(135deg,#FFDF00,#FF9500)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>torcer!</span>
             </h2>

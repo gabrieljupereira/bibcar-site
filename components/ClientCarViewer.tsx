@@ -16,7 +16,7 @@ const CarViewer3D = dynamic(() => import('./CarViewer3D'), {
         fontSize: 13,
         letterSpacing: 2,
         textTransform: 'uppercase',
-        fontFamily: 'Inter, sans-serif',
+        fontFamily: 'Montserrat, sans-serif',
       }}
     >
       Carregando...

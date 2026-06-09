@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -30,13 +30,15 @@ html {
 body {
   background-color: #F7F5FF;
   color: #100D24;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
 
 .bebas {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 .gold-text {

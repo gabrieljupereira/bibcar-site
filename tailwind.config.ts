@@ -21,8 +21,10 @@ const config: Config = {
         silver: '#64748B',
       },
       fontFamily: {
-        bebas: ['"Bebas Neue"', 'sans-serif'],
-        inter: ['Inter', 'sans-serif'],
+        montserrat: ['Montserrat', 'sans-serif'],
+        bebas: ['Montserrat', 'sans-serif'],
+        inter: ['Montserrat', 'sans-serif'],
+        sans: ['Montserrat', 'sans-serif'],
       },
     },
   },
